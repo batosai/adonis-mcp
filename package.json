@@ -1,0 +1,62 @@
+{
+  "name": "@jrmc/adonis-mcp",
+  "version": "1.0.0-alpha.1",
+  "keywords": [
+    "adonisjs",
+    "mcp",
+    "ace",
+    "commands"
+  ],
+  "author": "Jeremy Chaufourier jeremy@chaufourier.fr",
+  "license": "MIT",
+  "description": "AdonisJS MCP - MCP server for your AdonisJS applications.",
+  "type": "module",
+  "main": "build/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/batosai/adonis-mcp.git"
+  },
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "npm run clean && tsc && npm run copyfiles",
+    "copyfiles": "copyfiles \"stubs/**/**/*.stub\" build",
+    "postbuild": "adonis-kit index build/commands",
+    "prepublishOnly": "npm run build",
+    "clean": "del-cli build",
+    "format": "prettier --write ."
+  },
+  "exports": {
+    ".": "./build/index.js",
+    "./types": "./build/src/types.js",
+    "./providers/*": "./build/providers/*.js",
+    "./commands": "./build/commands/main.js",
+    "./commands/*": "./build/commands/*.js",
+    "./controllers/*": "./build/src/controllers/*.js",
+    "./mcp_provider": "./build/providers/mcp_provider.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.20.2"
+  },
+  "devDependencies": {
+    "@adonisjs/assembler": "^7.8.2",
+    "@adonisjs/core": "^6.19.0",
+    "@adonisjs/prettier-config": "^1.4.5",
+    "@adonisjs/tsconfig": "^1.4.1",
+    "@types/node": "^24.0.11",
+    "copyfiles": "^2.4.1",
+    "del-cli": "^7.0.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.8.3"
+  },
+  "prettier": "@adonisjs/prettier-config",
+  "publishConfig": {
+    "access": "public",
+    "tag": "alpha"
+  },
+  "volta": {
+    "node": "22.17.0"
+  }
+}

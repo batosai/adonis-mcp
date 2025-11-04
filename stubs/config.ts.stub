@@ -1,0 +1,8 @@
+{{{
+  exports({ to: app.configPath('mcp.ts') })
+}}}
+import { defineConfig } from '@jrmc/adonis-mcp'
+
+export default defineConfig({
+  path: '/mcp',
+})

@@ -1,0 +1,27 @@
+{{#var resourceFileName = string(className).snakeCase().ext('.ts').toString()}}
+{{{
+  exports({
+    to: app.makePath(app.rcFile.directories['mcp'] || 'app/mcp/', 'prompts', resourceFileName)
+  })
+}}}
+import type { Prompt } from '@jrmc/adonis-mcp/types'
+
+export default class {{ className }} implements Prompt {
+  name = 'prompt_name'
+  config = {
+    title: 'Prompt Title',
+    description: 'Prompt Description',
+    argsSchema: {}
+  }
+
+  async handle() {
+    return {
+      messages: [
+        {
+          role: 'user' as const,
+          content: { type: 'text' as const, text: `Please review this code:\n\n${code}` }
+        }
+      ]
+    }
+  }
+}

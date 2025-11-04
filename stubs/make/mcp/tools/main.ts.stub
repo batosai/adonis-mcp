@@ -1,0 +1,19 @@
+{{#var resourceFileName = string(className).snakeCase().ext('.ts').toString()}}
+{{{
+  exports({
+    to: app.makePath(app.rcFile.directories['mcp'] || 'app/mcp/', 'tools', resourceFileName)
+  })
+}}}
+import type { Tool } from '@jrmc/adonis-mcp/types'
+
+export default class {{ className }} implements Tool {
+  name = 'Tool name'
+  config = {
+    title: 'Tool title',
+    description: 'Tool description',
+  }
+
+  async handle() {
+
+  }
+}
