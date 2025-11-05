@@ -21,7 +21,7 @@ export default class MakePrompt extends BaseCommand {
     const stubPath = `make/mcp/prompts/main.ts.stub`
 
     await codemods.makeUsingStub(stubsRoot, stubPath, {
-      className: `${string.snakeCase(this.name)}Prompt`
+      className: `${string.pascalCase(this.name)}Prompt`
     })
 
     this.logger.success(`Prompt created successfully for: ${this.name}`)

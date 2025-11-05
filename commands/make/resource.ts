@@ -21,7 +21,7 @@ export default class MakeResource extends BaseCommand {
     const stubPath = `make/mcp/resources/main.ts.stub`
 
     await codemods.makeUsingStub(stubsRoot, stubPath, {
-      className: `${string.snakeCase(this.name)}Resource`
+      className: `${string.pascalCase(this.name)}Resource`
     })
 
     this.logger.success(`Resource created successfully for: ${this.name}`)
