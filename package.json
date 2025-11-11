@@ -30,15 +30,12 @@
   },
   "exports": {
     ".": "./build/index.js",
-    "./types": "./build/src/types.js",
+    "./types/*": "./build/src/types/*.js",
     "./providers/*": "./build/providers/*.js",
     "./commands": "./build/commands/main.js",
     "./commands/*": "./build/commands/*.js",
     "./controllers/*": "./build/src/controllers/*.js",
     "./mcp_provider": "./build/providers/mcp_provider.js"
-  },
-  "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.20.2"
   },
   "devDependencies": {
     "@adonisjs/assembler": "^7.8.2",
