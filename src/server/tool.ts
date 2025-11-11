@@ -8,7 +8,7 @@
 import type { InferJSONSchema, JSONSchema } from '../types/method.js'
 import type { McpContext } from '../types/context.js'
 
-export abstract class BaseTool<S extends JSONSchema> {
+export abstract class Tool<S extends JSONSchema> {
   abstract name: string
   abstract title?: string
   abstract description?: string
