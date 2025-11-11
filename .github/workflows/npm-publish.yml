@@ -1,6 +1,10 @@
 name: NPM publish
 
 on:
+  pull_request:
+    types: [closed]
+    branches:
+      - 'main'
   push:
     branches:
       - 'main'
@@ -16,6 +20,7 @@ env:
 
 jobs:
   release:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -43,6 +48,7 @@ jobs:
             Tag: ${{ steps.release.outputs.release_tag }}
 
   publish-npm:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
     needs: release
     runs-on: ubuntu-latest
     steps:
