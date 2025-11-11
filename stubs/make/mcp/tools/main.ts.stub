@@ -1,7 +1,7 @@
 {{#var resourceFileName = string(className).snakeCase().ext('.ts').toString()}}
 {{{
   exports({
-    to: app.makePath(app.rcFile.directories['mcp'] || 'app/mcp/', 'tools', resourceFileName)
+    to: app.makePath(app.rcFile.directories['mcp'] || basePath, resourceFileName)
   })
 }}}
 import type { McpContext } from '@jrmc/adonis-mcp/types/context'
@@ -20,8 +20,9 @@ export default class {{ className }} implements Tool<Schema> {
   title = 'Tool title'
   description = 'Tool description'
 
-  async handle({ args }: Context) {
+  async handle({ args, response }: Context) {
     console.log(args.text)
+    return response.text(JSON.stringify({ text: 'Hello, world!' }))
   }
 
   schema() {
