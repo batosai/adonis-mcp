@@ -8,6 +8,7 @@
 import type { McpConfig } from './types/config.js'
 import type { McpRequest } from './types/request.js'
 import type { ToolList, ResourceList, PromptList } from './types/method.js'
+import type { Transport } from './types/transport.js'
 
 import { createError } from '@adonisjs/core/exceptions'
 import ServerContext from './context.js'
@@ -86,8 +87,13 @@ export default class Server {
     this.prompts = { ...this.prompts, ...item }
   }
 
-  async handle(jsonRequest: McpRequest) {
+  async handle(jsonRequest: McpRequest, transport: Transport) {
     const mcpContext = this.createContext(jsonRequest)
+
+    if (transport) {
+      transport.bindBouncer(mcpContext)
+      transport.bindAuth(mcpContext)
+    }
 
     try {
       if (Object.keys(this.methods).includes(jsonRequest.method)) {

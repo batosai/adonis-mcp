@@ -17,5 +17,5 @@ export abstract class BaseTool<S extends JSONSchema> {
   abstract schema(): S
 
   /** handle typé automatiquement depuis le schema */
-  abstract handle(args: InferJSONSchema<S>, ctx?: McpContext): Record<string, unknown> | Promise<Record<string, unknown>>
+  abstract handle(ctx?: McpContext & { args: InferJSONSchema<S> }): Record<string, unknown> | Promise<Record<string, unknown>>
 }

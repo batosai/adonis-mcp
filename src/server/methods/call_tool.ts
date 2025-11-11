@@ -42,9 +42,12 @@ export default class CallTool implements Method {
     }
 
     const { default: Tool } = await import(ctx.tools[item])
+
+    ;(ctx as any).args = params.arguments ?? {}
+
     const tool = new Tool(ctx)
 
-    const content = await tool.handle(params.arguments ?? {}, ctx)
+    const content = await tool.handle(ctx)
 
     return Response.result(ctx.request.id, content)
   }

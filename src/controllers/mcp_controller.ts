@@ -6,6 +6,7 @@
  */
 
 import type { HttpContext } from '@adonisjs/core/http'
+import HttpTransport from '../Transport/http_transport.js'
 
 export default class McpController {
   async post(ctx: HttpContext) {
@@ -16,6 +17,6 @@ export default class McpController {
     console.log('method:', method)
 
     const mcp = await ctx.containerResolver.make('jrmc.mcp')
-    return await mcp.handle(body)
+    return await mcp.handle(body, new HttpTransport(ctx))
   }
 }

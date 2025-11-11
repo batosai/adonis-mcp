@@ -24,8 +24,6 @@ export default class ServerContext implements McpContext {
   prompts: PromptList
   request: McpRequest
   response: McpResponse
-  // auth: Auth
-  // bouncer: Bouncer
 
   constructor(options: ServerContextOptions) {
     this.supportedProtocolVersions = options.supportedProtocolVersions
