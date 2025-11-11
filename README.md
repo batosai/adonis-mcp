@@ -7,7 +7,7 @@ AdonisJS MCP - Server MCP for your AdonisJS applications.
 
 ## Roadmap
 
-- [ ] MCP prompts support
+- [x] MCP prompts support
 - [ ] MCP resources support
 - [ ] MCP prompts support
 - [ ] Alternative transports support (SSE, stdio)
@@ -132,6 +132,45 @@ async handle({ args, response, auth, bouncer }: Context) {
   
   return response.text(JSON.stringify({ result }))
 }
+```
+
+### Setting up Authentication and Bouncer
+
+To use `auth` and `bouncer` in your MCP tools, add the following TypeScript declaration in your middleware (e.g., in your Bouncer initialization middleware):
+
+```typescript
+declare module '@jrmc/adonis-mcp/types/context' {
+  export interface McpContext {
+    auth?: {
+      user?: HttpContext['auth']['user']
+    }
+    bouncer?: Bouncer<
+      Exclude<HttpContext['auth']['user'], undefined>,
+      typeof abilities,
+      typeof policies
+    >
+  }
+}
+```
+
+The MCP context automatically binds `auth` and `bouncer` from the `HttpContext` if they are available, so make sure your middleware initializes them on the `HttpContext` first.
+
+#### Registering the MCP Route
+
+In your `start/routes.ts` file, register the MCP route and apply middleware:
+
+```typescript
+import { middleware } from '#start/kernel'
+import router from '@adonisjs/core/services/router'
+
+// Register MCP route (defaults to /mcp, or specify a custom path)
+router.mcp().use(middleware.auth())
+```
+
+You can also specify a custom path:
+
+```typescript
+router.mcp('/custom-mcp-path').use(middleware.auth())
 ```
 
 ### Using Authentication
