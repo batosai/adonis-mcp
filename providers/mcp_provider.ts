@@ -47,7 +47,7 @@ export default class McpProvider {
     })
 
     await Promise.all(files.map(async (file) => {
-      const path = this.app.makePath('app/mcp', file)
+      const path = this.app.makePath(server.config.path!, file)
       const { default: tool } = await import(path)
       const toolInstance = new tool()
       server.addTool({
