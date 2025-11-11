@@ -82,7 +82,7 @@ export default class MyToolTool implements Tool<Schema> {
 
 ### Schema Definition
 
-The schema defines the input parameters of your tool. It follows the JSON Schema specification:
+The schema defines the input parameters of your tool. It follows the [JSON Schema](https://json-schema.org/) specification:
 
 ```typescript
 schema() {
