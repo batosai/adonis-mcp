@@ -240,3 +240,7 @@ export default class AddBookmarkTool implements Tool<Schema> {
 ## Support
 
 For any questions or issues, please open an issue on the [GitHub repository](https://github.com/batosai/adonis-mcp).
+
+## Inspiration
+
+This package is inspired by [laravel/mcp](https://github.com/laravel/mcp).
