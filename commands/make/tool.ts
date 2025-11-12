@@ -29,7 +29,7 @@ export default class MakeTool extends BaseCommand {
     const stubPath = `make/mcp/tools/main.ts.stub`
 
     await codemods.makeUsingStub(stubsRoot, stubPath, {
-      className: `${string.pascalCase(this.name)}Tool`,
+      name: string.pascalCase(this.name),
       basePath: config.path
     })
 

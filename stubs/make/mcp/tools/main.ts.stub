@@ -1,3 +1,4 @@
+{{#var className = `${name}Tool`}}
 {{#var resourceFileName = string(className).snakeCase().ext('.ts').toString()}}
 {{{
   exports({
@@ -16,7 +17,7 @@ type Schema = BaseSchema<{
 type Context = McpContext & { args: InferJSONSchema<Schema> }
 
 export default class {{ className }} implements Tool<Schema> {
-  name = 'tool_name'
+  name = '{{ name }}'
   title = 'Tool title'
   description = 'Tool description'
 
