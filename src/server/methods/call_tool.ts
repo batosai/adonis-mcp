@@ -47,8 +47,19 @@ export default class CallTool implements Method {
 
     const tool = new Tool(ctx)
 
-    const content = await tool.handle(ctx)
+    const data = await tool.handle(ctx)
+    let result
+    let error
 
-    return Response.result(ctx.request.id, content)
+    if (Array.isArray(data)) {
+      result = { content: data }
+    } else if (data.code) {
+      error = data
+    } else {
+      result = { content: [data] }
+    }
+
+
+    return Response.toJsonRpc({ id: ctx.request.id, result, error })
   }
 }

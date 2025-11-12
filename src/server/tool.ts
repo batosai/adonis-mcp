@@ -13,9 +13,7 @@ export abstract class Tool<S extends JSONSchema> {
   abstract title?: string
   abstract description?: string
 
-  /** Schema retourné par la classe */
-  abstract schema(): S
+  abstract schema?(): S
 
-  /** handle typé automatiquement depuis le schema */
-  abstract handle(ctx?: McpContext & { args: InferJSONSchema<S> }): Record<string, unknown> | Promise<Record<string, unknown>>
+  abstract handle(ctx?: McpContext & { args: InferJSONSchema<S> }): Record<string, unknown> | Record<string, unknown>[] | Promise<Record<string, unknown> | Record<string, unknown>[]>
 }

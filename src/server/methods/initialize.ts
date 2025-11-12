@@ -24,8 +24,7 @@ export default class Initialize implements Method {
 
     const protocolVersion = requestedVersion ?? ctx.supportedProtocolVersions[0]
 
-
-    const initResult = {
+    const result = {
       protocolVersion,
       capabilities: ctx.serverCapabilities,
       serverInfo: {
@@ -35,6 +34,6 @@ export default class Initialize implements Method {
       instructions: ctx.instructions,
     }
 
-    return Response.result(ctx.request.id, initResult)
+    return Response.toJsonRpc({ id: ctx.request.id, result })
   }
 }

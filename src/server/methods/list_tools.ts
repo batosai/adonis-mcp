@@ -8,18 +8,18 @@
 import type { Method } from '../../types/method.js'
 import type { McpContext } from '../../types/context.js'
 
-// import { createError } from '@adonisjs/core/exceptions'
 import Response from '../../response.js'
 
 export default class ListTools implements Method {
   async handle(ctx: McpContext) {
+    const error = false
     const tools = await Promise.all(
       Object.values(ctx.tools).map(async (filepath: string) => {
         try {
           const { default: Tool } = await import(filepath)
           const tool = new Tool()
 
-          const schema = tool.schema() ?? {
+          const schema = tool.schema ? tool.schema() : {
             type: 'object',
             properties: {},
           }
@@ -35,16 +35,18 @@ export default class ListTools implements Method {
             }
           }
         } catch (error) {
-          console.error(error)
-          // throw createError(
-          //   `Error listing tool ${tool.name}`,
-          //   'E_LIST_TOOLS_ERROR',
-          //   -32601,
-          // )
+          error = true
         }
       })
     )
 
-    return Response.result(ctx.request.id, { tools })
+    if (error) {
+      return Response.toJsonRpc({ id: ctx.request.id, error: { 
+        code: -32601,
+        message: `Error listing tool`,
+      }})
+    }
+
+    return Response.toJsonRpc({ id: ctx.request.id, result: { tools } })
   }
 }

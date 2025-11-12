@@ -5,12 +5,16 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-type McpRequestBase = {
-  jsonrpc: '2.0'
-  id: number | string
+export type JsonRpcRequest = {
+  jsonrpc: "2.0"
+  id: string | number
+  method: string
+  params?: {
+    [key: string]: unknown
+  }
 }
 
-type InitializeRequest = McpRequestBase & {
+type InitializeRequest = JsonRpcRequest & {
   method: 'initialize'
   params: {
     protocolVersion: string
@@ -29,7 +33,7 @@ type InitializeRequest = McpRequestBase & {
   }
 }
 
-type ToolsCallRequest = McpRequestBase & {
+type ToolsCallRequest = JsonRpcRequest & {
   method: 'tools/call'
   params: {
     name: string

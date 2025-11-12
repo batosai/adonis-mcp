@@ -5,51 +5,36 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-// import Role from './enums/role.js'
-
-export default class Response {
-  // constructor(_content: string, _role: Role = Role.USER) {}
-
-  
-  static notification(_method: string, _params: Record<string, any>) {}
+import type { JsonRpcResponse, McpResponse } from './types/response.js'
+import { ErrorCode } from './enums/error.js'
+export default class Response implements McpResponse {
 
   text(text: string) {
+    return { type: 'text' as const, text }
+  }
+
+  image(data: string, mimeType: string, _meta?: Record<string, unknown>) {
+    return { type: 'image' as const, data, mimeType, _meta }
+  }
+
+  audio(data: string, mimeType: string, _meta?: Record<string, unknown>) {
+    return { type: 'audio' as const, data, mimeType, _meta }
+  }
+
+  error(message: string, code?: number, data?: Record<string, unknown>) {
     return {
-      content: [{ type: 'text' as const, text }],
+      message,
+      code: code ?? ErrorCode.InternalError,
+      data,
     }
   }
 
-  static json(_content: Record<string, any>) {}
-
-  static blob(_content: string) {}
-
-  static error(_text: string) {}
-
-  content() {}
-
-  static audio() {}
-
-  static image() {}
-
-  asAssistant() {}
-
-  isNotification() {}
-
-  isError() {}
-
-  role() {}
-
-  static result(id: number | string, result: Record<string, any>) {
-    return this.resultRpc({
-      id,
-      result,
-    })
-  }
-
-  static resultRpc(result: Record<string, any>) {
+  static toJsonRpc({ id, result, error }: Omit<JsonRpcResponse, 'jsonrpc'> ): JsonRpcResponse {
     return {
       jsonrpc: '2.0',
-      ...result,
+      id,
+      result,
+      error,
     } as const
   }
 }
