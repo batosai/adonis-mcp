@@ -39,4 +39,8 @@ export default class ServerContext implements McpContext {
     this.request = options.request
     this.response = new McpResponse()
   }
+
+  public getPerPage(requestedPerPage?: number): number {
+    return Math.min(requestedPerPage ?? this.defaultPaginationLength, this.maxPaginationLength)
+  }
 }

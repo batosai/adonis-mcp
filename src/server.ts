@@ -65,6 +65,14 @@ export default class Server {
     if (config.instructions) {
       this.instructions = config.instructions
     }
+
+    if (config.maxPaginationLength) {
+      this.maxPaginationLength = config.maxPaginationLength
+    }
+
+    if (config.defaultPaginationLength) {
+      this.defaultPaginationLength = config.defaultPaginationLength
+    }
   }
 
   addCapability(key: string, value: boolean = true) {

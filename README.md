@@ -11,7 +11,7 @@ AdonisJS MCP - Server MCP for your AdonisJS applications.
 - [ ] MCP resources support
 - [ ] MCP prompts support
 - [ ] Alternative transports support (SSE, stdio)
-- [ ] Advanced pagination support
+- [x] Advanced pagination support
 - [ ] Automatic schema validation with Vine ??
 
 ## Installation & Configuration
@@ -275,6 +275,10 @@ export default class AddBookmarkTool implements Tool<Schema> {
   }
 }
 ```
+
+### Pagination
+
+The `tools/list` method supports cursor-based pagination to handle large numbers of tools efficiently. This is particularly useful when you have many tools registered in your application. [More information](https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/pagination)
 
 ## Support
 

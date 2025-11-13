@@ -10,4 +10,6 @@ export type McpConfig = {
   version?: string
   instructions?: string
   path?: string
+  maxPaginationLength?: number
+  defaultPaginationLength?: number
 }

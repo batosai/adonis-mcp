@@ -22,6 +22,8 @@ export interface McpContext {
   prompts: PromptList
   request: McpRequest
   response: McpResponse
+
+  getPerPage(requestedPerPage?: number): number
 }
 
-export type ServerContextOptions = Omit<McpContext, 'response'>
+export type ServerContextOptions = Omit<McpContext, 'response' | 'getPerPage'>

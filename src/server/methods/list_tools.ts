@@ -8,13 +8,23 @@
 import type { Method } from '../../types/method.js'
 import type { McpContext } from '../../types/context.js'
 
+import { CursorPaginator } from '../pagination/cursor_paginator.js'
 import Response from '../../response.js'
 
 export default class ListTools implements Method {
   async handle(ctx: McpContext) {
-    const error = false
+    let error = false
+    let nextCursor
+
+    const paginator = new CursorPaginator(
+      Object.values(ctx.tools), 
+      ctx.getPerPage(), 
+      ctx.request.params?.cursor
+    )
+    const paginatedTools = paginator.paginate('tools')
+
     const tools = await Promise.all(
-      Object.values(ctx.tools).map(async (filepath: string) => {
+      (paginatedTools['tools'] as string[]).map(async (filepath: string) => {
         try {
           const { default: Tool } = await import(filepath)
           const tool = new Tool()
@@ -47,6 +57,10 @@ export default class ListTools implements Method {
       }})
     }
 
-    return Response.toJsonRpc({ id: ctx.request.id, result: { tools } })
+    if (paginatedTools.nextCursor) {
+      nextCursor = paginatedTools.nextCursor
+    }
+
+    return Response.toJsonRpc({ id: ctx.request.id, result: { tools, nextCursor } })
   }
 }
