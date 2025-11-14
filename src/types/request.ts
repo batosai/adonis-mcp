@@ -10,6 +10,7 @@ export type JsonRpcRequest = {
   id: string | number
   method: string
   params?: {
+    cursor?: string
     [key: string]: unknown
   }
 }
