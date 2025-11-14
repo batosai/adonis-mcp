@@ -18,19 +18,19 @@ export default class Server {
   name: string = 'AdonisJS MCP Server'
   version: string = '1.0.0'
   instructions: string = 'This MCP server lets AI agents interact with our AdonisJS application.'
-  
+
   supportedProtocolVersion: string[] = ['2025-06-18']
-  
+
   capabilities: Record<string, any> = {
     tools: {
-      listChanged: false
+      listChanged: false,
     },
     resources: {
-      listChanged: false
+      listChanged: false,
     },
     prompts: {
-      listChanged: false
-    }
+      listChanged: false,
+    },
   }
 
   tools: ToolList = {}
@@ -77,14 +77,14 @@ export default class Server {
 
   addCapability(key: string, value: boolean = true) {
     if (key.includes('.')) {
-      const [ root, child ] = key.split('.')
+      const [root, child] = key.split('.')
       let existing = this.capabilities[root] ?? {}
 
       existing[child] = value
       this.capabilities[root] = existing
     }
   }
-  
+
   addTool(item: ToolList) {
     this.tools = { ...this.tools, ...item }
   }
@@ -110,12 +110,11 @@ export default class Server {
         const instance = new method()
 
         return instance.handle(mcpContext)
-      }
-      else {
+      } else {
         throw createError(
           `The method ${jsonRequest.method} was not found.`,
           'E_METHOD_NOT_FOUND',
-          -32601,
+          -32601
         )
       }
     } catch (e) {
@@ -139,8 +138,7 @@ export default class Server {
     })
   }
 
-  generateSessionId()
-  {
+  generateSessionId() {
     return crypto.randomUUID()
   }
 }

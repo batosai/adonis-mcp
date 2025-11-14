@@ -30,7 +30,7 @@ export default class MakeTool extends BaseCommand {
 
     await codemods.makeUsingStub(stubsRoot, stubPath, {
       name: string.pascalCase(this.name),
-      basePath: config.path
+      basePath: config.path,
     })
 
     this.logger.success(`Tool created successfully for: ${this.name}`)

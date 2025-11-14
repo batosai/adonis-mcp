@@ -8,7 +8,6 @@
 import type { JsonRpcResponse, McpResponse } from './types/response.js'
 import { ErrorCode } from './enums/error.js'
 export default class Response implements McpResponse {
-
   text(text: string) {
     return { type: 'text' as const, text }
   }
@@ -29,7 +28,7 @@ export default class Response implements McpResponse {
     }
   }
 
-  static toJsonRpc({ id, result, error }: Omit<JsonRpcResponse, 'jsonrpc'> ): JsonRpcResponse {
+  static toJsonRpc({ id, result, error }: Omit<JsonRpcResponse, 'jsonrpc'>): JsonRpcResponse {
     return {
       jsonrpc: '2.0',
       id,

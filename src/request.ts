@@ -4,6 +4,4 @@
  * @license MIT
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
-export default class Request {
-  
-}
+export default class Request {}

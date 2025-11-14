@@ -14,13 +14,13 @@ export default class HttpTransport implements Transport {
 
   bindBouncer(mcpContext: McpContext) {
     if ('bouncer' in this.ctx) {
-      (mcpContext as any).bouncer = this.ctx.bouncer
+      ;(mcpContext as any).bouncer = this.ctx.bouncer
     }
   }
 
   bindAuth(mcpContext: McpContext) {
     if ('auth' in this.ctx) {
-      (mcpContext as any).auth = this.ctx.auth
+      ;(mcpContext as any).auth = this.ctx.auth
     }
   }
 }

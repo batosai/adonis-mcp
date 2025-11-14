@@ -10,13 +10,13 @@ import type { McpRequest } from './request.js'
 import type { McpResponse } from './response.js'
 
 export interface McpContext {
-  supportedProtocolVersions: string[],
-  serverCapabilities: Record<string, any>,
-  serverName: string,
-  serverVersion: string,
-  instructions: string,
-  maxPaginationLength: number,
-  defaultPaginationLength: number,
+  supportedProtocolVersions: string[]
+  serverCapabilities: Record<string, any>
+  serverName: string
+  serverVersion: string
+  instructions: string
+  maxPaginationLength: number
+  defaultPaginationLength: number
   tools: ToolList
   resources: ResourceList
   prompts: PromptList

@@ -1,12 +1,16 @@
 export class CursorPaginator {
-  constructor(private items: unknown[], private perPage: number, private cursor?: string) {}
+  constructor(
+    private items: unknown[],
+    private perPage: number,
+    private cursor?: string
+  ) {}
 
   public paginate(key: string = 'items'): { [key: string]: unknown } {
     const startOffset = this.getStartOffsetFromCursor()
     console.log('startOffset', startOffset)
     const paginatedItems = this.items.slice(startOffset, startOffset + this.perPage)
 
-    const hasMorePages = this.items.length > (startOffset + this.perPage)
+    const hasMorePages = this.items.length > startOffset + this.perPage
     console.log('hasMorePages', hasMorePages)
     console.log('paginatedItems', paginatedItems.length)
     const result: Record<string, unknown> = {

@@ -43,17 +43,19 @@ export default class McpProvider {
     const server = await this.app.container.make('jrmc.mcp')
     const path = this.app.makePath(server.config.path!)
     const files = await fsReadAll(path, {
-      filter: (filePath) => filePath.includes('_tool.ts')
+      filter: (filePath) => filePath.includes('_tool.ts'),
     })
 
-    await Promise.all(files.map(async (file) => {
-      const path = this.app.makePath(server.config.path!, file)
-      const { default: tool } = await import(path)
-      const toolInstance = new tool()
-      server.addTool({
-        [toolInstance.name]: path,
+    await Promise.all(
+      files.map(async (file) => {
+        const path = this.app.makePath(server.config.path!, file)
+        const { default: tool } = await import(path)
+        const toolInstance = new tool()
+        server.addTool({
+          [toolInstance.name]: path,
+        })
       })
-    }))
+    )
   }
 
   // async registerResources() {

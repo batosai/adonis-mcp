@@ -15,5 +15,5 @@ export enum ErrorCode {
   InvalidRequest = -32600,
   MethodNotFound = -32601,
   InvalidParams = -32602,
-  InternalError = -32603
+  InternalError = -32603,
 }

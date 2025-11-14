@@ -1,4 +1,3 @@
-
 /**
  * @jrmc/adonis-mcp
  *

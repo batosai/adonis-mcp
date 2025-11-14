@@ -17,8 +17,8 @@ export default class ListTools implements Method {
     let nextCursor
 
     const paginator = new CursorPaginator(
-      Object.values(ctx.tools), 
-      ctx.getPerPage(), 
+      Object.values(ctx.tools),
+      ctx.getPerPage(),
       ctx.request.params?.cursor
     )
     const paginatedTools = paginator.paginate('tools')
@@ -29,10 +29,12 @@ export default class ListTools implements Method {
           const { default: Tool } = await import(filepath)
           const tool = new Tool()
 
-          const schema = tool.schema ? tool.schema() : {
-            type: 'object',
-            properties: {},
-          }
+          const schema = tool.schema
+            ? tool.schema()
+            : {
+                type: 'object',
+                properties: {},
+              }
 
           return {
             name: tool.name,
@@ -42,7 +44,7 @@ export default class ListTools implements Method {
               type: schema.type,
               properties: schema.properties,
               required: schema.required ?? [],
-            }
+            },
           }
         } catch (error) {
           error = true
@@ -51,10 +53,13 @@ export default class ListTools implements Method {
     )
 
     if (error) {
-      return Response.toJsonRpc({ id: ctx.request.id, error: { 
-        code: -32601,
-        message: `Error listing tool`,
-      }})
+      return Response.toJsonRpc({
+        id: ctx.request.id,
+        error: {
+          code: -32601,
+          message: `Error listing tool`,
+        },
+      })
     }
 
     if (paginatedTools.nextCursor) {

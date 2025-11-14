@@ -11,10 +11,14 @@ import type { McpContext } from '../../types/context.js'
 import { createError } from '@adonisjs/core/exceptions'
 import Response from '../../response.js'
 
-export default class Initialize implements Method {  
+export default class Initialize implements Method {
   handle(ctx: McpContext) {
     if (ctx.request.method !== 'initialize') {
-      throw createError('Invalid request method for initialize handler', 'E_INVALID_REQUEST_METHOD', -32000)
+      throw createError(
+        'Invalid request method for initialize handler',
+        'E_INVALID_REQUEST_METHOD',
+        -32000
+      )
     }
     const requestedVersion = ctx.request.params.protocolVersion ?? null
 

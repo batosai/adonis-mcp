@@ -6,9 +6,9 @@
  */
 
 export type JsonRpcNotification = {
-  jsonrpc: "2.0";
-  method: string;
+  jsonrpc: '2.0'
+  method: string
   params?: {
-    [key: string]: unknown;
-  };
+    [key: string]: unknown
+  }
 }

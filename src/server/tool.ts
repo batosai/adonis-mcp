@@ -15,5 +15,10 @@ export abstract class Tool<S extends JSONSchema> {
 
   abstract schema?(): S
 
-  abstract handle(ctx?: McpContext & { args: InferJSONSchema<S> }): Record<string, unknown> | Record<string, unknown>[] | Promise<Record<string, unknown> | Record<string, unknown>[]>
+  abstract handle(
+    ctx?: McpContext & { args: InferJSONSchema<S> }
+  ):
+    | Record<string, unknown>
+    | Record<string, unknown>[]
+    | Promise<Record<string, unknown> | Record<string, unknown>[]>
 }

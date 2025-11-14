@@ -6,7 +6,7 @@
  */
 
 export type JsonRpcRequest = {
-  jsonrpc: "2.0"
+  jsonrpc: '2.0'
   id: string | number
   method: string
   params?: {
@@ -43,6 +43,4 @@ type ToolsCallRequest = JsonRpcRequest & {
   }
 }
 
-export type McpRequest = 
-  | InitializeRequest
-  | ToolsCallRequest
+export type McpRequest = InitializeRequest | ToolsCallRequest
