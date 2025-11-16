@@ -25,7 +25,6 @@ export default class MakeTool extends BaseCommand {
   #server: McpServer | null = null
 
   async run() {
-
     try {
       this.#server = await this.app.container.make('jrmc.mcp')
 
@@ -34,7 +33,6 @@ export default class MakeTool extends BaseCommand {
       transport.on('mcp:stdio:transport:message', async (message: JsonRpcRequest) => {
         await this.#server?.handle(message)
       })
-
     } catch (error: any) {
       throw error
     }

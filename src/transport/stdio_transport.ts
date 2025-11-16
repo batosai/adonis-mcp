@@ -18,8 +18,8 @@ export default class StdioTransport extends EventEmitter implements Transport {
   #readBuffer: ReadBuffer = new ReadBuffer()
 
   ondata = (chunk: Buffer) => {
-      this.#readBuffer.append(chunk)
-      this.processReadBuffer()
+    this.#readBuffer.append(chunk)
+    this.processReadBuffer()
   }
 
   constructor() {
@@ -40,9 +40,7 @@ export default class StdioTransport extends EventEmitter implements Transport {
         }
 
         this.emit('mcp:stdio:transport:message', message)
-      } catch (error) {
-        
-      }
+      } catch (error) {}
     }
   }
 

@@ -26,6 +26,6 @@ export interface McpContext {
   getPerPage(requestedPerPage?: number): number
 }
 
-export type ServerContextOptions = Omit<McpContext, 'response' | 'request'| 'getPerPage'> & {
+export type ServerContextOptions = Omit<McpContext, 'response' | 'request' | 'getPerPage'> & {
   jsonRpcRequest: JsonRpcRequest
 }

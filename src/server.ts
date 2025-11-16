@@ -135,7 +135,7 @@ export default class Server {
     } catch (e) {
       const errorCode = e.status ?? e.code ?? -32603
       const errorMessage = e.message ?? 'Internal error'
-      
+
       return Response.toJsonRpc({
         id: jsonRequest.id ?? null,
         error: {

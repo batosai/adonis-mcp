@@ -23,7 +23,7 @@ export class ReadBuffer {
       return null
     }
 
-    const index = this._buffer.indexOf('\n');
+    const index = this._buffer.indexOf('\n')
     if (index === -1) {
       return null
     }
