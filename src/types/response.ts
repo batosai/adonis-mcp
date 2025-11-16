@@ -6,27 +6,27 @@
  */
 
 export type JsonRpcResponse = {
-  jsonrpc: "2.0";
-  id: string | number;
+  jsonrpc: '2.0'
+  id: string | number
   result?: {
-    [key: string]: unknown;
+    [key: string]: unknown
   }
   error?: {
-    code: number;
-    message: string;
-    data?: unknown;
+    code: number
+    message: string
+    data?: unknown
   }
 }
 
 export type ErrorResponse = {
-  code: number;
-  message: string;
-  data?: unknown;
+  code: number
+  message: string
+  data?: unknown
 }
 
 export type TextResponse = {
-  type: 'text';
-  text: string;
+  type: 'text'
+  text: string
 }
 
 export type ImageResponse = {

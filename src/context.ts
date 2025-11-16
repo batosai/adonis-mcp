@@ -5,9 +5,10 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 import type { McpContext, ServerContextOptions } from './types/context.js'
-import type { McpRequest } from './types/request.js'
 import type { ToolList, ResourceList, PromptList } from './types/method.js'
+import type { McpRequest } from './types/request.js'
 
+import Request from './request.js'
 import McpResponse from './response.js'
 
 export default class ServerContext implements McpContext {
@@ -35,7 +36,7 @@ export default class ServerContext implements McpContext {
     this.tools = options.tools
     this.resources = options.resources
     this.prompts = options.prompts
-    this.request = options.request
+    this.request = new Request(options.jsonRpcRequest) as McpRequest
     this.response = new McpResponse()
   }
 

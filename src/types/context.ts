@@ -6,7 +6,7 @@
  */
 
 import type { ToolList, ResourceList, PromptList } from './method.js'
-import type { McpRequest } from './request.js'
+import type { McpRequest, JsonRpcRequest } from './request.js'
 import type { McpResponse } from './response.js'
 
 export interface McpContext {
@@ -26,4 +26,6 @@ export interface McpContext {
   getPerPage(requestedPerPage?: number): number
 }
 
-export type ServerContextOptions = Omit<McpContext, 'response' | 'getPerPage'>
+export type ServerContextOptions = Omit<McpContext, 'response' | 'request'| 'getPerPage'> & {
+  jsonRpcRequest: JsonRpcRequest
+}

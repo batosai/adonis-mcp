@@ -6,14 +6,16 @@
  */
 
 import type { McpConfig } from './types/config.js'
-import type { McpRequest } from './types/request.js'
+import type { JsonRpcRequest } from './types/request.js'
 import type { ToolList, ResourceList, PromptList } from './types/method.js'
 import type { Transport } from './types/transport.js'
 
 import { createError } from '@adonisjs/core/exceptions'
 import ServerContext from './context.js'
+import Response from './response.js'
 
 export default class Server {
+  #transport?: Transport
   config: McpConfig
   name: string = 'AdonisJS MCP Server'
   version: string = '1.0.0'
@@ -95,21 +97,34 @@ export default class Server {
     this.prompts = { ...this.prompts, ...item }
   }
 
-  async handle(jsonRequest: McpRequest, transport: Transport) {
+  async connect(transport: Transport) {
+    this.#transport = transport
+  }
+
+  async handle(jsonRequest: JsonRpcRequest) {
     const mcpContext = this.createContext(jsonRequest)
 
-    if (transport) {
-      transport.bindBouncer(mcpContext)
-      transport.bindAuth(mcpContext)
+    if (this.#transport) {
+      this.#transport.bindBouncer?.(mcpContext)
+      this.#transport.bindAuth?.(mcpContext)
     }
 
     try {
+      // TODO
+      if (jsonRequest.method.startsWith('notifications/')) {
+        return null
+      }
+
       if (Object.keys(this.methods).includes(jsonRequest.method)) {
         const lazyMethod = this.methods[jsonRequest.method as keyof typeof this.methods]
         const { default: method } = await lazyMethod()
         const instance = new method()
 
-        return instance.handle(mcpContext)
+        const response = await instance.handle(mcpContext)
+        if (this.#transport) {
+          this.#transport.send(response)
+        }
+        return response
       } else {
         throw createError(
           `The method ${jsonRequest.method} was not found.`,
@@ -118,11 +133,21 @@ export default class Server {
         )
       }
     } catch (e) {
-      // TODO
+      const errorCode = e.status ?? e.code ?? -32603
+      const errorMessage = e.message ?? 'Internal error'
+      
+      return Response.toJsonRpc({
+        id: jsonRequest.id ?? null,
+        error: {
+          code: errorCode,
+          message: errorMessage,
+          data: e.data ?? undefined,
+        },
+      })
     }
   }
 
-  createContext(request: McpRequest) {
+  createContext(jsonRpcRequest: JsonRpcRequest) {
     return new ServerContext({
       supportedProtocolVersions: this.supportedProtocolVersion,
       serverCapabilities: this.capabilities,
@@ -134,7 +159,7 @@ export default class Server {
       tools: this.tools,
       resources: this.resources,
       prompts: this.prompts,
-      request,
+      jsonRpcRequest,
     })
   }
 
