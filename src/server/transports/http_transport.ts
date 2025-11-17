@@ -6,9 +6,9 @@
  */
 
 import type { HttpContext } from '@adonisjs/core/http'
-import type { McpContext } from '../types/context.js'
-import type { Transport } from '../types/transport.js'
-import type { JsonRpcResponse } from '../types/response.js'
+import type { McpContext } from '../../types/context.js'
+import type { Transport } from '../../types/transport.js'
+import type { JsonRpcResponse } from '../../types/response.js'
 
 export default class HttpTransport implements Transport {
   constructor(protected ctx: HttpContext) {}

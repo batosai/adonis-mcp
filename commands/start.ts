@@ -11,7 +11,7 @@ import type { JsonRpcRequest } from '../src/types/request.js'
 import { BaseCommand } from '@adonisjs/core/ace'
 
 import McpServer from '../src/server.js'
-import StdioTransport from '../src/transport/stdio_transport.js'
+import StdioTransport from '../src/server/transports/stdio_transport.js'
 
 export default class MakeTool extends BaseCommand {
   static commandName = 'mcp:start'

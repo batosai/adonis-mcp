@@ -4,12 +4,12 @@
  * @license MIT
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
-import type { McpContext, ServerContextOptions } from './types/context.js'
-import type { ToolList, ResourceList, PromptList } from './types/method.js'
-import type { McpRequest } from './types/request.js'
+import type { McpContext, ServerContextOptions } from '../types/context.js'
+import type { ToolList, ResourceList, PromptList } from '../types/method.js'
+import type { McpRequest } from '../types/request.js'
 
-import Request from './request.js'
-import McpResponse from './response.js'
+import Request from '../request.js'
+import McpResponse from '../response.js'
 
 export default class ServerContext implements McpContext {
   supportedProtocolVersions: string[]

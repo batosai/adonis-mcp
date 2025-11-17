@@ -5,11 +5,11 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import type { Transport } from '../types/transport.js'
-import type { JsonRpcResponse } from '../types/response.js'
+import type { Transport } from '../../types/transport.js'
+import type { JsonRpcResponse } from '../../types/response.js'
 import type { Readable, Writable } from 'node:stream'
 
-import { ReadBuffer, serializeMessage } from '../utils/stdio.js'
+import { ReadBuffer, serializeMessage } from '../../utils/stdio.js'
 import { EventEmitter } from 'node:events'
 
 export default class StdioTransport extends EventEmitter implements Transport {

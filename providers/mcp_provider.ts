@@ -26,7 +26,7 @@ export default class McpProvider {
 
   async start() {
     const router = await this.app.container.make('router')
-    const McpController = () => import('../src/controllers/mcp_controller.js')
+    const McpController = () => import('../src/server/controllers/mcp_controller.js')
 
     router.mcp = (pattern: string = '/mcp') => {
       return router.group(() => {

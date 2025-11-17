@@ -6,7 +6,7 @@
  */
 
 import type { HttpContext } from '@adonisjs/core/http'
-import HttpTransport from '../transport/http_transport.js'
+import HttpTransport from '../transports/http_transport.js'
 
 export default class McpController {
   async post(ctx: HttpContext) {

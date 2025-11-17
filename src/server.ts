@@ -11,7 +11,7 @@ import type { ToolList, ResourceList, PromptList } from './types/method.js'
 import type { Transport } from './types/transport.js'
 
 import { createError } from '@adonisjs/core/exceptions'
-import ServerContext from './context.js'
+import ServerContext from './server/context.js'
 import Response from './response.js'
 
 export default class Server {
