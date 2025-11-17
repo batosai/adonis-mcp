@@ -10,9 +10,11 @@ AdonisJS MCP - Server MCP for your AdonisJS applications.
 - [x] MCP prompts support
 - [ ] MCP resources support
 - [ ] MCP prompts support
-- [ ] Alternative transports support (SSE, stdio)
+- [ ] Alternative transports support SSE
+- [x] Alternative transports support stdio
 - [x] Advanced pagination support
 - [ ] Automatic schema validation with Vine ??
+- [ ] Documentation
 
 ## Installation & Configuration
 
