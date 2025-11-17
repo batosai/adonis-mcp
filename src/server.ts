@@ -11,8 +11,9 @@ import type { ToolList, ResourceList, PromptList } from './types/method.js'
 import type { Transport } from './types/transport.js'
 
 import { createError } from '@adonisjs/core/exceptions'
+import { ErrorCode } from './enums/error.js'
 import ServerContext from './server/context.js'
-import Response from './response.js'
+import JsonRpcException from './server/exceptions/jsonrpc_exception.js'
 
 export default class Server {
   #transport?: Transport
@@ -104,7 +105,9 @@ export default class Server {
   async handle(jsonRequest: JsonRpcRequest) {
     const mcpContext = this.createContext(jsonRequest)
 
-    if (this.#transport) {
+    if (!this.#transport) {
+      throw createError('No transport connected.', 'E_NO_TRANSPORT_CONNECTED', 500)
+    } else {
       this.#transport.bindBouncer?.(mcpContext)
       this.#transport.bindAuth?.(mcpContext)
     }
@@ -121,29 +124,27 @@ export default class Server {
         const instance = new method()
 
         const response = await instance.handle(mcpContext)
-        if (this.#transport) {
-          this.#transport.send(response)
-        }
-        return response
+
+        this.#transport.send(response)
       } else {
-        throw createError(
+        throw new JsonRpcException(
           `The method ${jsonRequest.method} was not found.`,
-          'E_METHOD_NOT_FOUND',
-          -32601
+          ErrorCode.MethodNotFound,
+          jsonRequest.id
         )
       }
-    } catch (e) {
-      const errorCode = e.status ?? e.code ?? -32603
-      const errorMessage = e.message ?? 'Internal error'
-
-      return Response.toJsonRpc({
-        id: jsonRequest.id ?? null,
-        error: {
-          code: errorCode,
-          message: errorMessage,
-          data: e.data ?? undefined,
-        },
-      })
+    } catch (error: unknown) {
+      if (error instanceof JsonRpcException) {
+        return this.#transport.send(error.toJsonRpcResponse())
+      }
+      this.#transport.send(
+        new JsonRpcException(
+          'Internal error', 
+          ErrorCode.InternalError, 
+          jsonRequest.id, 
+          { error }
+        ).toJsonRpcResponse()
+      )
     }
   }
 

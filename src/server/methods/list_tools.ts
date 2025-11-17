@@ -8,12 +8,13 @@
 import type { Method } from '../../types/method.js'
 import type { McpContext } from '../../types/context.js'
 
+import { ErrorCode } from '../../enums/error.js'
+import JsonRpcException from '../exceptions/jsonrpc_exception.js'
 import { CursorPaginator } from '../pagination/cursor_paginator.js'
 import Response from '../../response.js'
 
 export default class ListTools implements Method {
   async handle(ctx: McpContext) {
-    let error = false
     let nextCursor
 
     const paginator = new CursorPaginator(
@@ -47,20 +48,10 @@ export default class ListTools implements Method {
             },
           }
         } catch (error) {
-          error = true
+          throw new JsonRpcException(`Error listing tool`, ErrorCode.InternalError, ctx.request.id, { error })
         }
       })
     )
-
-    if (error) {
-      return Response.toJsonRpc({
-        id: ctx.request.id,
-        error: {
-          code: -32601,
-          message: `Error listing tool`,
-        },
-      })
-    }
 
     if (paginatedTools.nextCursor) {
       nextCursor = paginatedTools.nextCursor

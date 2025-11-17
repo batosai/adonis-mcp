@@ -8,22 +8,23 @@
 import type { Method } from '../../types/method.js'
 import type { McpContext } from '../../types/context.js'
 
-import { createError } from '@adonisjs/core/exceptions'
+import { ErrorCode } from '../../enums/error.js'
+import JsonRpcException from '../exceptions/jsonrpc_exception.js'
 import Response from '../../response.js'
 
 export default class Initialize implements Method {
   handle(ctx: McpContext) {
     if (ctx.request.method !== 'initialize') {
-      throw createError(
+      throw new JsonRpcException(
         'Invalid request method for initialize handler',
-        'E_INVALID_REQUEST_METHOD',
-        -32000
+        ErrorCode.InvalidRequest,
+        ctx.request.id
       )
     }
     const requestedVersion = ctx.request.params.protocolVersion ?? null
 
     if (requestedVersion !== null && !ctx.supportedProtocolVersions.includes(requestedVersion)) {
-      throw createError('Unsupported protocol version', 'E_JSON_RPC_ERROR', -32000)
+      throw new JsonRpcException('Unsupported protocol version', ErrorCode.InvalidRequest, ctx.request.id)
     }
 
     const protocolVersion = requestedVersion ?? ctx.supportedProtocolVersions[0]
