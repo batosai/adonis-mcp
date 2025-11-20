@@ -1,29 +1,21 @@
+{{#var className = `${name}Resource`}}
 {{#var resourceFileName = string(className).snakeCase().ext('.ts').toString()}}
 {{{
   exports({
-    to: app.makePath(app.rcFile.directories['mcp'] || 'app/mcp/', 'resources', resourceFileName)
+    to: app.makePath(app.rcFile.directories['mcp'] || basePath, resourceFileName)
   })
 }}}
-import { type Resource, ResourceTemplate, Response } from '@jrmc/adonis-mcp/types'
+import type { McpContext } from '@jrmc/adonis-mcp/types/context'
+
+import { Tool } from '@jrmc/adonis-mcp'
 
 export default class {{ className }} implements Resource {
   name = 'resource_name'
-  config = {
-    title: 'Resoource title',
-    description: 'Resource description'
-  }
+  uri = 'file:///example.txt'
 
-  uriOrTemplate = new ResourceTemplate('users://{userId}/profile', { list: undefined })
+  // mimeType = 'text/plain"'
 
-  async handle(uri: URL, { userId }: { userId: string }) {
-    return Response.uri(uri, `Profile data for user ${userId}`)
-    // return {
-    //   contents: [
-    //     {
-    //       uri: uri.href,
-    //       text: `Profile data for user ${userId}`
-    //     }
-    //   ]
-    // }
+  async handle({ response }: McpContext) {
+    return response.text('Resource content')
   }
 }

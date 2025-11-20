@@ -5,6 +5,9 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
+import type { CommandOptions } from '@adonisjs/core/types/ace'
+import type { McpConfig } from '@jrmc/adonis-mcp/types/config'
+
 import { args, BaseCommand } from '@adonisjs/core/ace'
 import string from '@adonisjs/core/helpers/string'
 import { stubsRoot } from '../../stubs/main.js'
@@ -13,15 +16,21 @@ export default class MakeResource extends BaseCommand {
   static commandName = 'make:mcp-resource'
   static description = 'Create a new MCP resource'
 
+  static options: CommandOptions = {
+    startApp: true,
+  }
+
   @args.string({ description: 'Name of the resource' })
   declare name: string
 
   async run() {
+    const config = this.app.config.get<McpConfig>('mcp', { path: 'app/mcp' })
     const codemods = await this.createCodemods()
     const stubPath = `make/mcp/resources/main.ts.stub`
 
     await codemods.makeUsingStub(stubsRoot, stubPath, {
-      className: `${string.pascalCase(this.name)}Resource`
+      name: string.pascalCase(this.name),
+      basePath: config.path,
     })
 
     this.logger.success(`Resource created successfully for: ${this.name}`)
