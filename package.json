@@ -36,6 +36,7 @@
     "./commands": "./build/commands/main.js",
     "./commands/*": "./build/commands/*.js",
     "./controllers/*": "./build/src/controllers/*.js",
+    "./contents/*": "./build/src/server/contents/*.js",
     "./mcp_provider": "./build/providers/mcp_provider.js"
   },
   "devDependencies": {

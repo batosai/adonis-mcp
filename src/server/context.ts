@@ -37,7 +37,7 @@ export default class ServerContext implements McpContext {
     this.resources = options.resources
     this.prompts = options.prompts
     this.request = new Request(options.jsonRpcRequest) as McpRequest
-    this.response = new McpResponse()
+    this.response = new McpResponse(options.jsonRpcRequest)
   }
 
   public getPerPage(requestedPerPage?: number): number {

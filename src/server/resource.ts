@@ -20,6 +20,5 @@ export abstract class Resource {
     ctx?: McpContext
   ):
     | Record<string, unknown>
-    | Record<string, unknown>[]
-    | Promise<Record<string, unknown> | Record<string, unknown>[]>
+    | Promise<Record<string, unknown>>
 }
