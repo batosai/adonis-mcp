@@ -10,7 +10,6 @@ import type { McpContext } from '../../types/context.js'
 
 import { ErrorCode } from '../../enums/error.js'
 import JsonRpcException from '../exceptions/jsonrpc_exception.js'
-import Response from '../../response.js'
 
 export default class CallTool implements Method {
   async handle(ctx: McpContext) {
@@ -39,19 +38,7 @@ export default class CallTool implements Method {
     ;(ctx as any).args = params.arguments ?? {}
 
     const tool = new Tool(ctx)
-
-    const data = await tool.handle(ctx)
-    let result
-    let error
-
-    if (Array.isArray(data)) {
-      result = { content: data }
-    } else if (data.code) {
-      error = data
-    } else {
-      result = { content: [data] }
-    }
-
-    return Response.toJsonRpc({ id: ctx.request.id, result, error })
+    const response = await tool.handle(ctx)
+    return response.render()
   }
 }

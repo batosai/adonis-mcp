@@ -6,6 +6,7 @@
  */
 
 import type { Content } from '../content.js'
+import type { ImageResponse } from '../../types/response.js'
 import { createError } from '@adonisjs/core/exceptions'
 
 export default class Image implements Content {
@@ -19,7 +20,7 @@ export default class Image implements Content {
     this._meta = _meta
   }
 
-  toTool() {
+  toTool(): ImageResponse {
     return {
       type: 'image' as const,
       data: this.data,
@@ -28,7 +29,7 @@ export default class Image implements Content {
     }
   }
 
-  toPrompt() {
+  toPrompt(): ImageResponse {
     return {
       type: 'image' as const,
       data: this.data,
@@ -37,7 +38,7 @@ export default class Image implements Content {
     }
   }
 
-  toResource() {
+  toResource(): never {
     throw createError(
       'Image content may not be used in resources.',
       'E_IMAGE_NOT_SUPPORTED'

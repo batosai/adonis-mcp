@@ -6,6 +6,7 @@
  */
 
 import type { Content } from '../content.js'
+import type { BlobResponse } from '../../types/response.js'
 import { createError } from '@adonisjs/core/exceptions'
 
 export default class Blob implements Content {
@@ -19,21 +20,21 @@ export default class Blob implements Content {
     }
   }
 
-  toTool() {
+  toTool(): never {
     throw createError(
       'Blob content may not be used in tools.',
       'E_BLOB_NOT_SUPPORTED'
     )
   }
 
-  toPrompt() {
+  toPrompt(): never {
     throw createError(
       'Blob content may not be used in prompts.',
       'E_BLOB_NOT_SUPPORTED'
     )
   }
 
-  toResource() {
+  toResource(): BlobResponse {
     return { blob: this.text }
   }
 }

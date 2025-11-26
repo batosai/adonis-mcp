@@ -10,20 +10,25 @@ import type { Content } from '../server/content.js'
 export type JsonRpcResponse = {
   jsonrpc: '2.0'
   id: string | number
-  result?: {
-    [key: string]: unknown
-  }
-  error?: {
-    code: number
-    message: string
-    data?: unknown
-  }
+  result?: JsonRpcResult
+  error?: JsonRpcError
 }
 
-export type ErrorResponse = {
+export type JsonRpcResult = {
+  [key: string]: unknown
+}
+
+export type JsonRpcError = {
   code: number
   message: string
   data?: unknown
+}
+
+//
+
+export type ErrorResponse = {
+  type: 'text'
+  text: string
 }
 
 export type TextResponse = {
@@ -49,21 +54,18 @@ export type BlobResponse = {
   blob: string
 }
 
+export type ToolResponse = TextResponse | ImageResponse | AudioResponse | ErrorResponse
+export type ResourceResponse = string | BlobResponse
+export type PromptResponse = TextResponse | ImageResponse | AudioResponse
+//
 export interface McpResponse {
 
   readonly requestType: 'tool' | 'resource' | 'prompt'
-  send(content: Content | Content[]): 
-    this['requestType'] extends 'resource' 
-      ? string[] 
-      : Array<TextResponse | ImageResponse | AudioResponse>
+  send(content: Content | Content[]): McpResponse
 
-  text(text: string): 
-    this['requestType'] extends 'resource' 
-      ? string 
-      : TextResponse
-
-  blob(text: string): BlobResponse
-  image(data: string, mimeType: string, _meta?: Record<string, unknown>): ImageResponse
-  audio(data: string, mimeType: string, _meta?: Record<string, unknown>): AudioResponse
-  error(message: string, code?: number, data?: Record<string, unknown>): ErrorResponse
+  text(text: string): McpResponse
+  blob(text: string): McpResponse
+  image(data: string, mimeType: string, _meta?: Record<string, unknown>): McpResponse
+  audio(data: string, mimeType: string, _meta?: Record<string, unknown>): McpResponse
+  error(message: string): McpResponse
 }

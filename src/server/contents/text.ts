@@ -6,6 +6,7 @@
  */
 
 import type { Content } from '../content.js'
+import type { TextResponse } from '../../types/response.js'
 
 export default class Text implements Content {
   text: string
@@ -18,21 +19,21 @@ export default class Text implements Content {
     }
   }
 
-  toTool() {
+  toTool(): TextResponse {
     return {
       type: 'text' as const,
       text: this.text
     }
   }
 
-  toPrompt() {
+  toPrompt(): TextResponse {
     return {
       type: 'text' as const,
       text: this.text
     }
   }
 
-  toResource() {
+  toResource(): string {
     return this.text
   }
 }
