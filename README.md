@@ -7,14 +7,15 @@ AdonisJS MCP - Server MCP for your AdonisJS applications.
 
 ## Roadmap
 
-- [x] MCP prompts support
-- [ ] MCP resources support
+- [x] MCP tools support
+- [x] MCP resources support
 - [ ] MCP prompts support
-- [ ] Alternative transports support SSE
-- [x] Alternative transports support stdio
+- [x] HTTP transport
+- [x] Stdio transport
+- [x] Fake transport (for testing)
 - [x] Advanced pagination support
+- [ ] Alternative transports support SSE
 - [ ] Automatic schema validation with Vine ??
-- [ ] Fake transport
 - [ ] Documentation
 
 ## Installation & Configuration
@@ -217,13 +218,43 @@ async handle({ args, bouncer }: Context) {
 
 ### Response Return
 
-The context includes a `response` instance to format your responses. The most common method is `text()`:
+The context includes a `response` instance to format your responses. The available methods depend on the context type:
+
+#### Tool Responses
+
+For tools, you can use:
+
+- `response.text(text: string)`: Return plain text content
+- `response.image(data: string, mimeType: string)`: Return image content (base64 encoded)
+- `response.audio(data: string, mimeType: string)`: Return audio content (base64 encoded)
+- `response.error(message: string)`: Return an error message
+- `response.send(content: Content | Content[])`: Send custom content objects
 
 ```typescript
 async handle({ args, response }: Context) {
-  const data = { success: true, message: 'Operation completed' }
+  // Return text
+  return response.text(JSON.stringify({ success: true }))
   
-  return response.text(JSON.stringify(data))
+  // Return image
+  const imageData = await fs.readFile('path/to/image.png', 'base64')
+  return response.image(imageData, 'image/png')
+  
+  // Return error
+  return response.error('Something went wrong')
+}
+```
+
+#### Resource Responses
+
+For resources, you can use:
+
+- `response.text(text: string)`: Return text content
+- `response.blob(text: string)`: Return binary content (base64 encoded)
+
+```typescript
+async handle({ response }: ResourceContext) {
+  const content = await fs.readFile('path/to/file.txt', 'utf-8')
+  return response.text(content)
 }
 ```
 
@@ -279,9 +310,70 @@ export default class AddBookmarkTool implements Tool<Schema> {
 }
 ```
 
+### Creating a Resource
+
+To create a new resource, use the Ace command:
+
+```bash
+node ace make:mcp-resource my_resource
+```
+
+This command will create a file in `app/mcp/resources/my_resource.ts` with a base template:
+
+```typescript
+import type { ResourceContext } from '@jrmc/adonis-mcp/types/context'
+
+import { Resource } from '@jrmc/adonis-mcp'
+
+export default class MyResourceResource implements Resource {
+  name = 'example.txt'
+  uri = 'file:///example.txt'
+  mimeType = 'text/plain'
+  title = 'Resource title'
+  description = 'Resource description'
+  size = 0
+
+  async handle({ response }: ResourceContext) {
+    this.size = 1000
+    return response.text('Hello World')
+  }
+}
+```
+
+### Resource Properties
+
+Resources have the following properties:
+
+- `name` (optional): The name of the resource
+- `uri` (required): The unique identifier for the resource (must be unique)
+- `mimeType` (optional): The MIME type of the resource
+- `title` (optional): A human-readable title
+- `description` (optional): A description of the resource
+- `size` (optional): The size of the resource in bytes
+
+### Resource Handler
+
+The `handle` method returns the content of the resource. You can use `response.text()` for text content or `response.blob()` for binary content:
+
+```typescript
+async handle({ response }: ResourceContext) {
+  const content = await fs.readFile('path/to/file.txt', 'utf-8')
+  this.size = content.length
+  return response.text(content)
+}
+```
+
+### Transports
+
+The package supports multiple transport mechanisms:
+
+- **HTTP Transport**: Default transport for HTTP-based MCP servers (used when accessing via HTTP routes)
+- **Stdio Transport**: For command-line MCP servers that communicate via standard input/output
+- **Fake Transport**: For testing purposes, allows you to capture and inspect MCP messages
+
 ### Pagination
 
-The `tools/list` method supports cursor-based pagination to handle large numbers of tools efficiently. This is particularly useful when you have many tools registered in your application. [More information](https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/pagination)
+The `tools/list` and `resources/list` methods support cursor-based pagination to handle large numbers of tools and resources efficiently. This is particularly useful when you have many tools or resources registered in your application. [More information](https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/pagination)
 
 ## Support
 
