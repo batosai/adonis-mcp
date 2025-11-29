@@ -6,7 +6,10 @@
  */
 
 import type { Content } from '../content.js'
-import type { AudioResponse } from '../../types/response.js'
+import type { AudioContent } from '../../types/content.js'
+import type { AnyTool as Tool } from '../tool.js'
+import type { Prompt } from '../prompt.js'
+import type { Resource } from '../resource.js'
 import { createError } from '@adonisjs/core/exceptions'
 
 export default class Audio implements Content {
@@ -20,7 +23,7 @@ export default class Audio implements Content {
     this._meta = _meta
   }
 
-  toTool(): AudioResponse {
+  toTool(_tool: Tool): AudioContent {
     return {
       type: 'audio' as const,
       data: this.data,
@@ -29,7 +32,7 @@ export default class Audio implements Content {
     }
   }
 
-  toPrompt(): AudioResponse {
+  toPrompt(_prompt: Prompt): AudioContent {
     return {
       type: 'audio' as const,
       data: this.data,
@@ -38,7 +41,7 @@ export default class Audio implements Content {
     }
   }
 
-  toResource(): never {
+  toResource(_resource: Resource): never {
     throw createError(
       'Audio content may not be used in resources.',
       'E_AUDIO_NOT_SUPPORTED'

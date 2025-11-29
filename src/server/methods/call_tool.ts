@@ -6,39 +6,32 @@
  */
 
 import type { Method } from '../../types/method.js'
-import type { McpContext } from '../../types/context.js'
+import type { McpContext, ToolContext } from '../../types/context.js'
 
 import { ErrorCode } from '../../enums/error.js'
 import JsonRpcException from '../exceptions/jsonrpc_exception.js'
 
 export default class CallTool implements Method {
   async handle(ctx: McpContext) {
-    if (ctx.request.method !== 'tools/call') {
-      throw new JsonRpcException(
-        `The request method ${ctx.request.method} is not valid for tools/call handler.`,
-        ErrorCode.MethodNotFound,
-        ctx.request.id
-      )
-    }
-
-    const params = ctx.request.params
+    const toolContext = ctx as unknown as ToolContext
+    const params = toolContext.request.params
 
     if (!params?.name) {
-      throw new JsonRpcException(`The tool name is required.`, ErrorCode.InvalidParams, ctx.request.id)
+      throw new JsonRpcException(`The tool name is required.`, ErrorCode.InvalidParams, toolContext.request.id)
     }
 
-    const item = Object.keys(ctx.tools).find((key) => key === params.name)
+    const item = Object.keys(toolContext.tools).find((key) => key === params.name)
 
     if (!item) {
-      throw new JsonRpcException(`The tool ${params.name} was not found.`, ErrorCode.MethodNotFound, ctx.request.id)
+      throw new JsonRpcException(`The tool ${params.name} was not found.`, ErrorCode.MethodNotFound, toolContext.request.id)
     }
 
-    const { default: Tool } = await import(ctx.tools[item])
+    const { default: Tool } = await import(toolContext.tools[item])
 
-    ;(ctx as any).args = params.arguments ?? {}
+    ;(toolContext as any).args = params.arguments ?? {}
 
-    const tool = new Tool(ctx)
-    const response = await tool.handle(ctx)
-    return response.render()
+    const tool = new Tool(toolContext)
+    const response = await tool.handle(toolContext)
+    return response.render(tool)
   }
 }

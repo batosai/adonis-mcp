@@ -5,10 +5,11 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import type { McpContext } from '../types/context.js'
+import type { ResourceContext } from '../types/context.js'
+import type { McpResourceResponse } from '../types/response.js'
 
 export abstract class Resource {
-  abstract name: string
+  abstract name?: string
   abstract uri: string
   abstract title?: string
   abstract description?: string
@@ -17,8 +18,6 @@ export abstract class Resource {
   
 
   abstract handle(
-    ctx?: McpContext
-  ):
-    | Record<string, unknown>
-    | Promise<Record<string, unknown>>
+    ctx?: ResourceContext
+  ): Promise<McpResourceResponse>
 }

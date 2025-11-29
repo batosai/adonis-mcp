@@ -42,17 +42,5 @@ test.group('CallTool Method', () => {
     }
   })
 
-  test('should throw error for invalid request method', async ({ assert }) => {
-    const request = createJsonRpcRequest('invalid-method')
-    const context = createTestContext(request)
-    const method = new CallTool()
-
-    try {
-      await method.handle(context)
-      assert.fail('Should have thrown an error')
-    } catch (error: any) {
-      assert.equal(error.code, ErrorCode.MethodNotFound)
-    }
-  })
 })
 

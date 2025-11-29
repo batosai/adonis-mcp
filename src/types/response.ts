@@ -7,6 +7,7 @@
 
 import type { Content } from '../server/content.js'
 import type { McpRequestType } from './request.js'
+import type { TextContent, ImageContent, AudioContent, ErrorContent, BlobResourceContent, TextResourceContent, ResourceContent } from './content.js'
 
 export type JsonRpcResponse = {
   jsonrpc: '2.0'
@@ -27,37 +28,9 @@ export type JsonRpcError = {
 
 //
 
-export type ErrorResponse = {
-  type: 'text'
-  text: string
-}
-
-export type TextResponse = {
-  type: 'text'
-  text: string
-}
-
-export type ImageResponse = {
-  type: 'image'
-  data: string
-  mimeType: string
-  _meta?: Record<string, unknown>
-}
-
-export type AudioResponse = {
-  type: 'audio'
-  data: string
-  mimeType: string
-  _meta?: Record<string, unknown>
-}
-
-export type BlobResponse = {
-  blob: string
-}
-
-export type ToolResponse = TextResponse | ImageResponse | AudioResponse | ErrorResponse
-export type ResourceResponse = string | BlobResponse
-export type PromptResponse = TextResponse | ImageResponse | AudioResponse
+export type ToolResponse = TextContent | ImageContent | AudioContent | ErrorContent | ResourceContent
+export type ResourceResponse = BlobResourceContent | TextResourceContent
+export type PromptResponse = TextContent | ImageContent | AudioContent | ErrorContent | ResourceContent
 
 // Helper types to simplify return types
 export type ResponseType<T extends McpRequestType> = 

@@ -35,7 +35,7 @@ export default class McpProvider {
     }
 
     await this.registerTools()
-    // await this.registerResources()
+    await this.registerResources()
     // await this.registerPrompts()
   }
 
@@ -58,18 +58,24 @@ export default class McpProvider {
     )
   }
 
-  // async registerResources() {
-  //   const mcp = await this.app.container.make('jrmc.mcp')
-  //   const collection = await fsImportAll(new URL(this.app.makePath(mcp.config.path!), import.meta.url), {
-  //     filter: (filePath) => filePath.includes('_resource.ts')
-  //   })
+  async registerResources() {
+    const server = await this.app.container.make('jrmc.mcp')
+    const path = this.app.makePath(server.config.path!)
+    const files = await fsReadAll(path, {
+      filter: (filePath) => filePath.includes('_resource.ts'),
+    })
 
-  //   Object.values(collection).map((item: any) => {
-  //     const resourceMcp = new item()
-
-  //     mcp.getServer().registerResource(resourceMcp.name, resourceMcp.uriOrTemplate, resourceMcp.config, resourceMcp.handle)
-  //   })
-  // }
+    await Promise.all(
+      files.map(async (file) => {
+        const path = this.app.makePath(server.config.path!, file)
+        const { default: resource } = await import(path)
+        const resourceInstance = new resource()
+        server.addResource({
+          [resourceInstance.uri]: path,
+        })
+      })
+    )
+  }
 
   // async registerPrompts() {
   //   const mcp = await this.app.container.make('jrmc.mcp')

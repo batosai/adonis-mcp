@@ -8,6 +8,9 @@
 import type { Content } from '../content.js'
 import type { JsonRpcResponse as Response, ToolResponse, ResourceResponse, PromptResponse, JsonRpcResult, JsonRpcError } from '../../types/response.js'
 import type { JsonRpcRequestType } from '../../types/request.js'
+import type { AnyTool as Tool } from '../tool.js'
+import type { Prompt } from '../prompt.js'
+import type { Resource } from '../resource.js'
 
 export default class JsonRpcResponse {
   #requestType: JsonRpcRequestType
@@ -18,10 +21,18 @@ export default class JsonRpcResponse {
   #content: Array<ToolResponse | ResourceResponse | PromptResponse> = []
   #result?: JsonRpcResult
   #error?: JsonRpcError
+  #component?: Tool | Prompt | Resource
 
-  constructor(id: string | number, requestType: JsonRpcRequestType) {
+  constructor(
+    id: string | number, 
+    requestType: JsonRpcRequestType,
+    component?: Tool | Prompt | Resource
+  ) {
     this.#requestType = requestType
     this.#id = id
+    if (component) {
+      this.#component = component
+    }
   }
 
   addContent(content: Content) {
@@ -31,11 +42,11 @@ export default class JsonRpcResponse {
 
     let result
     if (this.#requestType === 'resource') {
-      result = content.toResource()
+      result = content.toResource(this.#component as Resource)
     } else if (this.#requestType === 'prompt') {
-      result = content.toPrompt()
+      result = content.toPrompt(this.#component as Prompt)
     } else {
-      result = content.toTool()
+      result = content.toTool(this.#component as Tool)
     }
 
     this.#content.push(result)
@@ -60,11 +71,15 @@ export default class JsonRpcResponse {
       } as const
     }
 
+    // For resources, use 'contents' (plural) as per MCP spec
+    const contentKey = this.#requestType === 'resource' ? 'contents' : 'content'
+
+
     return {
       jsonrpc: this.#version,
       id: this.#id,
       result: {
-        content: this.#content,
+        [contentKey]: this.#content,
         ...(this.#isError && { error: this.#error }),
       },
       error: this.#error,

@@ -6,7 +6,10 @@
  */
 
 import type { Content } from '../content.js'
-import type { ImageResponse } from '../../types/response.js'
+import type { ImageContent } from '../../types/content.js'
+import type { AnyTool as Tool } from '../tool.js'
+import type { Prompt } from '../prompt.js'
+import type { Resource } from '../resource.js'
 import { createError } from '@adonisjs/core/exceptions'
 
 export default class Image implements Content {
@@ -20,7 +23,7 @@ export default class Image implements Content {
     this._meta = _meta
   }
 
-  toTool(): ImageResponse {
+  toTool(_tool: Tool): ImageContent {
     return {
       type: 'image' as const,
       data: this.data,
@@ -29,7 +32,7 @@ export default class Image implements Content {
     }
   }
 
-  toPrompt(): ImageResponse {
+  toPrompt(_prompt: Prompt): ImageContent {
     return {
       type: 'image' as const,
       data: this.data,
@@ -38,7 +41,7 @@ export default class Image implements Content {
     }
   }
 
-  toResource(): never {
+  toResource(_resource: Resource): never {
     throw createError(
       'Image content may not be used in resources.',
       'E_IMAGE_NOT_SUPPORTED'

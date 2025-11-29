@@ -5,16 +5,17 @@
     to: app.makePath(app.rcFile.directories['mcp'] || basePath, resourceFileName)
   })
 }}}
-import type { McpContext } from '@jrmc/adonis-mcp/types/context'
+import type { ToolContext } from '@jrmc/adonis-mcp/types/context'
 import type { BaseSchema, InferJSONSchema } from '@jrmc/adonis-mcp/types/method'
 
 import { Tool } from '@jrmc/adonis-mcp'
+import Text from '@jrmc/adonis-mcp/contents/text'
 
 type Schema = BaseSchema<{
   text: { type: "string" }
 }>
 
-type Context = McpContext & { args: InferJSONSchema<Schema> }
+type Context = ToolContext & { args: InferJSONSchema<Schema> }
 
 export default class {{ className }} implements Tool<Schema> {
   name = '{{ name }}'
@@ -23,7 +24,7 @@ export default class {{ className }} implements Tool<Schema> {
 
   async handle({ args, response }: Context) {
     console.log(args.text)
-    return response.text(JSON.stringify({ text: 'Hello, world!' }))
+    return response.send(new Text('Hello, world!'))
   }
 
   schema() {

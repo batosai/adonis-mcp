@@ -47,4 +47,11 @@ type ToolsCallRequest = JsonRpcRequest & {
   }
 }
 
-export type McpRequest = InitializeRequest | ToolsCallRequest
+type ResourcesReadRequest = JsonRpcRequest & {
+  method: 'resources/read'
+  params: {
+    uri: string
+  }
+}
+
+export type McpRequest = InitializeRequest | ToolsCallRequest | ResourcesReadRequest

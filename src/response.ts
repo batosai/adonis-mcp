@@ -8,6 +8,9 @@
 import type { JsonRpcResponse, McpResponse, ResponseType, TextResponseType, MediaResponseType, McpToolResponse, McpResourceResponse } from './types/response.js'
 import type { JsonRpcRequest, McpRequestType } from './types/request.js'
 import type { Content } from './server/content.js'
+import type { AnyTool as Tool } from './server/tool.js'
+import type { Prompt } from './server/prompt.js'
+import type { Resource } from './server/resource.js'
 
 import JsonRpc from './server/json_rpc/response.js'
 import Text from './server/contents/text.js'
@@ -18,7 +21,8 @@ import Error from './server/contents/error.js'
 
 export default class Response<T extends McpRequestType = McpRequestType> implements McpResponse {
   readonly type: T
-  #jsonRpc: JsonRpc
+  #content: Content[]
+  #jsonRpcRequest: JsonRpcRequest
 
   constructor(jsonRpcRequest: JsonRpcRequest) {
     if (jsonRpcRequest.method === 'resources/read') {
@@ -28,30 +32,31 @@ export default class Response<T extends McpRequestType = McpRequestType> impleme
     } else {
       this.type = 'tool' as T
     }
-    this.#jsonRpc = new JsonRpc(jsonRpcRequest.id, this.type)
+    this.#content = []
+    this.#jsonRpcRequest = jsonRpcRequest
   }
 
   text(text: string): TextResponseType<T> {
     const textContent = new Text(text)
-    this.#jsonRpc.addContent(textContent)
+    this.#content.push(textContent)
     return this as unknown as TextResponseType<T>
   }
 
   blob(text: string): McpResourceResponse {
     const blobContent = new Blob(text)
-    this.#jsonRpc.addContent(blobContent)
+    this.#content.push(blobContent)
     return this as unknown as McpResourceResponse
   }
 
   image(data: string, mimeType: string, _meta?: Record<string, unknown>): MediaResponseType<T> {
     const imageContent = new Image(data, mimeType, _meta)
-    this.#jsonRpc.addContent(imageContent)
+    this.#content.push(imageContent)
     return this as unknown as MediaResponseType<T>
   }
 
   audio(data: string, mimeType: string, _meta?: Record<string, unknown>): MediaResponseType<T> {
     const audioContent = new Audio(data, mimeType, _meta)
-    this.#jsonRpc.addContent(audioContent)
+    this.#content.push(audioContent)
     return this as unknown as MediaResponseType<T>
   }
 
@@ -72,7 +77,7 @@ export default class Response<T extends McpRequestType = McpRequestType> impleme
 
   error(message: string): McpToolResponse {
     const errorContent = new Error(message)
-    this.#jsonRpc.addContent(errorContent)
+    this.#content.push(errorContent)
     return this as McpToolResponse
   }
 
@@ -80,12 +85,14 @@ export default class Response<T extends McpRequestType = McpRequestType> impleme
     if (!Array.isArray(content)) {
       content = [content]
     }
-    content.forEach((c) => this.#jsonRpc.addContent(c))
+    content.forEach((c) => this.#content.push(c))
     return this as unknown as ResponseType<T>
   }
 
-  render() {
-    return this.#jsonRpc.render()
+  render(component: Tool | Prompt | Resource): JsonRpcResponse {
+    const jsonRpc = new JsonRpc(this.#jsonRpcRequest.id, this.type, component)
+    this.#content.forEach((c) => jsonRpc.addContent(c))
+    return jsonRpc.render()
   }
 
   static toJsonRpc({ id, result, error }: Omit<JsonRpcResponse, 'jsonrpc'>): JsonRpcResponse {

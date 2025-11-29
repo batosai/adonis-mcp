@@ -6,7 +6,10 @@
  */
 
 import type { Content } from '../content.js'
-import type { TextResponse } from '../../types/response.js'
+import type { TextContent, TextResourceContent } from '../../types/content.js'
+import type { AnyTool as Tool } from '../tool.js'
+import type { Prompt } from '../prompt.js'
+import type { Resource } from '../resource.js'
 
 export default class Text implements Content {
   text: string
@@ -19,21 +22,26 @@ export default class Text implements Content {
     }
   }
 
-  toTool(): TextResponse {
+  toTool(_tool: Tool): TextContent {
     return {
       type: 'text' as const,
       text: this.text
     }
   }
 
-  toPrompt(): TextResponse {
+  toPrompt(_prompt: Prompt): TextContent {
     return {
       type: 'text' as const,
       text: this.text
     }
   }
 
-  toResource(): string {
-    return this.text
+  toResource(_resource: Resource): TextResourceContent {
+    return {
+      text: this.text,
+      uri: _resource.uri,
+      mimeType: _resource.mimeType,
+      size: _resource.size,
+    }
   }
 }

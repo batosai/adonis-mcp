@@ -32,6 +32,21 @@ export interface McpContext {
   getPerPage(requestedPerPage?: number): number
 }
 
+export type ToolContext = Omit<McpContext, 'response' | 'requestType'> & {
+  requestType: 'tool'
+  response: McpToolResponse
+}
+
+export type ResourceContext = Omit<McpContext, 'response' | 'requestType'> & {
+  requestType: 'resource'
+  response: McpResourceResponse
+}
+
+export type PromptContext = Omit<McpContext, 'response' | 'requestType'> & {
+  requestType: 'prompt'
+  response: McpPromptResponse
+}
+
 export type ServerContextOptions = Omit<McpContext, 'requestType' | 'response' | 'request' | 'getPerPage'> & {
   jsonRpcRequest: JsonRpcRequest
 }
