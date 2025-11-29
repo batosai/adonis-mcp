@@ -31,8 +31,6 @@ export default class ReadResource implements Method {
     const resource = new Resource(resourceContext)
     const response = await resource.handle(resourceContext)
 
-    console.log(response.render(resource).result.content)
-
     return response.render(resource)
   }
 }

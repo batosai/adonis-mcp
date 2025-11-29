@@ -74,3 +74,33 @@ export function createListToolsRequest(
   )
 }
 
+export function createListResourcesRequest(
+  cursor?: string,
+  id: string | number = 1
+): JsonRpcRequest {
+  return createJsonRpcRequest(
+    'resources/list',
+    cursor ? { cursor } : undefined,
+    id
+  )
+}
+
+export function createPingRequest(
+  id: string | number = 1
+): JsonRpcRequest {
+  return createJsonRpcRequest('ping', undefined, id)
+}
+
+export function createResourcesReadRequest(
+  uri: string,
+  id: string | number = 1
+): JsonRpcRequest {
+  return createJsonRpcRequest(
+    'resources/read',
+    {
+      uri,
+    },
+    id
+  )
+}
+
