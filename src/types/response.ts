@@ -6,6 +6,7 @@
  */
 
 import type { Content } from '../server/content.js'
+import type { McpRequestType } from './request.js'
 
 export type JsonRpcResponse = {
   jsonrpc: '2.0'
@@ -57,15 +58,31 @@ export type BlobResponse = {
 export type ToolResponse = TextResponse | ImageResponse | AudioResponse | ErrorResponse
 export type ResourceResponse = string | BlobResponse
 export type PromptResponse = TextResponse | ImageResponse | AudioResponse
-//
-export interface McpResponse {
 
-  readonly requestType: 'tool' | 'resource' | 'prompt'
-  send(content: Content | Content[]): McpResponse
+// Helper types to simplify return types
+export type ResponseType<T extends McpRequestType> = 
+  T extends 'tool' ? McpToolResponse :
+  T extends 'resource' ? McpResourceResponse :
+  McpPromptResponse
 
-  text(text: string): McpResponse
-  blob(text: string): McpResponse
-  image(data: string, mimeType: string, _meta?: Record<string, unknown>): McpResponse
-  audio(data: string, mimeType: string, _meta?: Record<string, unknown>): McpResponse
-  error(message: string): McpResponse
+export type MediaResponseType<T extends McpRequestType> = 
+  T extends 'tool' ? McpToolResponse :
+  T extends 'prompt' ? McpPromptResponse :
+  never
+
+export type TextResponseType<T extends McpRequestType> = 
+  T extends 'tool' ? McpToolResponse : McpResourceResponse
+
+export interface McpResponse<T extends McpRequestType = McpRequestType> {
+  readonly type: T
+  send(content: Content | Content[]): ResponseType<T>
+  text(text: string): TextResponseType<T>
+  blob(text: string): McpResourceResponse
+  image(data: string, mimeType: string, _meta?: Record<string, unknown>): MediaResponseType<T>
+  audio(data: string, mimeType: string, _meta?: Record<string, unknown>): MediaResponseType<T>
+  error(message: string): McpToolResponse
 }
+
+export type McpToolResponse = Pick<McpResponse<'tool'>, 'send' | 'text' | 'image' | 'audio' | 'error'>
+export type McpResourceResponse = Pick<McpResponse<'resource'>, 'text' | 'blob'>
+export type McpPromptResponse = Pick<McpResponse<'prompt'>, 'send' | 'text' | 'image' | 'audio' | 'error'>

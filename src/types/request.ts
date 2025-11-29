@@ -5,6 +5,10 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
+// Base type for request types
+export type McpRequestType = 'tool' | 'resource' | 'prompt'
+export type JsonRpcRequestType = McpRequestType | 'system'
+
 export type JsonRpcRequest = {
   jsonrpc: '2.0'
   id: string | number

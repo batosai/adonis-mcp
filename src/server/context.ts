@@ -6,12 +6,15 @@
  */
 import type { McpContext, ServerContextOptions } from '../types/context.js'
 import type { ToolList, ResourceList, PromptList } from '../types/method.js'
-import type { McpRequest } from '../types/request.js'
+import type { McpRequest, McpRequestType } from '../types/request.js'
+import type { McpToolResponse, McpResourceResponse, McpPromptResponse } from '../types/response.js'
 
 import Request from '../request.js'
 import McpResponse from '../response.js'
 
 export default class ServerContext implements McpContext {
+  readonly requestType: McpRequestType
+
   supportedProtocolVersions: string[]
   serverCapabilities: Record<string, any>
   serverName: string
@@ -23,9 +26,24 @@ export default class ServerContext implements McpContext {
   resources: ResourceList
   prompts: PromptList
   request: McpRequest
-  response: McpResponse
+  response: this['requestType'] extends 'resource' 
+  ? McpResourceResponse
+  : this['requestType'] extends 'prompt'
+  ? McpPromptResponse
+  : McpToolResponse
 
   constructor(options: ServerContextOptions) {
+    if (options.jsonRpcRequest.method === 'resources/read') {
+      this.requestType = 'resource'
+      this.response = new McpResponse<'resource'>(options.jsonRpcRequest) as any
+    } else if (options.jsonRpcRequest.method === 'prompts/get') {
+      this.requestType = 'prompt'
+      this.response = new McpResponse<'prompt'>(options.jsonRpcRequest) as any
+    } else {
+      this.requestType = 'tool'
+      this.response = new McpResponse<'tool'>(options.jsonRpcRequest) as any
+    }
+
     this.supportedProtocolVersions = options.supportedProtocolVersions
     this.serverCapabilities = options.serverCapabilities
     this.serverName = options.serverName
@@ -37,7 +55,6 @@ export default class ServerContext implements McpContext {
     this.resources = options.resources
     this.prompts = options.prompts
     this.request = new Request(options.jsonRpcRequest) as McpRequest
-    this.response = new McpResponse(options.jsonRpcRequest)
   }
 
   public getPerPage(requestedPerPage?: number): number {

@@ -7,7 +7,7 @@
 
 import type { InferJSONSchema, JSONSchema } from '../types/method.js'
 import type { McpContext } from '../types/context.js'
-import type { TextResponse, ImageResponse, AudioResponse } from '../types/response.js'
+import type { McpToolResponse } from '../types/response.js'
 
 export abstract class Tool<S extends JSONSchema> {
   abstract name: string
@@ -18,11 +18,5 @@ export abstract class Tool<S extends JSONSchema> {
 
   abstract handle(
     ctx?: McpContext & { args: InferJSONSchema<S> }
-  ):
-    | TextResponse | ImageResponse | AudioResponse
-    | Array<TextResponse | ImageResponse | AudioResponse>
-    | Promise<
-        TextResponse | ImageResponse | AudioResponse | 
-        Array<TextResponse | ImageResponse | AudioResponse>
-      >
+  ): Promise<McpToolResponse>
 }

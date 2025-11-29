@@ -6,11 +6,11 @@
  */
 
 import type { Content } from '../content.js'
-import type { JsonRpcResponse as Response } from '../../types/response.js'
-import type { ToolResponse, ResourceResponse, PromptResponse, JsonRpcResult, JsonRpcError } from '../../types/response.js'
+import type { JsonRpcResponse as Response, ToolResponse, ResourceResponse, PromptResponse, JsonRpcResult, JsonRpcError } from '../../types/response.js'
+import type { JsonRpcRequestType } from '../../types/request.js'
 
 export default class JsonRpcResponse {
-  #requestType: 'tool' | 'resource' | 'prompt' | 'system'
+  #requestType: JsonRpcRequestType
 
   #version = '2.0' as const
   #id: string | number
@@ -19,7 +19,7 @@ export default class JsonRpcResponse {
   #result?: JsonRpcResult
   #error?: JsonRpcError
 
-  constructor(id: string | number, requestType: 'tool' | 'resource' | 'prompt' | 'system') {
+  constructor(id: string | number, requestType: JsonRpcRequestType) {
     this.#requestType = requestType
     this.#id = id
   }
