@@ -104,3 +104,29 @@ export function createResourcesReadRequest(
   )
 }
 
+export function createListPromptsRequest(
+  cursor?: string,
+  id: string | number = 1
+): JsonRpcRequest {
+  return createJsonRpcRequest(
+    'prompts/list',
+    cursor ? { cursor } : undefined,
+    id
+  )
+}
+
+export function createPromptsGetRequest(
+  name: string,
+  args?: Record<string, unknown>,
+  id: string | number = 1
+): JsonRpcRequest {
+  return createJsonRpcRequest(
+    'prompts/get',
+    {
+      name,
+      arguments: args,
+    },
+    id
+  )
+}
+
