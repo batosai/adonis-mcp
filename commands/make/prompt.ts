@@ -5,6 +5,9 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
+import type { CommandOptions } from '@adonisjs/core/types/ace'
+import type { McpConfig } from '@jrmc/adonis-mcp/types/config'
+
 import { args, BaseCommand } from '@adonisjs/core/ace'
 import string from '@adonisjs/core/helpers/string'
 import { stubsRoot } from '../../stubs/main.js'
@@ -13,15 +16,21 @@ export default class MakePrompt extends BaseCommand {
   static commandName = 'make:mcp-prompt'
   static description = 'Create a new MCP prompt'
 
+  static options: CommandOptions = {
+    startApp: true,
+  }
+
   @args.string({ description: 'Name of the prompt' })
   declare name: string
 
   async run() {
+    const config = this.app.config.get<McpConfig>('mcp', { path: 'app/mcp' })
     const codemods = await this.createCodemods()
     const stubPath = `make/mcp/prompts/main.ts.stub`
 
     await codemods.makeUsingStub(stubsRoot, stubPath, {
-      className: `${string.pascalCase(this.name)}Prompt`
+      name: string.pascalCase(this.name),
+      basePath: config.path,
     })
 
     this.logger.success(`Prompt created successfully for: ${this.name}`)

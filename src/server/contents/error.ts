@@ -6,7 +6,7 @@
  */
 
 import type { Content } from '../content.js'
-import type { Prompt } from '../prompt.js'
+import type { AnyPrompt as Prompt } from '../prompt.js'
 import type { Resource } from '../resource.js'
 import Text from './text.js'
 import { createError } from '@adonisjs/core/exceptions'

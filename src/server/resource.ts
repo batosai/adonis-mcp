@@ -6,18 +6,18 @@
  */
 
 import type { ResourceContext } from '../types/context.js'
-import type { McpResourceResponse } from '../types/response.js'
+import type { Content } from '../server/content.js'
 
 export abstract class Resource {
-  abstract name?: string
   abstract uri: string
   abstract title?: string
   abstract description?: string
+  abstract name?: string
   abstract size?: number
   abstract mimeType?: string
   
 
   abstract handle(
     ctx?: ResourceContext
-  ): Promise<McpResourceResponse>
+  ): Promise<Content | Content[]>
 }

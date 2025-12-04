@@ -7,18 +7,18 @@
 
 import type { InferJSONSchema, JSONSchema } from '../types/method.js'
 import type { ToolContext } from '../types/context.js'
-import type { McpToolResponse } from '../types/response.js'
+import type { Content } from '../server/content.js'
 
-export abstract class Tool<S extends JSONSchema> {
+export abstract class Tool<T extends JSONSchema> {
   abstract name: string
   abstract title?: string
   abstract description?: string
 
-  abstract schema?(): S
+  abstract schema?(): T
 
   abstract handle(
-    ctx?: ToolContext & { args: InferJSONSchema<S> }
-  ): Promise<McpToolResponse>
+    ctx?: ToolContext & { args: InferJSONSchema<T> }
+  ): Promise<Content | Content[]>
 }
 
 export type AnyTool = Tool<JSONSchema>

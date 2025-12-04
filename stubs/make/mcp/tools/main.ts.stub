@@ -9,7 +9,6 @@ import type { ToolContext } from '@jrmc/adonis-mcp/types/context'
 import type { BaseSchema, InferJSONSchema } from '@jrmc/adonis-mcp/types/method'
 
 import { Tool } from '@jrmc/adonis-mcp'
-import Text from '@jrmc/adonis-mcp/contents/text'
 
 type Schema = BaseSchema<{
   text: { type: "string" }
@@ -24,7 +23,7 @@ export default class {{ className }} implements Tool<Schema> {
 
   async handle({ args, response }: Context) {
     console.log(args.text)
-    return response.send(new Text('Hello, world!'))
+    return response.text('Hello, world!')
   }
 
   schema() {

@@ -7,7 +7,7 @@
 
 import type { McpContext } from '../../types/context.js'
 import type { Transport } from '../../types/transport.js'
-import type { JsonRpcResponse } from '../../types/response.js'
+import type { JsonRpcResponse } from '../../types/jsonrpc.js'
 
 export default class FakeTransport implements Transport {
   sentMessages: JsonRpcResponse[] = []

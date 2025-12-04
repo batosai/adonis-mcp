@@ -1,4 +1,4 @@
-import type { JsonRpcResponse } from '../../types/response.js'
+import type { JsonRpcResponse } from '../../types/jsonrpc.js'
 
 import Response from '../../response.js'
 

@@ -6,9 +6,9 @@
  */
 
 import type { Content } from '../content.js'
-import type { AudioContent } from '../../types/content.js'
+import type { AudioBuilder } from '../../types/jsonrpc.js'
 import type { AnyTool as Tool } from '../tool.js'
-import type { Prompt } from '../prompt.js'
+import type { AnyPrompt as Prompt } from '../prompt.js'
 import type { Resource } from '../resource.js'
 import { createError } from '@adonisjs/core/exceptions'
 
@@ -23,7 +23,7 @@ export default class Audio implements Content {
     this._meta = _meta
   }
 
-  toTool(_tool: Tool): AudioContent {
+  toTool(_tool: Tool): AudioBuilder {
     return {
       type: 'audio' as const,
       data: this.data,
@@ -32,7 +32,7 @@ export default class Audio implements Content {
     }
   }
 
-  toPrompt(_prompt: Prompt): AudioContent {
+  toPrompt(_prompt: Prompt): AudioBuilder {
     return {
       type: 'audio' as const,
       data: this.data,

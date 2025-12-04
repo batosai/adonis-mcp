@@ -1,5 +1,6 @@
 export { configure } from './configure.js'
 export { Tool } from './src/server/tool.js'
 export { Resource } from './src/server/resource.js'
+export { Prompt } from './src/server/prompt.js'
 export * as McpResponse from './src/response.js'
 export { defineConfig } from './src/define_config.js'

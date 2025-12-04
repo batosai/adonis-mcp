@@ -7,9 +7,11 @@
 
 import type { Method } from '../../types/method.js'
 import type { McpContext, ResourceContext } from '../../types/context.js'
+import type { Content } from '../content.js'
 
 import { ErrorCode } from '../../enums/error.js'
 import JsonRpcException from '../exceptions/jsonrpc_exception.js'
+import Response from '../../response.js'
 
 export default class ReadResource implements Method {
   async handle(ctx: McpContext) {
@@ -29,8 +31,20 @@ export default class ReadResource implements Method {
     const { default: Resource } = await import(resourceContext.resources[item])
 
     const resource = new Resource(resourceContext)
-    const response = await resource.handle(resourceContext)
+    const contents = await resource.handle(resourceContext)
 
-    return response.render(resource)
+    let data: Content[]
+    if (!Array.isArray(contents)) {
+      data = [contents]
+    } else {
+      data = contents
+    }
+
+    const result: Record<string, any> = { contents: [] }
+    data.forEach((content) => {
+      result.contents.push(content.toResource(resource))
+    })
+
+    return Response.toJsonRpc({ id: ctx.request.id, result})
   }
 }

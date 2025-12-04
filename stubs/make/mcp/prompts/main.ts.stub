@@ -1,27 +1,41 @@
+{{#var className = `${name}Prompt`}}
 {{#var resourceFileName = string(className).snakeCase().ext('.ts').toString()}}
 {{{
   exports({
-    to: app.makePath(app.rcFile.directories['mcp'] || 'app/mcp/', 'prompts', resourceFileName)
+    to: app.makePath(app.rcFile.directories['mcp'] || basePath, resourceFileName)
   })
 }}}
-import type { Prompt } from '@jrmc/adonis-mcp/types'
+import type { PromptContext } from '@jrmc/adonis-mcp/types/context'
+import type { BaseSchema, InferJSONSchema } from '@jrmc/adonis-mcp/types/method'
 
-export default class {{ className }} implements Prompt {
-  name = 'prompt_name'
-  config = {
-    title: 'Prompt Title',
-    description: 'Prompt Description',
-    argsSchema: {}
+import { Prompt } from '@jrmc/adonis-mcp'
+
+type Schema = BaseSchema<{
+  text: { type: "string" }
+}>
+
+type Context = PromptContext & { args: InferJSONSchema<Schema> }
+
+export default class {{ className }} implements Prompt<Schema> {
+  name = '{{ name }}'
+  title = 'Prompt title'
+  description = 'Prompt description'
+
+  async handle({ args, response }: Context) {
+    console.log(args.text)
+    return response.text('Hello, world!')
   }
 
-  async handle() {
+  schema() {
     return {
-      messages: [
-        {
-          role: 'user' as const,
-          content: { type: 'text' as const, text: `Please review this code:\n\n${code}` }
-        }
-      ]
-    }
+      type: "object",
+      properties: {
+        text: {
+          type: "string",
+          description: "Description text argument"
+        },
+      },
+      required: ["text"]
+    } as Schema
   }
 }

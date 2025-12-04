@@ -6,7 +6,7 @@
  */
 
 import type { McpContext } from './context.js'
-import type { JsonRpcResponse } from './response.js'
+import type { JsonRpcResponse } from './jsonrpc.js'
 
 export interface Transport {
   bindBouncer?(mcpContext: McpContext): void

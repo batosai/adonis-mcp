@@ -6,7 +6,7 @@
  */
 
 import type { JsonRpcRequest } from '../types/request.js'
-import type { JsonRpcResponse } from '../types/response.js'
+import type { JsonRpcResponse } from '../types/jsonrpc.js'
 
 /**
  * Buffers a continuous stdio stream into discrete JSON-RPC messages.

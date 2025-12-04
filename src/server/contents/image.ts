@@ -6,9 +6,9 @@
  */
 
 import type { Content } from '../content.js'
-import type { ImageContent } from '../../types/content.js'
+import type { ImageBuilder } from '../../types/jsonrpc.js'
 import type { AnyTool as Tool } from '../tool.js'
-import type { Prompt } from '../prompt.js'
+import type { AnyPrompt as Prompt } from '../prompt.js'
 import type { Resource } from '../resource.js'
 import { createError } from '@adonisjs/core/exceptions'
 
@@ -23,7 +23,7 @@ export default class Image implements Content {
     this._meta = _meta
   }
 
-  toTool(_tool: Tool): ImageContent {
+  toTool(_tool: Tool): ImageBuilder {
     return {
       type: 'image' as const,
       data: this.data,
@@ -32,7 +32,7 @@ export default class Image implements Content {
     }
   }
 
-  toPrompt(_prompt: Prompt): ImageContent {
+  toPrompt(_prompt: Prompt): ImageBuilder {
     return {
       type: 'image' as const,
       data: this.data,

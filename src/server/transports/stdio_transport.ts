@@ -6,7 +6,7 @@
  */
 
 import type { Transport } from '../../types/transport.js'
-import type { JsonRpcResponse } from '../../types/response.js'
+import type { JsonRpcResponse } from '../../types/jsonrpc.js'
 import type { Readable, Writable } from 'node:stream'
 
 import { ReadBuffer, serializeMessage } from '../../utils/stdio.js'

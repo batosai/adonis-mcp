@@ -5,57 +5,33 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import type { Content } from '../server/content.js'
 import type { McpRequestType } from './request.js'
-import type { TextContent, ImageContent, AudioContent, ErrorContent, BlobResourceContent, TextResourceContent, ResourceContent } from './content.js'
+import type { TextBuilder, ImageBuilder, AudioBuilder, ErrorBuilder, BlobResourceBuilder, TextResourceBuilder, ResourceBuilder } from './jsonrpc.js'
+import type { Text, TextPrompt, Blob, Image, ImagePrompt, Audio, AudioPrompt, Error } from './content.js'
 
-export type JsonRpcResponse = {
-  jsonrpc: '2.0'
-  id: string | number
-  result?: JsonRpcResult
-  error?: JsonRpcError
-}
+export type ToolResponse = TextBuilder | ImageBuilder | AudioBuilder | ErrorBuilder | ResourceBuilder
+export type ResourceResponse = BlobResourceBuilder | TextResourceBuilder
+export type PromptResponse = TextBuilder | ImageBuilder | AudioBuilder | ErrorBuilder | ResourceBuilder
 
-export type JsonRpcResult = {
-  [key: string]: unknown
-}
 
-export type JsonRpcError = {
-  code: number
-  message: string
-  data?: unknown
-}
+type TextResponseType<T extends McpRequestType> = 
+  T extends 'prompt' ? TextPrompt : Text
 
-//
+type ImageResponseType<T extends McpRequestType> = 
+  T extends 'prompt' ? ImagePrompt : Image
 
-export type ToolResponse = TextContent | ImageContent | AudioContent | ErrorContent | ResourceContent
-export type ResourceResponse = BlobResourceContent | TextResourceContent
-export type PromptResponse = TextContent | ImageContent | AudioContent | ErrorContent | ResourceContent
-
-// Helper types to simplify return types
-export type ResponseType<T extends McpRequestType> = 
-  T extends 'tool' ? McpToolResponse :
-  T extends 'resource' ? McpResourceResponse :
-  McpPromptResponse
-
-export type MediaResponseType<T extends McpRequestType> = 
-  T extends 'tool' ? McpToolResponse :
-  T extends 'prompt' ? McpPromptResponse :
-  never
-
-export type TextResponseType<T extends McpRequestType> = 
-  T extends 'tool' ? McpToolResponse : McpResourceResponse
+type AudioResponseType<T extends McpRequestType> = 
+  T extends 'prompt' ? AudioPrompt : Audio
 
 export interface McpResponse<T extends McpRequestType = McpRequestType> {
   readonly type: T
-  send(content: Content | Content[]): ResponseType<T>
   text(text: string): TextResponseType<T>
-  blob(text: string): McpResourceResponse
-  image(data: string, mimeType: string, _meta?: Record<string, unknown>): MediaResponseType<T>
-  audio(data: string, mimeType: string, _meta?: Record<string, unknown>): MediaResponseType<T>
-  error(message: string): McpToolResponse
+  blob(text: string): Blob
+  image(data: string, mimeType: string, _meta?: Record<string, unknown>): ImageResponseType<T>
+  audio(data: string, mimeType: string, _meta?: Record<string, unknown>): AudioResponseType<T>
+  error(message: string): Error
 }
 
-export type McpToolResponse = Pick<McpResponse<'tool'>, 'send' | 'text' | 'image' | 'audio' | 'error'>
+export type McpToolResponse = Pick<McpResponse<'tool'>, 'text' | 'image' | 'audio' | 'error'>
 export type McpResourceResponse = Pick<McpResponse<'resource'>, 'text' | 'blob'>
-export type McpPromptResponse = Pick<McpResponse<'prompt'>, 'send' | 'text' | 'image' | 'audio' | 'error'>
+export type McpPromptResponse = Pick<McpResponse<'prompt'>, 'text' | 'image' | 'audio' | 'error'>

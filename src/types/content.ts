@@ -5,48 +5,25 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-export type ErrorContent = {
-  type: 'text'
-  text: string
+import type { Content } from '../server/content.js'
+
+export type TextPrompt = Content & {
+  asAssistant: () => Content
+  asUser: () => Content
 }
 
-export type TextContent = {
-  type: 'text'
-  text: string
-  _meta?: { [key: string]: unknown }
+export type ImagePrompt = Content & {
+  asAssistant: () => Content
+  asUser: () => Content
 }
 
-export type ImageContent = {
-  type: 'image'
-  data: string
-  mimeType: string
-  _meta?: { [key: string]: unknown }
+export type AudioPrompt = Content & {
+  asAssistant: () => Content
+  asUser: () => Content
 }
 
-export type AudioContent = {
-  type: 'audio'
-  data: string
-  mimeType: string
-  _meta?: { [key: string]: unknown }
-}
-
-export type BlobResourceContent = {
-  blob: string
-  mimeType?: string
-  uri: string
-  size?: number
-  _meta?: { [key: string]: unknown }
-}
-
-export type TextResourceContent = {
-  text: string
-  mimeType?: string
-  uri: string
-  size?: number
-  _meta?: { [key: string]: unknown }
-}
-
-export type ResourceContent = {
-  type: 'resource'
-  resource: BlobResourceContent | TextResourceContent
-}
+export type Text = Content
+export type Blob = Content
+export type Image = Content
+export type Audio = Content
+export type Error = Content

@@ -22,3 +22,8 @@ export default class TestResource1 extends Resource {
   }
 }
 
+
+
+
+
+

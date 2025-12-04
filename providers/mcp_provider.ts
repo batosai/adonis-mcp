@@ -36,7 +36,7 @@ export default class McpProvider {
 
     await this.registerTools()
     await this.registerResources()
-    // await this.registerPrompts()
+    await this.registerPrompts()
   }
 
   async registerTools() {
@@ -77,18 +77,24 @@ export default class McpProvider {
     )
   }
 
-  // async registerPrompts() {
-  //   const mcp = await this.app.container.make('jrmc.mcp')
-  //   const collection = await fsImportAll(new URL(this.app.makePath(mcp.config.path!), import.meta.url), {
-  //     filter: (filePath) => filePath.includes('_prompt.ts')
-  //   })
+  async registerPrompts() {
+    const server = await this.app.container.make('jrmc.mcp')
+    const path = this.app.makePath(server.config.path!)
+    const files = await fsReadAll(path, {
+      filter: (filePath) => filePath.includes('_prompt.ts'),
+    })
 
-  //   Object.values(collection).map((item: any) => {
-  //     const promptMcp = new item()
-
-  //     mcp.getServer().registerPrompt(promptMcp.name, promptMcp.config, promptMcp.handle)
-  //   })
-  // }
+    await Promise.all(
+      files.map(async (file) => {
+        const path = this.app.makePath(server.config.path!, file)
+        const { default: prompt } = await import(path)
+        const promptInstance = new prompt()
+        server.addPrompt({
+          [promptInstance.name]: path,
+        })
+      })
+    )
+  }
 }
 
 declare module '@adonisjs/core/http' {

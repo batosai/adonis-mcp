@@ -6,10 +6,10 @@
  */
 
 import type { Content } from '../content.js'
-import type { BlobResourceContent } from '../../types/content.js'
+import type { BlobResourceBuilder } from '../../types/jsonrpc.js'
 import type { Resource } from '../resource.js'
 import type { AnyTool as Tool } from '../tool.js'
-import type { Prompt } from '../prompt.js'
+import type { AnyPrompt as Prompt } from '../prompt.js'
 import { createError } from '@adonisjs/core/exceptions'
 
 export default class Blob implements Content {
@@ -37,7 +37,7 @@ export default class Blob implements Content {
     )
   }
 
-  toResource(resource: Resource): BlobResourceContent {
+  toResource(resource: Resource): BlobResourceBuilder {
     return { 
       blob: this.text,
       uri: resource.uri,
