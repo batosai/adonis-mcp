@@ -5,9 +5,9 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import type { JsonRpcResponse as Response, JsonRpcResult, JsonRpcError } from '../types/jsonrpc.js'
+import type { JsonRpcResponse, JsonRpcResult, JsonRpcError } from '../types/jsonrpc.js'
 
-export default class JsonrpcResponse {
+export default class Response {
   #version = '2.0' as const
   #id: string | number
   #result?: JsonRpcResult
@@ -27,7 +27,7 @@ export default class JsonrpcResponse {
     this.#error = error
   }
 
-  render(): Response {
+  render(): JsonRpcResponse {
     return {
       jsonrpc: this.#version,
       id: this.#id,

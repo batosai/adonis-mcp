@@ -5,6 +5,16 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
+export type JsonRpcRequest = {
+  jsonrpc: '2.0'
+  id: string | number
+  method: string
+  params?: {
+    cursor?: string
+    [key: string]: unknown
+  }
+}
+
 export type JsonRpcResponse = {
   jsonrpc: '2.0'
   id: string | number
@@ -21,6 +31,16 @@ export type JsonRpcError = {
   message: string
   data?: unknown
 }
+
+export type JsonRpcNotification = {
+  jsonrpc: '2.0'
+  method: string
+  params?: {
+    [key: string]: unknown
+  }
+}
+
+// BUILDER TYPES
 
 export type ErrorBuilder = {
   type: 'text'

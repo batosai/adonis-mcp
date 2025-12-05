@@ -6,7 +6,7 @@
  */
 
 import type { CommandOptions } from '@adonisjs/core/types/ace'
-import type { JsonRpcRequest } from '../src/types/request.js'
+import type { JsonRpcRequest } from '../src/types/jsonrpc.js'
 
 import { BaseCommand } from '@adonisjs/core/ace'
 

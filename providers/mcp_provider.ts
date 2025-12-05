@@ -8,7 +8,7 @@
 import type { ApplicationService } from '@adonisjs/core/types'
 import type { RouteGroup } from '@adonisjs/core/http'
 import type { McpConfig } from '../src/types/config.js'
-// import type { Tool } from '../src/types.js'
+import type { McpRequestType } from '../src/types/request.js'
 
 import { fsReadAll } from '@adonisjs/core/helpers'
 import McpServer from '../src/server.js'
@@ -40,58 +40,47 @@ export default class McpProvider {
   }
 
   async registerTools() {
-    const server = await this.app.container.make('jrmc.mcp')
-    const path = this.app.makePath(server.config.path!)
-    const files = await fsReadAll(path, {
-      filter: (filePath) => filePath.includes('_tool.ts'),
-    })
-
-    await Promise.all(
-      files.map(async (file) => {
-        const path = this.app.makePath(server.config.path!, file)
-        const { default: tool } = await import(path)
-        const toolInstance = new tool()
-        server.addTool({
-          [toolInstance.name]: path,
-        })
-      })
-    )
+    this.registerMethods('tool')
   }
 
   async registerResources() {
-    const server = await this.app.container.make('jrmc.mcp')
-    const path = this.app.makePath(server.config.path!)
-    const files = await fsReadAll(path, {
-      filter: (filePath) => filePath.includes('_resource.ts'),
-    })
-
-    await Promise.all(
-      files.map(async (file) => {
-        const path = this.app.makePath(server.config.path!, file)
-        const { default: resource } = await import(path)
-        const resourceInstance = new resource()
-        server.addResource({
-          [resourceInstance.uri]: path,
-        })
-      })
-    )
+    this.registerMethods('resource')
   }
 
   async registerPrompts() {
+    this.registerMethods('prompt')
+  }
+
+  async registerMethods(type: McpRequestType) {
     const server = await this.app.container.make('jrmc.mcp')
     const path = this.app.makePath(server.config.path!)
     const files = await fsReadAll(path, {
-      filter: (filePath) => filePath.includes('_prompt.ts'),
+      filter: (filePath) => filePath.includes(`_${type}.ts`),
     })
 
     await Promise.all(
       files.map(async (file) => {
         const path = this.app.makePath(server.config.path!, file)
-        const { default: prompt } = await import(path)
-        const promptInstance = new prompt()
-        server.addPrompt({
-          [promptInstance.name]: path,
-        })
+        const { default: Method } = await import(path)
+        const instance = new Method()
+
+        switch (type) {
+          case 'tool':
+            server.addTool({
+              [instance.name]: path,
+            })
+            break
+          case 'resource':
+            server.addResource({
+              [instance.name]: path,
+            })
+            break
+          case 'prompt':
+            server.addPrompt({
+              [instance.name]: path,
+            })
+            break
+        }
       })
     )
   }

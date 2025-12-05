@@ -6,8 +6,9 @@
  */
 
 import type { ToolList, ResourceList, PromptList } from './method.js'
-import type { McpRequest, JsonRpcRequest, McpRequestType } from './request.js'
+import type { McpRequest, McpRequestType } from './request.js'
 import type { McpResourceResponse, McpToolResponse, McpPromptResponse } from './response.js'
+import type { JsonRpcRequest } from './jsonrpc.js'
 
 export interface McpContext {
   requestType: McpRequestType

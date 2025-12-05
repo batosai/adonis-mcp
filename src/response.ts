@@ -7,16 +7,17 @@
 
 import type { JsonRpcResponse } from './types/jsonrpc.js'
 import type { McpResponse } from './types/response.js'
-import type { JsonRpcRequest, McpRequestType } from './types/request.js'
+import type { McpRequestType } from './types/request.js'
+import type { JsonRpcRequest } from './types/jsonrpc.js'
 
-import JsonRpc from './utils/jsonrpc_response.js'
+import JsonRpc from './jsonrpc/response.js'
 import Text from './server/contents/text.js'
 import Blob from './server/contents/blob.js'
 import Image from './server/contents/image.js'
 import Audio from './server/contents/audio.js'
 import Error from './server/contents/error.js'
 
-export default class Response<T extends McpRequestType = McpRequestType> implements McpResponse {
+export default class <T extends McpRequestType = McpRequestType> implements McpResponse {
   readonly type: T
 
   constructor(jsonRpcRequest: JsonRpcRequest) {

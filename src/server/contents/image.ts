@@ -13,31 +13,31 @@ import type { Resource } from '../resource.js'
 import { createError } from '@adonisjs/core/exceptions'
 
 export default class Image implements Content {
-  data: string
-  mimeType: string
-  _meta?: Record<string, unknown>
+  #data: string
+  #mimeType: string
+  #_meta?: Record<string, unknown>
 
   constructor(data: string, mimeType: string, _meta?: Record<string, unknown>) {
-    this.data = data
-    this.mimeType = mimeType
-    this._meta = _meta
+    this.#data = data
+    this.#mimeType = mimeType
+    this.#_meta = _meta
   }
 
   toTool(_tool: Tool): ImageBuilder {
     return {
       type: 'image' as const,
-      data: this.data,
-      mimeType: this.mimeType,
-      _meta: this._meta
+      data: this.#data,
+      mimeType: this.#mimeType,
+      _meta: this.#_meta
     }
   }
 
   toPrompt(_prompt: Prompt): ImageBuilder {
     return {
       type: 'image' as const,
-      data: this.data,
-      mimeType: this.mimeType,
-      _meta: this._meta
+      data: this.#data,
+      mimeType: this.#mimeType,
+      _meta: this.#_meta
     }
   }
 

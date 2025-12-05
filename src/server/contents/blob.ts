@@ -13,13 +13,13 @@ import type { AnyPrompt as Prompt } from '../prompt.js'
 import { createError } from '@adonisjs/core/exceptions'
 
 export default class Blob implements Content {
-  text: string
+  #text: string
 
   constructor(text: string | Buffer) {
     if (typeof text === 'string') {
-      this.text = Buffer.from(text).toString('base64')
+      this.#text = Buffer.from(text).toString('base64')
     } else {
-      this.text = text.toString('base64')
+      this.#text = text.toString('base64')
     }
   }
 
@@ -39,7 +39,7 @@ export default class Blob implements Content {
 
   toResource(resource: Resource): BlobResourceBuilder {
     return { 
-      blob: this.text,
+      blob: this.#text,
       uri: resource.uri,
       mimeType: resource.mimeType,
       size: resource.size,

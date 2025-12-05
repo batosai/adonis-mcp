@@ -27,10 +27,6 @@ export default class StdioTransport extends EventEmitter implements Transport {
     this.#stdin.on('data', this.ondata)
   }
 
-  // onerror = (error: Error) => {
-  //     this.onerror?.(error)
-  // }
-
   async processReadBuffer() {
     while (true) {
       try {

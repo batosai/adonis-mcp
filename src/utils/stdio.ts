@@ -5,36 +5,35 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import type { JsonRpcRequest } from '../types/request.js'
-import type { JsonRpcResponse } from '../types/jsonrpc.js'
+import type { JsonRpcRequest, JsonRpcResponse } from '../types/jsonrpc.js'
 
 /**
  * Buffers a continuous stdio stream into discrete JSON-RPC messages.
  */
 export class ReadBuffer {
-  private _buffer?: Buffer
+  #buffer?: Buffer
 
   append(chunk: Buffer): void {
-    this._buffer = this._buffer ? Buffer.concat([this._buffer, chunk]) : chunk
+    this.#buffer = this.#buffer ? Buffer.concat([this.#buffer, chunk]) : chunk
   }
 
   readMessage(): JsonRpcRequest | null {
-    if (!this._buffer) {
+    if (!this.#buffer) {
       return null
     }
 
-    const index = this._buffer.indexOf('\n')
+    const index = this.#buffer.indexOf('\n')
     if (index === -1) {
       return null
     }
 
-    const line = this._buffer.toString('utf8', 0, index).replace(/\r$/, '')
-    this._buffer = this._buffer.subarray(index + 1)
+    const line = this.#buffer.toString('utf8', 0, index).replace(/\r$/, '')
+    this.#buffer = this.#buffer.subarray(index + 1)
     return deserializeMessage(line)
   }
 
   clear(): void {
-    this._buffer = undefined
+    this.#buffer = undefined
   }
 }
 

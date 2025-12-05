@@ -5,19 +5,10 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
+import type { JsonRpcRequest } from './jsonrpc.js'
+
 // Base type for request types
 export type McpRequestType = 'tool' | 'resource' | 'prompt'
-export type JsonRpcRequestType = McpRequestType | 'system'
-
-export type JsonRpcRequest = {
-  jsonrpc: '2.0'
-  id: string | number
-  method: string
-  params?: {
-    cursor?: string
-    [key: string]: unknown
-  }
-}
 
 type InitializeRequest = JsonRpcRequest & {
   method: 'initialize'
@@ -54,4 +45,9 @@ type ResourcesReadRequest = JsonRpcRequest & {
   }
 }
 
-export type McpRequest = InitializeRequest | ToolsCallRequest | ResourcesReadRequest
+type GetPromptRequest = JsonRpcRequest & {
+  method: 'prompts/get'
+  params: { arguments?: { [key: string]: string }; name: string }
+}
+
+export type McpRequest = InitializeRequest | ToolsCallRequest | ResourcesReadRequest | GetPromptRequest

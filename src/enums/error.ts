@@ -6,7 +6,6 @@
  */
 
 export enum ErrorCode {
-  // SDK error codes
   ConnectionClosed = -32000,
   RequestTimeout = -32001,
 

@@ -3,23 +3,30 @@ import type { JsonRpcResponse } from '../../types/jsonrpc.js'
 import Response from '../../response.js'
 
 export default class JsonRpcException extends Error {
+  #code: number
+  #requestId: string | number
+  #data?: Record<string, unknown>
+
   constructor(
     message: string,
-    protected code: number,
-    protected requestId: string | number,
-    protected data?: Record<string, unknown>
+    code: number,
+    requestId: string | number,
+    data?: Record<string, unknown>
   ) {
-
     super(message)
+
+    this.#code = code
+    this.#requestId = requestId
+    this.#data = data
   }
 
   toJsonRpcResponse(): JsonRpcResponse {
     return Response.toJsonRpc({
-      id: this.requestId,
+      id: this.#requestId,
       error: {
-        code: this.code,
+        code: this.#code,
         message: this.message,
-        data: this.data,
+        data: this.#data,
       },
     })
   }

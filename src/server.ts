@@ -6,7 +6,7 @@
  */
 
 import type { McpConfig } from './types/config.js'
-import type { JsonRpcRequest } from './types/request.js'
+import type { JsonRpcRequest } from './types/jsonrpc.js'
 import type { ToolList, ResourceList, PromptList } from './types/method.js'
 import type { Transport } from './types/transport.js'
 
