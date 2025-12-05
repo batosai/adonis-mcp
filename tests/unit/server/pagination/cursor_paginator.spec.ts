@@ -26,11 +26,7 @@ test.group('CursorPaginator', () => {
     const firstPage = new CursorPaginator(items, 10)
     const firstResult = firstPage.paginate('items')
 
-    const secondPage = new CursorPaginator(
-      items,
-      10,
-      firstResult.nextCursor as string
-    )
+    const secondPage = new CursorPaginator(items, 10, firstResult.nextCursor as string)
     const secondResult = secondPage.paginate('items')
 
     assert.equal((secondResult.items as string[]).length, 10)
@@ -69,4 +65,3 @@ test.group('CursorPaginator', () => {
     assert.notExists(result.items)
   })
 })
-

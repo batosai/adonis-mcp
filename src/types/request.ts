@@ -50,4 +50,8 @@ type GetPromptRequest = JsonRpcRequest & {
   params: { arguments?: { [key: string]: string }; name: string }
 }
 
-export type McpRequest = InitializeRequest | ToolsCallRequest | ResourcesReadRequest | GetPromptRequest
+export type McpRequest =
+  | InitializeRequest
+  | ToolsCallRequest
+  | ResourcesReadRequest
+  | GetPromptRequest

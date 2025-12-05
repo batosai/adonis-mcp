@@ -218,4 +218,3 @@ test.group('ListTools Method', () => {
     assert.exists(response.result?.nextCursor)
   })
 })
-

@@ -19,13 +19,21 @@ export default class GetPrompt implements Method {
     const params = promptContext.request.params
 
     if (!params?.name) {
-      throw new JsonRpcException(`The prompt name is required.`, ErrorCode.InvalidParams, promptContext.request.id)
+      throw new JsonRpcException(
+        `The prompt name is required.`,
+        ErrorCode.InvalidParams,
+        promptContext.request.id
+      )
     }
 
     const item = Object.keys(promptContext.prompts).find((key) => key === params.name)
 
     if (!item) {
-      throw new JsonRpcException(`The prompt ${params.name} was not found.`, ErrorCode.MethodNotFound, promptContext.request.id)
+      throw new JsonRpcException(
+        `The prompt ${params.name} was not found.`,
+        ErrorCode.MethodNotFound,
+        promptContext.request.id
+      )
     }
 
     const { default: Prompt } = await import(promptContext.prompts[item])
@@ -43,13 +51,21 @@ export default class GetPrompt implements Method {
     }
 
     if (!data || data.length === 0) {
-      throw new JsonRpcException(`The prompt ${params.name} returned no content.`, ErrorCode.InternalError, promptContext.request.id)
+      throw new JsonRpcException(
+        `The prompt ${params.name} returned no content.`,
+        ErrorCode.InternalError,
+        promptContext.request.id
+      )
     }
 
     let messages: { role: Role; content: Record<string, any> }[] = []
     data.forEach((content) => {
       if (!content || !content.role) {
-        throw new JsonRpcException(`Invalid content returned from prompt ${params.name}.`, ErrorCode.InternalError, promptContext.request.id)
+        throw new JsonRpcException(
+          `Invalid content returned from prompt ${params.name}.`,
+          ErrorCode.InternalError,
+          promptContext.request.id
+        )
       }
       messages.push({
         role: content.role as Role,
@@ -58,14 +74,18 @@ export default class GetPrompt implements Method {
     })
 
     if (messages.length === 0) {
-      throw new JsonRpcException(`The prompt ${params.name} returned no valid messages.`, ErrorCode.InternalError, promptContext.request.id)
+      throw new JsonRpcException(
+        `The prompt ${params.name} returned no valid messages.`,
+        ErrorCode.InternalError,
+        promptContext.request.id
+      )
     }
 
     const result = {
       description: prompt.description,
       messages,
     }
-  
-    return Response.toJsonRpc({ id: ctx.request.id, result})
+
+    return Response.toJsonRpc({ id: ctx.request.id, result })
   }
 }

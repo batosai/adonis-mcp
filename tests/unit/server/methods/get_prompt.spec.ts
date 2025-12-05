@@ -69,7 +69,7 @@ test.group('GetPrompt Method', () => {
     assert.exists(response.result?.messages)
     assert.isArray(response.result?.messages)
     assert.lengthOf(response.result?.messages, 1)
-    
+
     const message = response.result?.messages[0]
     assert.exists(message)
     assert.equal(message?.role, 'user')
@@ -100,7 +100,7 @@ test.group('GetPrompt Method', () => {
     assert.exists(response.result?.messages)
     assert.isArray(response.result?.messages)
     assert.lengthOf(response.result?.messages, 1)
-    
+
     const message = response.result?.messages[0]
     assert.exists(message)
     assert.equal(message?.role, 'user')
@@ -128,7 +128,7 @@ test.group('GetPrompt Method', () => {
     assert.exists(response.result)
     assert.exists(response.result?.messages)
     assert.lengthOf(response.result?.messages, 1)
-    
+
     const message = response.result?.messages[0]
     assert.exists(message)
     assert.equal(message?.content.text, 'Hello from test prompt 2: 42')
@@ -153,7 +153,7 @@ test.group('GetPrompt Method', () => {
     assert.exists(response.result)
     assert.exists(response.result?.messages)
     assert.lengthOf(response.result?.messages, 2)
-    
+
     const message1 = response.result?.messages[0]
     assert.exists(message1)
     assert.equal(message1?.role, 'user')
@@ -167,4 +167,3 @@ test.group('GetPrompt Method', () => {
     assert.equal(message2?.content.text, 'Second message')
   })
 })
-

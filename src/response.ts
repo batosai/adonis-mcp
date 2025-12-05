@@ -17,7 +17,7 @@ import Image from './server/contents/image.js'
 import Audio from './server/contents/audio.js'
 import Error from './server/contents/error.js'
 
-export default class <T extends McpRequestType = McpRequestType> implements McpResponse {
+export default class<T extends McpRequestType = McpRequestType> implements McpResponse {
   readonly type: T
 
   constructor(jsonRpcRequest: JsonRpcRequest) {

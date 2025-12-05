@@ -48,7 +48,12 @@ export default class ListTools implements Method {
             },
           }
         } catch (error) {
-          throw new JsonRpcException(`Error listing tool`, ErrorCode.InternalError, ctx.request.id, { error })
+          throw new JsonRpcException(
+            `Error listing tool`,
+            ErrorCode.InternalError,
+            ctx.request.id,
+            { error }
+          )
         }
       })
     )

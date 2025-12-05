@@ -16,9 +16,7 @@ export abstract class Tool<T extends JSONSchema> {
 
   abstract schema?(): T
 
-  abstract handle(
-    ctx?: ToolContext & { args: InferJSONSchema<T> }
-  ): Promise<Content | Content[]>
+  abstract handle(ctx?: ToolContext & { args: InferJSONSchema<T> }): Promise<Content | Content[]>
 }
 
 export type AnyTool = Tool<JSONSchema>

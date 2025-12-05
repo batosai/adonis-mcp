@@ -24,11 +24,11 @@ export interface McpContext {
   resources: ResourceList
   prompts: PromptList
   request: McpRequest
-  response: this['requestType'] extends 'resource' 
-  ? McpResourceResponse
-  : this['requestType'] extends 'prompt'
-  ? McpPromptResponse
-  : McpToolResponse
+  response: this['requestType'] extends 'resource'
+    ? McpResourceResponse
+    : this['requestType'] extends 'prompt'
+      ? McpPromptResponse
+      : McpToolResponse
 
   getPerPage(requestedPerPage?: number): number
 }
@@ -48,6 +48,9 @@ export type PromptContext = Omit<McpContext, 'response' | 'requestType'> & {
   response: McpPromptResponse
 }
 
-export type ServerContextOptions = Omit<McpContext, 'requestType' | 'response' | 'request' | 'getPerPage'> & {
+export type ServerContextOptions = Omit<
+  McpContext,
+  'requestType' | 'response' | 'request' | 'getPerPage'
+> & {
   jsonRpcRequest: JsonRpcRequest
 }

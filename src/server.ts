@@ -138,12 +138,9 @@ export default class Server {
         return this.#transport.send(error.toJsonRpcResponse())
       }
       this.#transport.send(
-        new JsonRpcException(
-          'Internal error', 
-          ErrorCode.InternalError, 
-          jsonRequest.id, 
-          { error }
-        ).toJsonRpcResponse()
+        new JsonRpcException('Internal error', ErrorCode.InternalError, jsonRequest.id, {
+          error,
+        }).toJsonRpcResponse()
       )
     }
   }

@@ -18,9 +18,7 @@ export abstract class Prompt<T extends JSONSchema> {
 
   abstract schema?(): T
 
-  abstract handle(
-    ctx?: PromptContext & { args: InferJSONSchema<T> }
-  ): Promise<Content | Content[]>
+  abstract handle(ctx?: PromptContext & { args: InferJSONSchema<T> }): Promise<Content | Content[]>
 }
 
 export type AnyPrompt = Prompt<JSONSchema>

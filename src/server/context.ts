@@ -26,11 +26,11 @@ export default class ServerContext implements McpContext {
   resources: ResourceList
   prompts: PromptList
   request: McpRequest
-  response: this['requestType'] extends 'resource' 
-  ? McpResourceResponse
-  : this['requestType'] extends 'prompt'
-  ? McpPromptResponse
-  : McpToolResponse
+  response: this['requestType'] extends 'resource'
+    ? McpResourceResponse
+    : this['requestType'] extends 'prompt'
+      ? McpPromptResponse
+      : McpToolResponse
 
   constructor(options: ServerContextOptions) {
     if (options.jsonRpcRequest.method === 'resources/read') {

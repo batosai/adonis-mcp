@@ -15,10 +15,6 @@ export default class TestPromptMultiple extends Prompt<JSONSchema> {
   description = 'Test prompt that returns multiple contents'
 
   async handle({ response }: PromptContext) {
-    return [
-      response.text('First message').asUser(),
-      response.text('Second message').asAssistant(),
-    ]
+    return [response.text('First message').asUser(), response.text('Second message').asAssistant()]
   }
 }
-

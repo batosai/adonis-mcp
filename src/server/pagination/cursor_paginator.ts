@@ -3,11 +3,7 @@ export class CursorPaginator {
   #perPage: number
   #cursor?: string
 
-  constructor(
-    items: unknown[],
-    perPage: number,
-    cursor?: string
-  ) {
+  constructor(items: unknown[], perPage: number, cursor?: string) {
     this.#items = items
     this.#perPage = perPage
     this.#cursor = cursor

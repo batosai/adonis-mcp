@@ -94,4 +94,3 @@ test.group('ServerContext', () => {
     assert.equal(context.getPerPage(), 15)
   })
 })
-

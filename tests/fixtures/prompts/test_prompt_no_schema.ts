@@ -18,4 +18,3 @@ export default class TestPromptNoSchema extends Prompt<JSONSchema> {
     return response.text('Hello from test prompt without schema')
   }
 }
-

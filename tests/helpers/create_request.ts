@@ -63,38 +63,22 @@ export function createToolsCallRequest(
   )
 }
 
-export function createListToolsRequest(
-  cursor?: string,
-  id: string | number = 1
-): JsonRpcRequest {
-  return createJsonRpcRequest(
-    'tools/list',
-    cursor ? { cursor } : undefined,
-    id
-  )
+export function createListToolsRequest(cursor?: string, id: string | number = 1): JsonRpcRequest {
+  return createJsonRpcRequest('tools/list', cursor ? { cursor } : undefined, id)
 }
 
 export function createListResourcesRequest(
   cursor?: string,
   id: string | number = 1
 ): JsonRpcRequest {
-  return createJsonRpcRequest(
-    'resources/list',
-    cursor ? { cursor } : undefined,
-    id
-  )
+  return createJsonRpcRequest('resources/list', cursor ? { cursor } : undefined, id)
 }
 
-export function createPingRequest(
-  id: string | number = 1
-): JsonRpcRequest {
+export function createPingRequest(id: string | number = 1): JsonRpcRequest {
   return createJsonRpcRequest('ping', undefined, id)
 }
 
-export function createResourcesReadRequest(
-  uri: string,
-  id: string | number = 1
-): JsonRpcRequest {
+export function createResourcesReadRequest(uri: string, id: string | number = 1): JsonRpcRequest {
   return createJsonRpcRequest(
     'resources/read',
     {
@@ -104,15 +88,8 @@ export function createResourcesReadRequest(
   )
 }
 
-export function createListPromptsRequest(
-  cursor?: string,
-  id: string | number = 1
-): JsonRpcRequest {
-  return createJsonRpcRequest(
-    'prompts/list',
-    cursor ? { cursor } : undefined,
-    id
-  )
+export function createListPromptsRequest(cursor?: string, id: string | number = 1): JsonRpcRequest {
+  return createJsonRpcRequest('prompts/list', cursor ? { cursor } : undefined, id)
 }
 
 export function createPromptsGetRequest(
@@ -129,4 +106,3 @@ export function createPromptsGetRequest(
     id
   )
 }
-

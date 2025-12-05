@@ -37,4 +37,3 @@ test.group('Ping Method', () => {
     assert.exists(response.result)
   })
 })
-

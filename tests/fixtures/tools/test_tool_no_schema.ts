@@ -22,4 +22,3 @@ export default class TestToolNoSchema extends Tool<JSONSchema> {
     return { result: 'test' }
   }
 }
-

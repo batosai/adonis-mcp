@@ -152,6 +152,4 @@ test.group('CallTool Method', () => {
       assert.equal(error.requestId, request.id)
     }
   })
-
 })
-

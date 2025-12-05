@@ -21,4 +21,3 @@ export default class TestResource2 extends Resource {
     return response.blob('Hello World') // Will be base64 encoded by Blob class
   }
 }
-

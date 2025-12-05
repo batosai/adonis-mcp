@@ -30,4 +30,3 @@ export default class TestTool1 extends Tool<JSONSchema> {
     return { result: 'test' }
   }
 }
-

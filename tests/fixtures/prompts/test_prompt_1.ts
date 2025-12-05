@@ -33,4 +33,3 @@ export default class TestPrompt1 extends Prompt<JSONSchema> {
     return response.text(`Hello from test prompt 1: ${args.text}`)
   }
 }
-

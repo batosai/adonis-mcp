@@ -87,4 +87,3 @@ test.group('Initialize Method', () => {
     }
   })
 })
-

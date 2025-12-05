@@ -6,22 +6,45 @@
  */
 
 import type { McpRequestType } from './request.js'
-import type { TextBuilder, ImageBuilder, AudioBuilder, ErrorBuilder, BlobResourceBuilder, TextResourceBuilder, ResourceBuilder } from './jsonrpc.js'
-import type { Text, TextPrompt, Blob, Image, ImagePrompt, Audio, AudioPrompt, Error } from './content.js'
+import type {
+  TextBuilder,
+  ImageBuilder,
+  AudioBuilder,
+  ErrorBuilder,
+  BlobResourceBuilder,
+  TextResourceBuilder,
+  ResourceBuilder,
+} from './jsonrpc.js'
+import type {
+  Text,
+  TextPrompt,
+  Blob,
+  Image,
+  ImagePrompt,
+  Audio,
+  AudioPrompt,
+  Error,
+} from './content.js'
 
-export type ToolResponse = TextBuilder | ImageBuilder | AudioBuilder | ErrorBuilder | ResourceBuilder
+export type ToolResponse =
+  | TextBuilder
+  | ImageBuilder
+  | AudioBuilder
+  | ErrorBuilder
+  | ResourceBuilder
 export type ResourceResponse = BlobResourceBuilder | TextResourceBuilder
-export type PromptResponse = TextBuilder | ImageBuilder | AudioBuilder | ErrorBuilder | ResourceBuilder
+export type PromptResponse =
+  | TextBuilder
+  | ImageBuilder
+  | AudioBuilder
+  | ErrorBuilder
+  | ResourceBuilder
 
+type TextResponseType<T extends McpRequestType> = T extends 'prompt' ? TextPrompt : Text
 
-type TextResponseType<T extends McpRequestType> = 
-  T extends 'prompt' ? TextPrompt : Text
+type ImageResponseType<T extends McpRequestType> = T extends 'prompt' ? ImagePrompt : Image
 
-type ImageResponseType<T extends McpRequestType> = 
-  T extends 'prompt' ? ImagePrompt : Image
-
-type AudioResponseType<T extends McpRequestType> = 
-  T extends 'prompt' ? AudioPrompt : Audio
+type AudioResponseType<T extends McpRequestType> = T extends 'prompt' ? AudioPrompt : Audio
 
 export interface McpResponse<T extends McpRequestType = McpRequestType> {
   readonly type: T

@@ -13,9 +13,7 @@ export default class Response {
   #result?: JsonRpcResult
   #error?: JsonRpcError
 
-  constructor(
-    id: string | number
-  ) {
+  constructor(id: string | number) {
     this.#id = id
   }
 

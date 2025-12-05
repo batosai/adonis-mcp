@@ -19,7 +19,10 @@ test.group('Server', () => {
 
     assert.equal(server.name, 'AdonisJS MCP Server')
     assert.equal(server.version, '1.0.0')
-    assert.equal(server.instructions, 'This MCP server lets AI agents interact with our AdonisJS application.')
+    assert.equal(
+      server.instructions,
+      'This MCP server lets AI agents interact with our AdonisJS application.'
+    )
     assert.equal(server.maxPaginationLength, 50)
     assert.equal(server.defaultPaginationLength, 15)
   })
@@ -141,4 +144,3 @@ test.group('Server', () => {
     assert.equal(context.request.id, request.id)
   })
 })
-

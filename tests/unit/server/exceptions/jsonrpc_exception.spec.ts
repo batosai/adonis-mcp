@@ -30,15 +30,9 @@ test.group('JsonRpcException', () => {
 
   test('should include data in error response when provided', ({ assert }) => {
     const data = { field: 'value' }
-    const exception = new JsonRpcException(
-      'Test error',
-      ErrorCode.InternalError,
-      456,
-      data
-    )
+    const exception = new JsonRpcException('Test error', ErrorCode.InternalError, 456, data)
     const response = exception.toJsonRpcResponse()
 
     assert.deepEqual(response.error?.data, data)
   })
 })
-

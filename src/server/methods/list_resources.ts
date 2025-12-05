@@ -39,7 +39,12 @@ export default class ListResources implements Method {
             mimeType: resource.mimeType,
           }
         } catch (error) {
-          throw new JsonRpcException(`Error listing resource`, ErrorCode.InternalError, ctx.request.id, { error })
+          throw new JsonRpcException(
+            `Error listing resource`,
+            ErrorCode.InternalError,
+            ctx.request.id,
+            { error }
+          )
         }
       })
     )

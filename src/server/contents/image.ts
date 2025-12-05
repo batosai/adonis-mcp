@@ -28,7 +28,7 @@ export default class Image implements Content {
       type: 'image' as const,
       data: this.#data,
       mimeType: this.#mimeType,
-      _meta: this.#_meta
+      _meta: this.#_meta,
     }
   }
 
@@ -37,14 +37,11 @@ export default class Image implements Content {
       type: 'image' as const,
       data: this.#data,
       mimeType: this.#mimeType,
-      _meta: this.#_meta
+      _meta: this.#_meta,
     }
   }
 
   toResource(_resource: Resource): never {
-    throw createError(
-      'Image content may not be used in resources.',
-      'E_IMAGE_NOT_SUPPORTED'
-    )
+    throw createError('Image content may not be used in resources.', 'E_IMAGE_NOT_SUPPORTED')
   }
 }

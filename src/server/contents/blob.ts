@@ -24,21 +24,15 @@ export default class Blob implements Content {
   }
 
   toTool(_tool: Tool): never {
-    throw createError(
-      'Blob content may not be used in tools.',
-      'E_BLOB_NOT_SUPPORTED'
-    )
+    throw createError('Blob content may not be used in tools.', 'E_BLOB_NOT_SUPPORTED')
   }
 
   toPrompt(_prompt: Prompt): never {
-    throw createError(
-      'Blob content may not be used in prompts.',
-      'E_BLOB_NOT_SUPPORTED'
-    )
+    throw createError('Blob content may not be used in prompts.', 'E_BLOB_NOT_SUPPORTED')
   }
 
   toResource(resource: Resource): BlobResourceBuilder {
-    return { 
+    return {
       blob: this.#text,
       uri: resource.uri,
       mimeType: resource.mimeType,

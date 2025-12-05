@@ -189,9 +189,3 @@ test.group('ListResources Method', () => {
     assert.exists(response.result?.nextCursor)
   })
 })
-
-
-
-
-
-

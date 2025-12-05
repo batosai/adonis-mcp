@@ -36,4 +36,3 @@ export default class FakeTransport implements Transport {
     return this.sentMessages[this.sentMessages.length - 1]
   }
 }
-

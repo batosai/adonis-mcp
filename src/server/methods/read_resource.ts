@@ -19,13 +19,21 @@ export default class ReadResource implements Method {
     const params = ctx.request.params
 
     if (!params?.uri) {
-      throw new JsonRpcException(`The resource URI is required.`, ErrorCode.InvalidParams, resourceContext.request.id)
+      throw new JsonRpcException(
+        `The resource URI is required.`,
+        ErrorCode.InvalidParams,
+        resourceContext.request.id
+      )
     }
 
     const item = Object.keys(resourceContext.resources).find((key) => key === params.uri)
 
     if (!item) {
-      throw new JsonRpcException(`The resource ${params.uri} was not found.`, ErrorCode.MethodNotFound, resourceContext.request.id)
+      throw new JsonRpcException(
+        `The resource ${params.uri} was not found.`,
+        ErrorCode.MethodNotFound,
+        resourceContext.request.id
+      )
     }
 
     const { default: Resource } = await import(resourceContext.resources[item])
@@ -45,6 +53,6 @@ export default class ReadResource implements Method {
       result.contents.push(content.toResource(resource))
     })
 
-    return Response.toJsonRpc({ id: ctx.request.id, result})
+    return Response.toJsonRpc({ id: ctx.request.id, result })
   }
 }

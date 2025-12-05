@@ -23,9 +23,6 @@ export default class TestToolWithMultipleContents extends Tool<JSONSchema> {
   }
 
   async handle({ response }: ToolContext) {
-    return [
-      response.text('First message'),
-      response.text('Second message'),
-    ]
+    return [response.text('First message'), response.text('Second message')]
   }
 }

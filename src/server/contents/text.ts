@@ -27,14 +27,14 @@ export default class Text implements Content {
   toTool(_tool: Tool): TextBuilder {
     return {
       type: 'text' as const,
-      text: this.#text
+      text: this.#text,
     }
   }
 
   toPrompt(_prompt: Prompt): TextBuilder {
     return {
       type: 'text' as const,
-      text: this.#text
+      text: this.#text,
     }
   }
 

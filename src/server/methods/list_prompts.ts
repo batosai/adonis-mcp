@@ -48,7 +48,12 @@ export default class ListPrompts implements Method {
             },
           }
         } catch (error) {
-          throw new JsonRpcException(`Error listing prompt`, ErrorCode.InternalError, ctx.request.id, { error })
+          throw new JsonRpcException(
+            `Error listing prompt`,
+            ErrorCode.InternalError,
+            ctx.request.id,
+            { error }
+          )
         }
       })
     )

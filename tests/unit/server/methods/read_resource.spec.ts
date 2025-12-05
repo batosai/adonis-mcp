@@ -8,7 +8,10 @@
 import { test } from '@japa/runner'
 import ReadResource from '../../../../src/server/methods/read_resource.js'
 import { createTestContext } from '../../../helpers/create_context.js'
-import { createResourcesReadRequest, createJsonRpcRequest } from '../../../helpers/create_request.js'
+import {
+  createResourcesReadRequest,
+  createJsonRpcRequest,
+} from '../../../helpers/create_request.js'
 import { ErrorCode } from '../../../../src/enums/error.js'
 
 // Import resource fixtures using relative paths
@@ -66,7 +69,7 @@ test.group('ReadResource Method', () => {
     assert.exists(response.result?.contents)
     assert.isArray(response.result?.contents)
     assert.lengthOf(response.result?.contents, 1)
-    
+
     const content = response.result?.contents[0]
     assert.exists(content)
     assert.equal(content?.text, 'Hello from test resource 1')
@@ -95,7 +98,7 @@ test.group('ReadResource Method', () => {
     assert.exists(response.result?.contents)
     assert.isArray(response.result?.contents)
     assert.lengthOf(response.result?.contents, 1)
-    
+
     const content = response.result?.contents[0]
     assert.exists(content)
     // Blob class encodes to base64, so "Hello World" becomes "SGVsbG8gV29ybGQ="
@@ -123,4 +126,3 @@ test.group('ReadResource Method', () => {
     assert.notExists(response.result?.content) // Should not have 'content' (singular)
   })
 })
-

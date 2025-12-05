@@ -8,4 +8,3 @@ declare module '@japa/runner' {
     assert: Assert
   }
 }
-

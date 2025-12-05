@@ -5,10 +5,7 @@ import { processCLIArgs, configure, run } from '@japa/runner'
 processCLIArgs(process.argv.slice(2))
 configure({
   files: ['tests/**/*.spec.ts'],
-  plugins: [
-    assert(),
-    expectTypeOf()
-  ],
+  plugins: [assert(), expectTypeOf()],
 })
 
 run()

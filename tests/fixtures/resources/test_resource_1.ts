@@ -21,9 +21,3 @@ export default class TestResource1 extends Resource {
     return response.text('Hello from test resource 1')
   }
 }
-
-
-
-
-
-

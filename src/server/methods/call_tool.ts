@@ -20,13 +20,21 @@ export default class CallTool implements Method {
     const params = toolContext.request.params
 
     if (!params?.name) {
-      throw new JsonRpcException(`The tool name is required.`, ErrorCode.InvalidParams, toolContext.request.id)
+      throw new JsonRpcException(
+        `The tool name is required.`,
+        ErrorCode.InvalidParams,
+        toolContext.request.id
+      )
     }
 
     const item = Object.keys(toolContext.tools).find((key) => key === params.name)
 
     if (!item) {
-      throw new JsonRpcException(`The tool ${params.name} was not found.`, ErrorCode.MethodNotFound, toolContext.request.id)
+      throw new JsonRpcException(
+        `The tool ${params.name} was not found.`,
+        ErrorCode.MethodNotFound,
+        toolContext.request.id
+      )
     }
 
     let Tool
@@ -67,6 +75,6 @@ export default class CallTool implements Method {
       result.isError = true
     }
 
-    return Response.toJsonRpc({ id: ctx.request.id, result})
+    return Response.toJsonRpc({ id: ctx.request.id, result })
   }
 }
