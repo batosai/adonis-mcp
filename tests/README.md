@@ -9,6 +9,10 @@ tests/
 ├── helpers/              # Helpers and fixtures to facilitate testing
 │   ├── create_context.ts    # Helper to create test contexts
 │   └── create_request.ts    # Helper to create JSON-RPC requests
+├── fixtures/             # Test fixtures
+│   ├── tools/            # Tool fixtures for testing
+│   ├── resources/        # Resource fixtures for testing
+│   └── prompts/          # Prompt fixtures for testing
 ├── unit/                 # Unit tests
 │   └── server/
 │       ├── context.spec.ts
@@ -65,6 +69,42 @@ import { createInitializeRequest } from '../helpers/create_request.js'
 const request = createInitializeRequest('2025-06-18', 1)
 ```
 
+### `createListResourcesRequest()`
+Creates a request to list resources.
+
+```typescript
+import { createListResourcesRequest } from '../helpers/create_request.js'
+
+const request = createListResourcesRequest('cursor123')
+```
+
+### `createResourcesReadRequest()`
+Creates a request to read a resource.
+
+```typescript
+import { createResourcesReadRequest } from '../helpers/create_request.js'
+
+const request = createResourcesReadRequest('file:///path/to/resource.txt')
+```
+
+### `createListPromptsRequest()`
+Creates a request to list prompts.
+
+```typescript
+import { createListPromptsRequest } from '../helpers/create_request.js'
+
+const request = createListPromptsRequest('cursor123')
+```
+
+### `createPromptsGetRequest()`
+Creates a request to get a prompt.
+
+```typescript
+import { createPromptsGetRequest } from '../helpers/create_request.js'
+
+const request = createPromptsGetRequest('my-prompt', { text: 'Hello' })
+```
+
 ### `FakeTransport`
 Fake transport for testing the server without external dependencies.
 
@@ -92,6 +132,11 @@ assert.exists(lastMessage)
 - ✅ Tests for `initialize` - MCP server initialization
 - ✅ Tests for `list_tools` - Tool listing with pagination
 - ✅ Tests for `call_tool` - Tool calls (error handling)
+- ✅ Tests for `list_resources` - Resource listing with pagination
+- ✅ Tests for `read_resource` - Resource reading (text and blob)
+- ✅ Tests for `list_prompts` - Prompt listing with pagination
+- ✅ Tests for `get_prompt` - Prompt retrieval with arguments
+- ✅ Tests for `ping` - Ping method
 - ✅ Tests for `Server` - Main server class
 - ✅ Tests for `ServerContext` - Server context
 - ✅ Tests for `CursorPaginator` - Cursor pagination
@@ -99,11 +144,6 @@ assert.exists(lastMessage)
 
 ## Tests to add (priorities)
 
-- [ ] Tests for `list_resources` with pagination
-- [ ] Tests for `list_prompts`
-- [ ] Tests for `get_prompt`
-- [ ] Tests for `read_resource`
-- [ ] Tests for `ping`
 - [ ] Tests for transports (stdio, http)
 - [ ] End-to-end integration tests
 
