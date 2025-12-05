@@ -20,6 +20,18 @@ export default class JsonRpcException extends Error {
     this.#data = data
   }
 
+  get code(): number {
+    return this.#code
+  }
+
+  get requestId(): string | number {
+    return this.#requestId
+  }
+
+  get data(): Record<string, unknown> | undefined {
+    return this.#data
+  }
+
   toJsonRpcResponse(): JsonRpcResponse {
     return Response.toJsonRpc({
       id: this.#requestId,
