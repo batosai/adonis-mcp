@@ -7,13 +7,14 @@
 
 import type { McpRequestType } from './request.js'
 import type {
-  TextBuilder,
-  ImageBuilder,
-  AudioBuilder,
+  TextContent,
+  ImageContent,
+  AudioContent,
   ErrorBuilder,
-  BlobResourceBuilder,
-  TextResourceBuilder,
-  ResourceBuilder,
+  BlobResourceContents,
+  TextResourceContents,
+  EmbeddedResource,
+  ResourceLink,
 } from './jsonrpc.js'
 import type {
   Text,
@@ -24,21 +25,24 @@ import type {
   Audio,
   AudioPrompt,
   Error,
+  ResourceLink as ResourceLinkContent,
+  EmbeddedResource as EmbeddedResourceContent,
 } from './content.js'
 
 export type ToolResponse =
-  | TextBuilder
-  | ImageBuilder
-  | AudioBuilder
-  | ErrorBuilder
-  | ResourceBuilder
-export type ResourceResponse = BlobResourceBuilder | TextResourceBuilder
+  | Promise<TextContent>
+  | Promise<ImageContent>
+  | Promise<AudioContent>
+  | Promise<ErrorBuilder>
+  | Promise<ResourceLink>
+  | Promise<EmbeddedResource>
+export type ResourceResponse = Promise<BlobResourceContents> | Promise<TextResourceContents>
 export type PromptResponse =
-  | TextBuilder
-  | ImageBuilder
-  | AudioBuilder
-  | ErrorBuilder
-  | ResourceBuilder
+  | Promise<TextContent>
+  | Promise<ImageContent>
+  | Promise<AudioContent>
+  | Promise<ErrorBuilder>
+  | Promise<EmbeddedResource>
 
 type TextResponseType<T extends McpRequestType> = T extends 'prompt' ? TextPrompt : Text
 
@@ -52,9 +56,11 @@ export interface McpResponse<T extends McpRequestType = McpRequestType> {
   blob(text: string): Blob
   image(data: string, mimeType: string, _meta?: Record<string, unknown>): ImageResponseType<T>
   audio(data: string, mimeType: string, _meta?: Record<string, unknown>): AudioResponseType<T>
+  resourceLink(uri: string): ResourceLinkContent
+  embeddedResource(uri: string): EmbeddedResourceContent
   error(message: string): Error
 }
 
-export type McpToolResponse = Pick<McpResponse<'tool'>, 'text' | 'image' | 'audio' | 'error'>
+export type McpToolResponse = Pick<McpResponse<'tool'>, 'text' | 'image' | 'audio' | 'resourceLink' | 'embeddedResource' | 'error'>
 export type McpResourceResponse = Pick<McpResponse<'resource'>, 'text' | 'blob'>
-export type McpPromptResponse = Pick<McpResponse<'prompt'>, 'text' | 'image' | 'audio' | 'error'>
+export type McpPromptResponse = Pick<McpResponse<'prompt'>, 'text' | 'image' | 'audio' | 'embeddedResource' | 'error'>

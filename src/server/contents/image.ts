@@ -6,24 +6,28 @@
  */
 
 import type { Content } from '../content.js'
-import type { ImageBuilder } from '../../types/jsonrpc.js'
+import type { ImageContent } from '../../types/jsonrpc.js'
 import type { AnyTool as Tool } from '../tool.js'
 import type { AnyPrompt as Prompt } from '../prompt.js'
 import type { Resource } from '../resource.js'
 import { createError } from '@adonisjs/core/exceptions'
 
+import Role from '../../enums/role.js'
+
 export default class Image implements Content {
   #data: string
   #mimeType: string
+  #role: Role
   #_meta?: Record<string, unknown>
 
   constructor(data: string, mimeType: string, _meta?: Record<string, unknown>) {
     this.#data = data
     this.#mimeType = mimeType
     this.#_meta = _meta
+    this.#role = Role.USER
   }
 
-  toTool(_tool: Tool): ImageBuilder {
+  async toTool(_tool: Tool): Promise<ImageContent> {
     return {
       type: 'image' as const,
       data: this.#data,
@@ -32,7 +36,7 @@ export default class Image implements Content {
     }
   }
 
-  toPrompt(_prompt: Prompt): ImageBuilder {
+  async toPrompt(_prompt: Prompt): Promise<ImageContent> {
     return {
       type: 'image' as const,
       data: this.#data,
@@ -41,7 +45,21 @@ export default class Image implements Content {
     }
   }
 
-  toResource(_resource: Resource): never {
+  async toResource(_resource: Resource): Promise<never> {
     throw createError('Image content may not be used in resources.', 'E_IMAGE_NOT_SUPPORTED')
+  }
+
+  asAssistant(): this {
+    this.#role = Role.ASSISTANT
+    return this
+  }
+
+  asUser(): this {
+    this.#role = Role.USER
+    return this
+  }
+
+  get role() {
+    return this.#role
   }
 }

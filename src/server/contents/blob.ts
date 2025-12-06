@@ -6,7 +6,7 @@
  */
 
 import type { Content } from '../content.js'
-import type { BlobResourceBuilder } from '../../types/jsonrpc.js'
+import type { BlobResourceContents } from '../../types/jsonrpc.js'
 import type { Resource } from '../resource.js'
 import type { AnyTool as Tool } from '../tool.js'
 import type { AnyPrompt as Prompt } from '../prompt.js'
@@ -23,20 +23,19 @@ export default class Blob implements Content {
     }
   }
 
-  toTool(_tool: Tool): never {
+  async toTool(_tool: Tool): Promise<never> {
     throw createError('Blob content may not be used in tools.', 'E_BLOB_NOT_SUPPORTED')
   }
 
-  toPrompt(_prompt: Prompt): never {
+  async toPrompt(_prompt: Prompt): Promise<never> {
     throw createError('Blob content may not be used in prompts.', 'E_BLOB_NOT_SUPPORTED')
   }
 
-  toResource(resource: Resource): BlobResourceBuilder {
+  async toResource(resource: Resource): Promise<BlobResourceContents> {
     return {
       blob: this.#text,
       uri: resource.uri,
       mimeType: resource.mimeType,
-      size: resource.size,
     }
   }
 }

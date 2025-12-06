@@ -22,8 +22,14 @@ export type AudioPrompt = Content & {
   asUser: () => Content
 }
 
+export type EmbeddedResource = Content & {
+  asAssistant: () => Content
+  asUser: () => Content
+}
+
 export type Text = Content
 export type Blob = Content
 export type Image = Content
 export type Audio = Content
+export type ResourceLink = Content
 export type Error = Content

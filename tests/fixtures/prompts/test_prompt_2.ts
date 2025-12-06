@@ -33,3 +33,4 @@ export default class TestPrompt2 extends Prompt<JSONSchema> {
     return response.text(`Hello from test prompt 2: ${args.number ?? 'no number'}`)
   }
 }
+

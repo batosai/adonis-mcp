@@ -40,50 +40,75 @@ export type JsonRpcNotification = {
   }
 }
 
-// BUILDER TYPES
+// CONTENT TYPES
+
+export type Role = 'user' | 'assistant'
 
 export type ErrorBuilder = {
   type: 'text'
   text: string
 }
 
-export type TextBuilder = {
+export type TextContent = {
   type: 'text'
   text: string
+  annotations?: Annotations
   _meta?: { [key: string]: unknown }
 }
 
-export type ImageBuilder = {
+export type ImageContent = {
   type: 'image'
   data: string
   mimeType: string
+  annotations?: Annotations
   _meta?: { [key: string]: unknown }
 }
 
-export type AudioBuilder = {
+export type AudioContent = {
   type: 'audio'
   data: string
   mimeType: string
+  annotations?: Annotations
   _meta?: { [key: string]: unknown }
 }
 
-export type BlobResourceBuilder = {
+export type BlobResourceContents = {
   blob: string
   mimeType?: string
   uri: string
-  size?: number
   _meta?: { [key: string]: unknown }
 }
 
-export type TextResourceBuilder = {
+export type TextResourceContents = {
   text: string
   mimeType?: string
   uri: string
-  size?: number
   _meta?: { [key: string]: unknown }
 }
 
-export type ResourceBuilder = {
-  type: 'resource'
-  resource: BlobResourceBuilder | TextResourceBuilder
+export type ResourceLink = {
+  type: 'resource_link'
+  name: string
+  size?: number
+  title?: string
+  description?: string
+  mimeType?: string
+  uri: string
+  annotations?: Annotations
+  _meta?: { [key: string]: unknown }
 }
+
+export type EmbeddedResource = {
+  type: 'resource'
+  resource: BlobResourceContents | TextResourceContents
+  annotations?: Annotations
+  _meta?: { [key: string]: unknown }
+}
+
+export type Annotations ={
+  audience?: Role[]
+  lastModified?: string
+  priority?: number
+}
+
+export type ContentBlock = TextContent | ImageContent | AudioContent | EmbeddedResource | ResourceLink

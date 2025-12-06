@@ -218,3 +218,4 @@ test.group('ListPrompts Method', () => {
     assert.exists(response.result?.nextCursor)
   })
 })
+

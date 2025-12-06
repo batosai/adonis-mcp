@@ -6,14 +6,16 @@
  */
 
 import type { Content } from '../content.js'
-import type { TextBuilder, TextResourceBuilder } from '../../types/jsonrpc.js'
+import type { TextContent, TextResourceContents } from '../../types/jsonrpc.js'
 import type { AnyTool as Tool } from '../tool.js'
 import type { AnyPrompt as Prompt } from '../prompt.js'
 import type { Resource } from '../resource.js'
 
+import Role from '../../enums/role.js'
+
 export default class Text implements Content {
   #text: string
-  #role: 'assistant' | 'user'
+  #role: Role
 
   constructor(text: string | unknown) {
     if (typeof text === 'string') {
@@ -21,39 +23,38 @@ export default class Text implements Content {
     } else {
       this.#text = JSON.stringify(text)
     }
-    this.#role = 'user'
+    this.#role = Role.USER
   }
 
-  toTool(_tool: Tool): TextBuilder {
+  async toTool(_tool: Tool): Promise<TextContent> {
     return {
       type: 'text' as const,
       text: this.#text,
     }
   }
 
-  toPrompt(_prompt: Prompt): TextBuilder {
+  async toPrompt(_prompt: Prompt): Promise<TextContent> {
     return {
       type: 'text' as const,
       text: this.#text,
     }
   }
 
-  toResource(_resource: Resource): TextResourceBuilder {
+  async toResource(resource: Resource): Promise<TextResourceContents> {
     return {
       text: this.#text,
-      uri: _resource.uri,
-      mimeType: _resource.mimeType,
-      size: _resource.size,
+      uri: resource.uri,
+      mimeType: resource.mimeType,
     }
   }
 
   asAssistant(): this {
-    this.#role = 'assistant'
+    this.#role = Role.ASSISTANT
     return this
   }
 
   asUser(): this {
-    this.#role = 'user'
+    this.#role = Role.USER
     return this
   }
 

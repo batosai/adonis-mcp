@@ -6,11 +6,12 @@
  */
 
 import type { Method } from '../../types/method.js'
-import type { McpContext, PromptContext } from '../../types/context.js'
+import type { McpContext, PromptContext, ResourceContext } from '../../types/context.js'
 import type Role from '../../enums/role.js'
 
 import { ErrorCode } from '../../enums/error.js'
 import JsonRpcException from '../exceptions/jsonrpc_exception.js'
+import EmbeddedResource from '../contents/embedded_resource.js'
 import Response from '../../response.js'
 
 export default class GetPrompt implements Method {
@@ -59,7 +60,7 @@ export default class GetPrompt implements Method {
     }
 
     let messages: { role: Role; content: Record<string, any> }[] = []
-    data.forEach((content) => {
+    for await (const content of data) {
       if (!content || !content.role) {
         throw new JsonRpcException(
           `Invalid content returned from prompt ${params.name}.`,
@@ -67,11 +68,16 @@ export default class GetPrompt implements Method {
           promptContext.request.id
         )
       }
+
+      if (content instanceof EmbeddedResource) {
+        await content.process(ctx.resources, ctx as unknown as ResourceContext)
+      }
+
       messages.push({
         role: content.role as Role,
-        content: content.toPrompt(prompt),
+        content: await content.toPrompt(prompt),
       })
-    })
+    }
 
     if (messages.length === 0) {
       throw new JsonRpcException(

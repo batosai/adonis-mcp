@@ -39,18 +39,13 @@ export default class ReadResource implements Method {
     const { default: Resource } = await import(resourceContext.resources[item])
 
     const resource = new Resource(resourceContext)
-    const contents = await resource.handle(resourceContext)
+    const content = await resource.handle(resourceContext)
 
-    let data: Content[]
-    if (!Array.isArray(contents)) {
-      data = [contents]
-    } else {
-      data = contents
-    }
+    const data: Content[] = [content]
 
     const result: Record<string, any> = { contents: [] }
-    data.forEach((content) => {
-      result.contents.push(content.toResource(resource))
+    data.forEach(async (content) => {
+      result.contents.push(await content.toResource(resource))
     })
 
     return Response.toJsonRpc({ id: ctx.request.id, result })

@@ -6,24 +6,28 @@
  */
 
 import type { Content } from '../content.js'
-import type { AudioBuilder } from '../../types/jsonrpc.js'
+import type { AudioContent } from '../../types/jsonrpc.js'
 import type { AnyTool as Tool } from '../tool.js'
 import type { AnyPrompt as Prompt } from '../prompt.js'
 import type { Resource } from '../resource.js'
 import { createError } from '@adonisjs/core/exceptions'
 
+import Role from '../../enums/role.js'
+
 export default class Audio implements Content {
   #data: string
   #mimeType: string
   #_meta?: Record<string, unknown>
+  #role: Role
 
   constructor(data: string, mimeType: string, _meta?: Record<string, unknown>) {
     this.#data = data
     this.#mimeType = mimeType
     this.#_meta = _meta
+    this.#role = Role.USER
   }
 
-  toTool(_tool: Tool): AudioBuilder {
+  async toTool(_tool: Tool): Promise<AudioContent> {
     return {
       type: 'audio' as const,
       data: this.#data,
@@ -32,7 +36,7 @@ export default class Audio implements Content {
     }
   }
 
-  toPrompt(_prompt: Prompt): AudioBuilder {
+  async toPrompt(_prompt: Prompt): Promise<AudioContent> {
     return {
       type: 'audio' as const,
       data: this.#data,
@@ -41,7 +45,21 @@ export default class Audio implements Content {
     }
   }
 
-  toResource(_resource: Resource): never {
+  async toResource(_resource: Resource): Promise<never> {
     throw createError('Audio content may not be used in resources.', 'E_AUDIO_NOT_SUPPORTED')
+  }
+
+  asAssistant(): this {
+    this.#role = Role.ASSISTANT
+    return this
+  }
+
+  asUser(): this {
+    this.#role = Role.USER
+    return this
+  }
+
+  get role() {
+    return this.#role
   }
 }

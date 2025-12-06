@@ -6,13 +6,15 @@
  */
 
 import type { Method } from '../../types/method.js'
-import type { McpContext, ToolContext } from '../../types/context.js'
+import type { McpContext, ToolContext, ResourceContext } from '../../types/context.js'
 import type { Content } from '../content.js'
 
 import { ErrorCode } from '../../enums/error.js'
 import JsonRpcException from '../exceptions/jsonrpc_exception.js'
 import Response from '../../response.js'
 import ErrorContent from '../contents/error.js'
+import ResourceLink from '../contents/resource_link.js'
+import EmbeddedResource from '../contents/embedded_resource.js'
 
 export default class CallTool implements Method {
   async handle(ctx: McpContext) {
@@ -63,13 +65,17 @@ export default class CallTool implements Method {
 
     let isError = false
     const result: Record<string, any> = { content: [] }
-    data.forEach((content) => {
-      result.content.push(content.toTool(tool))
+    for await (const content of data) {
+      if (content instanceof ResourceLink || content instanceof EmbeddedResource) {
+        await content.process(ctx.resources, ctx as unknown as ResourceContext)
+      }
+
+      result.content.push(await content.toTool(tool))
 
       if (content instanceof ErrorContent) {
         isError = true
       }
-    })
+    }
 
     if (isError) {
       result.isError = true

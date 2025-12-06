@@ -12,9 +12,9 @@ export abstract class Resource {
   abstract uri: string
   abstract title?: string
   abstract description?: string
-  abstract name?: string
-  abstract size?: number
+  abstract name: string
   abstract mimeType?: string
+  abstract size?: number
 
-  abstract handle(ctx?: ResourceContext): Promise<Content | Content[]>
+  abstract handle(ctx?: ResourceContext): Promise<Content>
 }

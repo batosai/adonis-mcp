@@ -15,6 +15,8 @@ import Text from './server/contents/text.js'
 import Blob from './server/contents/blob.js'
 import Image from './server/contents/image.js'
 import Audio from './server/contents/audio.js'
+import ResourceLink from './server/contents/resource_link.js'
+import EmbeddedResource from './server/contents/embedded_resource.js'
 import Error from './server/contents/error.js'
 
 export default class<T extends McpRequestType = McpRequestType> implements McpResponse {
@@ -46,20 +48,13 @@ export default class<T extends McpRequestType = McpRequestType> implements McpRe
     return new Audio(data, mimeType, _meta)
   }
 
-  resource() {
-    // TODO a definir mais utile car resource, prompt et tool en aurons besoin
-    // {
-    //   type: 'resource' as const,
-    //   name: string,
-    //   title: string,
-    //   uri: string,
-    //   mimeType: string,
-    // }
-    // peut etre definir des method static, resource, prompt et tool.
+  resourceLink(uri: string) {
+    return new ResourceLink(uri)
   }
 
-  // resourceLink() {
-  // embeddedResource() {
+  embeddedResource(uri: string) {
+    return new EmbeddedResource(uri)
+  }
 
   error(message: string) {
     return new Error(message)
