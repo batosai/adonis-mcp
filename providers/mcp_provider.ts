@@ -53,7 +53,7 @@ export default class McpProvider {
 
   async registerMethods(type: McpRequestType) {
     const server = await this.app.container.make('jrmc.mcp')
-    const path = this.app.makePath(server.config.path!)
+    const path = this.app.makePath(this.app.rcFile.directories['mcp'] || 'app/mcp/')
     const files = await fsReadAll(path, {
       filter: (filePath) => filePath.includes(`_${type}.ts`),
     })

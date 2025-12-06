@@ -2,7 +2,7 @@
 {{#var resourceFileName = string(className).snakeCase().ext('.ts').toString()}}
 {{{
   exports({
-    to: app.makePath(app.rcFile.directories['mcp'] || basePath, resourceFileName)
+    to: app.makePath(app.rcFile.directories['mcp'] || 'app/mcp/', resourceFileName)
   })
 }}}
 import type { PromptContext } from '@jrmc/adonis-mcp/types/context'
@@ -23,7 +23,9 @@ export default class {{ className }} implements Prompt<Schema> {
 
   async handle({ args, response }: Context) {
     console.log(args.text)
-    return response.text('Hello, world!')
+    return [
+      response.text('Hello, world!')
+    ]
   }
 
   schema() {
