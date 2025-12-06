@@ -22,7 +22,7 @@ export default class Server {
   version: string = '1.0.0'
   instructions: string = 'This MCP server lets AI agents interact with our AdonisJS application.'
 
-  supportedProtocolVersion: string[] = ['2025-06-18']
+  supportedProtocolVersion: string[] = ['2025-11-25', '2025-06-18']
 
   capabilities: Record<string, any> = {
     tools: {
