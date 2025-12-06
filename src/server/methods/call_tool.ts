@@ -62,9 +62,9 @@ export default class CallTool implements Method {
     }
 
     let isError = false
-    const result: Record<string, any> = { contents: [] }
+    const result: Record<string, any> = { content: [] }
     data.forEach((content) => {
-      result.contents.push(content.toTool(tool))
+      result.content.push(content.toTool(tool))
 
       if (content instanceof ErrorContent) {
         isError = true
