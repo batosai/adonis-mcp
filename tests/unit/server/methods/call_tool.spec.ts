@@ -64,9 +64,9 @@ test.group('CallTool Method', () => {
     assert.equal(response.jsonrpc, '2.0')
     assert.equal(response.id, request.id)
     assert.exists(response.result)
-    assert.exists(response.result?.contents)
-    assert.isArray(response.result?.contents)
-    const contents = response.result?.contents as any[]
+    assert.exists(response.result?.content)
+    assert.isArray(response.result?.content)
+    const contents = response.result?.content as any[]
     assert.equal(contents.length, 1)
     assert.notExists(response.result?.isError)
 
@@ -93,9 +93,9 @@ test.group('CallTool Method', () => {
     assert.equal(response.jsonrpc, '2.0')
     assert.equal(response.id, request.id)
     assert.exists(response.result)
-    assert.exists(response.result?.contents)
-    assert.isArray(response.result?.contents)
-    const contents = response.result?.contents as any[]
+    assert.exists(response.result?.content)
+    assert.isArray(response.result?.content)
+    const contents = response.result?.content as any[]
     assert.equal(contents.length, 1)
     assert.equal(response.result?.isError, true)
 
@@ -122,9 +122,9 @@ test.group('CallTool Method', () => {
     assert.equal(response.jsonrpc, '2.0')
     assert.equal(response.id, request.id)
     assert.exists(response.result)
-    assert.exists(response.result?.contents)
-    assert.isArray(response.result?.contents)
-    const contents = response.result?.contents as any[]
+    assert.exists(response.result?.content)
+    assert.isArray(response.result?.content)
+    const contents = response.result?.content as any[]
     assert.equal(contents.length, 2)
     assert.notExists(response.result?.isError)
     assert.equal(contents[0].type, 'text')
