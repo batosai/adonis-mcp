@@ -72,7 +72,7 @@ export default class McpProvider {
             break
           case 'resource':
             server.addResource({
-              [instance.name]: path,
+              [instance.uri]: path,
             })
             break
           case 'prompt':
