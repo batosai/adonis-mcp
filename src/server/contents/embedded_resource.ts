@@ -26,7 +26,7 @@ export default class EmbeddedResource implements Content {
     this.#role = 'user'
   }
 
-  async process(resourceList: ResourceList, ctx: ResourceContext): Promise<this> {
+  async preProcess(resourceList: ResourceList, ctx: ResourceContext): Promise<this> {
     this.#ctx = ctx
     const item = resourceList[this.#uri]
 

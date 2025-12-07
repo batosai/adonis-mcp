@@ -76,6 +76,7 @@ export type BlobResourceContents = {
   blob: string
   mimeType?: string
   uri: string
+  size?: number
   _meta?: { [key: string]: unknown }
 }
 
@@ -83,6 +84,7 @@ export type TextResourceContents = {
   text: string
   mimeType?: string
   uri: string
+  size?: number
   _meta?: { [key: string]: unknown }
 }
 

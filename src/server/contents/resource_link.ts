@@ -23,7 +23,7 @@ export default class ResourceLink implements Content {
     this.#resource = null
   }
 
-  async process(resourceList: ResourceList): Promise<this> {
+  async preProcess(resourceList: ResourceList): Promise<this> {
     const item = resourceList[this.#uri]
 
     if (!item) {

@@ -67,7 +67,7 @@ export default class CallTool implements Method {
     const result: Record<string, any> = { content: [] }
     for await (const content of data) {
       if (content instanceof ResourceLink || content instanceof EmbeddedResource) {
-        await content.process(ctx.resources, ctx as unknown as ResourceContext)
+        await content.preProcess(ctx.resources, ctx as unknown as ResourceContext)
       }
 
       result.content.push(await content.toTool(tool))

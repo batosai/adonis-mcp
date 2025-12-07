@@ -70,7 +70,7 @@ export default class GetPrompt implements Method {
       }
 
       if (content instanceof EmbeddedResource) {
-        await content.process(ctx.resources, ctx as unknown as ResourceContext)
+        await content.preProcess(ctx.resources, ctx as unknown as ResourceContext)
       }
 
       messages.push({
