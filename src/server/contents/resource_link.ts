@@ -53,10 +53,16 @@ export default class ResourceLink implements Content {
   }
 
   async toPrompt(_prompt: Prompt): Promise<never> {
-    throw createError('Resource link content may not be used in prompts.', 'E_RESOURCE_LINK_NOT_SUPPORTED')
+    throw createError(
+      'Resource link content may not be used in prompts.',
+      'E_RESOURCE_LINK_NOT_SUPPORTED'
+    )
   }
 
   async toResource(_resource: Resource): Promise<never> {
-    throw createError('Resource link content may not be used in resources.', 'E_RESOURCE_LINK_NOT_SUPPORTED')
+    throw createError(
+      'Resource link content may not be used in resources.',
+      'E_RESOURCE_LINK_NOT_SUPPORTED'
+    )
   }
 }

@@ -65,7 +65,10 @@ export default class EmbeddedResource implements Content {
   }
 
   async toResource(_resource: Resource): Promise<never> {
-    throw createError('Embedded resource content may not be used in resources.', 'E_EMBEDDED_RESOURCE_NOT_SUPPORTED')
+    throw createError(
+      'Embedded resource content may not be used in resources.',
+      'E_EMBEDDED_RESOURCE_NOT_SUPPORTED'
+    )
   }
 
   asAssistant(): this {

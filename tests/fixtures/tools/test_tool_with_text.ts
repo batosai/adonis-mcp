@@ -31,4 +31,3 @@ export default class TestToolWithText extends Tool<JSONSchema> {
     return response.text(`Response: ${args.message}`)
   }
 }
-

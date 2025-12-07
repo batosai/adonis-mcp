@@ -61,6 +61,12 @@ export interface McpResponse<T extends McpRequestType = McpRequestType> {
   error(message: string): Error
 }
 
-export type McpToolResponse = Pick<McpResponse<'tool'>, 'text' | 'image' | 'audio' | 'resourceLink' | 'embeddedResource' | 'error'>
+export type McpToolResponse = Pick<
+  McpResponse<'tool'>,
+  'text' | 'image' | 'audio' | 'resourceLink' | 'embeddedResource' | 'error'
+>
 export type McpResourceResponse = Pick<McpResponse<'resource'>, 'text' | 'blob'>
-export type McpPromptResponse = Pick<McpResponse<'prompt'>, 'text' | 'image' | 'audio' | 'embeddedResource' | 'error'>
+export type McpPromptResponse = Pick<
+  McpResponse<'prompt'>,
+  'text' | 'image' | 'audio' | 'embeddedResource' | 'error'
+>

@@ -18,4 +18,3 @@ export default class TestPromptMultiple extends Prompt<JSONSchema> {
     return [response.text('First message').asUser(), response.text('Second message').asAssistant()]
   }
 }
-
