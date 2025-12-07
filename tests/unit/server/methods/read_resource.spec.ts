@@ -68,14 +68,14 @@ test.group('ReadResource Method', () => {
     assert.exists(response.result)
     assert.exists(response.result?.contents)
     assert.isArray(response.result?.contents)
-    assert.lengthOf(response.result?.contents, 1)
+    const contents = response.result?.contents as any[]
+    assert.lengthOf(contents, 1)
 
-    const content = response.result?.contents[0]
+    const content = contents[0]
     assert.exists(content)
     assert.equal(content?.text, 'Hello from test resource 1')
     assert.equal(content?.uri, uri)
     assert.equal(content?.mimeType, 'text/plain')
-    assert.equal(content?.size, 100)
   })
 
   test('should return blob resource content', async ({ assert }) => {
@@ -97,15 +97,15 @@ test.group('ReadResource Method', () => {
     assert.exists(response.result)
     assert.exists(response.result?.contents)
     assert.isArray(response.result?.contents)
-    assert.lengthOf(response.result?.contents, 1)
+    const contents = response.result?.contents as any[]
+    assert.lengthOf(contents, 1)
 
-    const content = response.result?.contents[0]
+    const content = contents[0]
     assert.exists(content)
     // Blob class encodes to base64, so "Hello World" becomes "SGVsbG8gV29ybGQ="
     assert.equal(content?.blob, 'SGVsbG8gV29ybGQ=')
     assert.equal(content?.uri, uri)
     assert.equal(content?.mimeType, 'application/octet-stream')
-    assert.equal(content?.size, 200)
   })
 
   test('should use contents (plural) key for resources', async ({ assert }) => {

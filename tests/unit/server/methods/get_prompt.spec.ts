@@ -68,9 +68,10 @@ test.group('GetPrompt Method', () => {
     assert.equal(response.result?.description, 'First test prompt')
     assert.exists(response.result?.messages)
     assert.isArray(response.result?.messages)
-    assert.lengthOf(response.result?.messages, 1)
+    const messages = response.result?.messages as any[]
+    assert.lengthOf(messages, 1)
 
-    const message = response.result?.messages[0]
+    const message = messages[0]
     assert.exists(message)
     assert.equal(message?.role, 'user')
     assert.exists(message?.content)
@@ -99,9 +100,10 @@ test.group('GetPrompt Method', () => {
     assert.equal(response.result?.description, 'Second test prompt')
     assert.exists(response.result?.messages)
     assert.isArray(response.result?.messages)
-    assert.lengthOf(response.result?.messages, 1)
+    const messages = response.result?.messages as any[]
+    assert.lengthOf(messages, 1)
 
-    const message = response.result?.messages[0]
+    const message = messages[0]
     assert.exists(message)
     assert.equal(message?.role, 'user')
     assert.exists(message?.content)
@@ -127,9 +129,10 @@ test.group('GetPrompt Method', () => {
     assert.equal(response.id, request.id)
     assert.exists(response.result)
     assert.exists(response.result?.messages)
-    assert.lengthOf(response.result?.messages, 1)
+    const messages = response.result?.messages as any[]
+    assert.lengthOf(messages, 1)
 
-    const message = response.result?.messages[0]
+    const message = messages[0]
     assert.exists(message)
     assert.equal(message?.content.text, 'Hello from test prompt 2: 42')
   })
@@ -152,15 +155,16 @@ test.group('GetPrompt Method', () => {
     assert.equal(response.id, request.id)
     assert.exists(response.result)
     assert.exists(response.result?.messages)
-    assert.lengthOf(response.result?.messages, 2)
+    const messages = response.result?.messages as any[]
+    assert.lengthOf(messages, 2)
 
-    const message1 = response.result?.messages[0]
+    const message1 = messages[0]
     assert.exists(message1)
     assert.equal(message1?.role, 'user')
     assert.equal(message1?.content.type, 'text')
     assert.equal(message1?.content.text, 'First message')
 
-    const message2 = response.result?.messages[1]
+    const message2 = messages[1]
     assert.exists(message2)
     assert.equal(message2?.role, 'assistant')
     assert.equal(message2?.content.type, 'text')
