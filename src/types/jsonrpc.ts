@@ -76,7 +76,6 @@ export type BlobResourceContents = {
   blob: string
   mimeType?: string
   uri: string
-  size?: number
   _meta?: { [key: string]: unknown }
 }
 
@@ -84,7 +83,6 @@ export type TextResourceContents = {
   text: string
   mimeType?: string
   uri: string
-  size?: number
   _meta?: { [key: string]: unknown }
 }
 
@@ -107,10 +105,15 @@ export type EmbeddedResource = {
   _meta?: { [key: string]: unknown }
 }
 
-export type Annotations ={
+export type Annotations = {
   audience?: Role[]
   lastModified?: string
   priority?: number
 }
 
-export type ContentBlock = TextContent | ImageContent | AudioContent | EmbeddedResource | ResourceLink
+export type ContentBlock =
+  | TextContent
+  | ImageContent
+  | AudioContent
+  | EmbeddedResource
+  | ResourceLink
