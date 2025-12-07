@@ -72,6 +72,8 @@ export type AudioContent = {
   _meta?: { [key: string]: unknown }
 }
 
+export type StructuredContent = Record<string, unknown>
+
 export type BlobResourceContents = {
   blob: string
   mimeType?: string

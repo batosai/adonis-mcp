@@ -15,6 +15,7 @@ import Text from './server/contents/text.js'
 import Blob from './server/contents/blob.js'
 import Image from './server/contents/image.js'
 import Audio from './server/contents/audio.js'
+import Structured from './server/contents/structured.js'
 import ResourceLink from './server/contents/resource_link.js'
 import EmbeddedResource from './server/contents/embedded_resource.js'
 import Error from './server/contents/error.js'
@@ -46,6 +47,10 @@ export default class<T extends McpRequestType = McpRequestType> implements McpRe
 
   audio(data: string, mimeType: string, _meta?: Record<string, unknown>) {
     return new Audio(data, mimeType, _meta)
+  }
+
+  structured(object: Record<string, unknown>) {
+    return new Structured(object)
   }
 
   resourceLink(uri: string) {

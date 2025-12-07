@@ -32,4 +32,5 @@ export type Blob = Content
 export type Image = Content
 export type Audio = Content
 export type ResourceLink = Content
+export type Structured = Content
 export type Error = Content

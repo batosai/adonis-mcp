@@ -10,6 +10,7 @@ import type {
   TextContent,
   ImageContent,
   AudioContent,
+  StructuredContent,
   ErrorBuilder,
   BlobResourceContents,
   TextResourceContents,
@@ -24,6 +25,7 @@ import type {
   ImagePrompt,
   Audio,
   AudioPrompt,
+  Structured,
   Error,
   ResourceLink as ResourceLinkContent,
   EmbeddedResource as EmbeddedResourceContent,
@@ -33,10 +35,13 @@ export type ToolResponse =
   | Promise<TextContent>
   | Promise<ImageContent>
   | Promise<AudioContent>
-  | Promise<ErrorBuilder>
+  | Promise<StructuredContent>
   | Promise<ResourceLink>
   | Promise<EmbeddedResource>
+  | Promise<ErrorBuilder>
+
 export type ResourceResponse = Promise<BlobResourceContents> | Promise<TextResourceContents>
+
 export type PromptResponse =
   | Promise<TextContent>
   | Promise<ImageContent>
@@ -56,6 +61,7 @@ export interface McpResponse<T extends McpRequestType = McpRequestType> {
   blob(text: string): Blob
   image(data: string, mimeType: string, _meta?: Record<string, unknown>): ImageResponseType<T>
   audio(data: string, mimeType: string, _meta?: Record<string, unknown>): AudioResponseType<T>
+  structured(object: Record<string, unknown>): Structured
   resourceLink(uri: string): ResourceLinkContent
   embeddedResource(uri: string): EmbeddedResourceContent
   error(message: string): Error
@@ -63,7 +69,7 @@ export interface McpResponse<T extends McpRequestType = McpRequestType> {
 
 export type McpToolResponse = Pick<
   McpResponse<'tool'>,
-  'text' | 'image' | 'audio' | 'resourceLink' | 'embeddedResource' | 'error'
+  'text' | 'image' | 'audio' | 'structured' | 'resourceLink' | 'embeddedResource' | 'error'
 >
 export type McpResourceResponse = Pick<McpResponse<'resource'>, 'text' | 'blob'>
 export type McpPromptResponse = Pick<

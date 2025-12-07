@@ -15,6 +15,7 @@ import Response from '../../response.js'
 import ErrorContent from '../contents/error.js'
 import ResourceLink from '../contents/resource_link.js'
 import EmbeddedResource from '../contents/embedded_resource.js'
+import Structured from '../contents/structured.js'
 
 export default class CallTool implements Method {
   async handle(ctx: McpContext) {
@@ -68,6 +69,10 @@ export default class CallTool implements Method {
     for await (const content of data) {
       if (content instanceof ResourceLink || content instanceof EmbeddedResource) {
         await content.preProcess(ctx.resources, ctx as unknown as ResourceContext)
+      }
+
+      if (content instanceof Structured) {
+        result.structuredContent = content.structuredContent
       }
 
       result.content.push(await content.toTool(tool))
