@@ -90,7 +90,7 @@ test.group('ListTools Method', () => {
     assert.exists(tool.inputSchema)
     assert.equal(tool.inputSchema.type, 'object')
     assert.deepEqual(tool.inputSchema.properties, {})
-    assert.deepEqual(tool.inputSchema.required, [])
+    assert.deepEqual(tool.inputSchema.required, undefined)
   })
 
   test('should return empty array when no tools are registered', async ({ assert }) => {

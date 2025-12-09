@@ -8,7 +8,7 @@
 import type { McpConfig } from './types/config.js'
 import type { JsonRpcRequest } from './types/jsonrpc.js'
 import type { ToolList, ResourceList, PromptList } from './types/method.js'
-import type { Transport } from './types/transport.js'
+import type { Transport } from './server/contracts/transport.js'
 
 import { createError } from '@adonisjs/core/exceptions'
 import { ErrorCode } from './enums/error.js'
@@ -49,6 +49,7 @@ export default class Server {
     'tools/call': () => import('./server/methods/call_tool.js'),
     'resources/list': () => import('./server/methods/list_resources.js'),
     'resources/read': () => import('./server/methods/read_resource.js'),
+    'resources/templates/list': () => import('./server/methods/list_resource_templates.js'),
     'prompts/list': () => import('./server/methods/list_prompts.js'),
     'prompts/get': () => import('./server/methods/get_prompt.js'),
     'ping': () => import('./server/methods/ping.js'),

@@ -5,7 +5,7 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import type { Content } from '../content.js'
+import type { Content } from '../contracts/content.js'
 import type { BlobResourceContents } from '../../types/jsonrpc.js'
 import type { Resource } from '../resource.js'
 import type { AnyTool as Tool } from '../tool.js'

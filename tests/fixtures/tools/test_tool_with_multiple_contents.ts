@@ -26,3 +26,4 @@ export default class TestToolWithMultipleContents extends Tool<JSONSchema> {
     return [response.text('First message'), response.text('Second message')]
   }
 }
+

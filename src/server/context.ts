@@ -4,7 +4,9 @@
  * @license MIT
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
-import type { McpContext, ServerContextOptions } from '../types/context.js'
+
+import type { McpContext } from './contracts/context.js'
+import type { ServerContextOptions } from '../types/context.js'
 import type { ToolList, ResourceList, PromptList } from '../types/method.js'
 import type { McpRequest, McpRequestType } from '../types/request.js'
 import type { McpToolResponse, McpResourceResponse, McpPromptResponse } from '../types/response.js'
@@ -57,7 +59,36 @@ export default class ServerContext implements McpContext {
     this.request = new Request(options.jsonRpcRequest) as McpRequest
   }
 
-  public getPerPage(requestedPerPage?: number): number {
+  getPerPage(requestedPerPage?: number): number {
     return Math.min(requestedPerPage ?? this.defaultPaginationLength, this.maxPaginationLength)
+  }
+
+  async getResources(): Promise<ResourceList> {
+    return this.#filterResources({ includeTemplates: false })
+  }
+
+  async getResourceTemplates(): Promise<ResourceList> {
+    return this.#filterResources({ includeTemplates: true })
+  }
+
+  async #filterResources({ includeTemplates }: { includeTemplates: boolean }): Promise<ResourceList> {
+    const resourceEntries = Object.entries(this.resources)
+    const filteredEntries = await Promise.all(
+      resourceEntries.map(async ([key, resource]: [string, string]) => {
+        const { default: Resource } = await import(resource)
+        const resourceInstance = new Resource()
+        const isTemplate = this.#isResourceTemplate(resourceInstance)
+        return (includeTemplates ? isTemplate : !isTemplate) ? [key, resource] : null
+      })
+    )
+    
+    return Object.fromEntries(
+      filteredEntries.filter((entry): entry is [string, string] => entry !== null)
+    ) as ResourceList
+  }
+
+  #isResourceTemplate(resource: any): boolean
+  {
+    return resource.getUriTemplate !== undefined
   }
 }

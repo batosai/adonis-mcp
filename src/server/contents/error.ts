@@ -5,7 +5,7 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import type { Content } from '../content.js'
+import type { Content } from '../contracts/content.js'
 import type { AnyPrompt as Prompt } from '../prompt.js'
 import type { Resource } from '../resource.js'
 import Text from './text.js'

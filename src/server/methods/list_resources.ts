@@ -5,8 +5,8 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
+import type { McpContext } from '../contracts/context.js'
 import type { Method } from '../../types/method.js'
-import type { McpContext } from '../../types/context.js'
 
 import { ErrorCode } from '../../enums/error.js'
 import JsonRpcException from '../exceptions/jsonrpc_exception.js'
@@ -18,7 +18,7 @@ export default class ListResources implements Method {
     let nextCursor
 
     const paginator = new CursorPaginator(
-      Object.values(ctx.resources),
+      Object.values(await ctx.getResources()),
       ctx.getPerPage(),
       ctx.request.params?.cursor
     )
@@ -29,15 +29,7 @@ export default class ListResources implements Method {
         try {
           const { default: Resource } = await import(filepath)
           const resource = new Resource()
-
-          return {
-            name: resource.name,
-            uri: resource.uri,
-            title: resource.title,
-            description: resource.description,
-            size: resource.size,
-            mimeType: resource.mimeType,
-          }
+          return resource.toJson()
         } catch (error) {
           throw new JsonRpcException(
             `Error listing resource`,

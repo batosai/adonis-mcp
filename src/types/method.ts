@@ -5,7 +5,7 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import type { McpContext } from './context.js'
+import type { McpContext } from '../server/contracts/context.js'
 
 export interface Method {
   handle(ctx: McpContext): Record<string, any>

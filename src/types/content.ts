@@ -5,7 +5,7 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import type { Content } from '../server/content.js'
+import type { Content } from '../server/contracts/content.js'
 
 export type TextPrompt = Content & {
   asAssistant: () => Content

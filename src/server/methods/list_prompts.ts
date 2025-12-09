@@ -5,8 +5,8 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
+import type { McpContext } from '../contracts/context.js'
 import type { Method } from '../../types/method.js'
-import type { McpContext } from '../../types/context.js'
 
 import { ErrorCode } from '../../enums/error.js'
 import JsonRpcException from '../exceptions/jsonrpc_exception.js'
@@ -29,24 +29,7 @@ export default class ListPrompts implements Method {
         try {
           const { default: Prompt } = await import(filepath)
           const prompt = new Prompt()
-
-          const schema = prompt.schema
-            ? prompt.schema()
-            : {
-                type: 'object',
-                properties: {},
-              }
-
-          return {
-            name: prompt.name,
-            title: prompt.title,
-            description: prompt.description,
-            inputSchema: {
-              type: schema.type,
-              properties: schema.properties,
-              required: schema.required ?? [],
-            },
-          }
+          return prompt.toJson()
         } catch (error) {
           throw new JsonRpcException(
             `Error listing prompt`,

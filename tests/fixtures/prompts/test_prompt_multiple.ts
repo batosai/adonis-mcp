@@ -7,14 +7,19 @@
 
 import { Prompt } from '../../../src/server/prompt.js'
 import type { PromptContext } from '../../../src/types/context.js'
-import type { JSONSchema } from '../../../src/types/method.js'
+import type { BaseSchema, InferJSONSchema } from '@jrmc/adonis-mcp/types/method'
 
-export default class TestPromptMultiple extends Prompt<JSONSchema> {
+type Schema = BaseSchema<{}>
+
+type Context = PromptContext & { args: InferJSONSchema<Schema> }
+
+export default class TestPromptMultiple extends Prompt<Schema> {
   name = 'test-prompt-multiple'
   title = 'Test Prompt Multiple'
   description = 'Test prompt that returns multiple contents'
 
-  async handle({ response }: PromptContext) {
+  async handle({ response }: Context) {
     return [response.text('First message').asUser(), response.text('Second message').asAssistant()]
   }
 }
+

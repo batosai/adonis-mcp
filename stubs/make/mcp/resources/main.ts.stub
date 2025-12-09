@@ -9,7 +9,7 @@ import type { ResourceContext } from '@jrmc/adonis-mcp/types/context'
 
 import { Resource } from '@jrmc/adonis-mcp'
 
-export default class {{ className }} implements Resource {
+export default class {{ className }} extends Resource {
   name = 'example.txt'
   uri = 'file:///example.txt'
   mimeType = 'text/plain"'

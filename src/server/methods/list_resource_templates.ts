@@ -13,26 +13,26 @@ import JsonRpcException from '../exceptions/jsonrpc_exception.js'
 import { CursorPaginator } from '../pagination/cursor_paginator.js'
 import Response from '../../response.js'
 
-export default class ListTools implements Method {
+export default class ListResourceTemplates implements Method {
   async handle(ctx: McpContext) {
     let nextCursor
 
     const paginator = new CursorPaginator(
-      Object.values(ctx.tools),
+      Object.values(await ctx.getResourceTemplates()),
       ctx.getPerPage(),
       ctx.request.params?.cursor
     )
-    const paginatedTools = paginator.paginate('tools')
+    const paginatedResources = paginator.paginate('resourceTemplates')
 
-    const tools = await Promise.all(
-      (paginatedTools['tools'] as string[]).map(async (filepath: string) => {
+    const resourceTemplates = await Promise.all(
+      (paginatedResources['resourceTemplates'] as string[]).map(async (filepath: string) => {
         try {
-          const { default: Tool } = await import(filepath)
-          const tool = new Tool()
-          return tool.toJson()
+          const { default: Resource } = await import(filepath)
+          const resource = new Resource()
+          return resource.toJson()
         } catch (error) {
           throw new JsonRpcException(
-            `Error listing tool`,
+            `Error listing resource`,
             ErrorCode.InternalError,
             ctx.request.id,
             { error }
@@ -41,10 +41,10 @@ export default class ListTools implements Method {
       })
     )
 
-    if (paginatedTools.nextCursor) {
-      nextCursor = paginatedTools.nextCursor
+    if (paginatedResources.nextCursor) {
+      nextCursor = paginatedResources.nextCursor
     }
 
-    return Response.toJsonRpc({ id: ctx.request.id, result: { tools, nextCursor } })
+    return Response.toJsonRpc({ id: ctx.request.id, result: { resourceTemplates, nextCursor } })
   }
 }

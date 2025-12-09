@@ -5,7 +5,7 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import type { Transport } from '../../types/transport.js'
+import type { Transport } from '../contracts/transport.js'
 import type { JsonRpcResponse } from '../../types/jsonrpc.js'
 import type { Readable, Writable } from 'node:stream'
 

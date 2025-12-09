@@ -90,7 +90,7 @@ test.group('ListPrompts Method', () => {
     assert.exists(prompt.inputSchema)
     assert.equal(prompt.inputSchema.type, 'object')
     assert.deepEqual(prompt.inputSchema.properties, {})
-    assert.deepEqual(prompt.inputSchema.required, [])
+    assert.deepEqual(prompt.inputSchema.required, undefined)
   })
 
   test('should return empty array when no prompts are registered', async ({ assert }) => {

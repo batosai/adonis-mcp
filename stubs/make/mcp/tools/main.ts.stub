@@ -16,7 +16,7 @@ type Schema = BaseSchema<{
 
 type Context = ToolContext & { args: InferJSONSchema<Schema> }
 
-export default class {{ className }} implements Tool<Schema> {
+export default class {{ className }} extends Tool<Schema> {
   name = '{{ name }}'
   title = 'Tool title'
   description = 'Tool description'

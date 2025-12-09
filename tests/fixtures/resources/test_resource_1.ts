@@ -7,7 +7,6 @@
 
 import { Resource } from '../../../src/server/resource.js'
 import type { ResourceContext } from '../../../src/types/context.js'
-import type { McpResourceResponse } from '../../../src/types/response.js'
 
 export default class TestResource1 extends Resource {
   name = 'test-resource-1'
@@ -17,7 +16,8 @@ export default class TestResource1 extends Resource {
   mimeType = 'text/plain'
   size = 100
 
-  async handle({ response }: ResourceContext): Promise<McpResourceResponse> {
+  async handle({ response }: ResourceContext) {
     return response.text('Hello from test resource 1')
   }
 }
+

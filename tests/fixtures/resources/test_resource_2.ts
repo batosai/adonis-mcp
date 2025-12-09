@@ -7,7 +7,6 @@
 
 import { Resource } from '../../../src/server/resource.js'
 import type { ResourceContext } from '../../../src/types/context.js'
-import type { McpResourceResponse } from '../../../src/types/response.js'
 
 export default class TestResource2 extends Resource {
   name = 'test-resource-2'
@@ -17,7 +16,7 @@ export default class TestResource2 extends Resource {
   mimeType = 'application/octet-stream'
   size = 200
 
-  async handle({ response }: ResourceContext): Promise<McpResourceResponse> {
+  async handle({ response }: ResourceContext) {
     return response.blob('Hello World') // Will be base64 encoded by Blob class
   }
 }
