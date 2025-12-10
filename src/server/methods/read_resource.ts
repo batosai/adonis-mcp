@@ -13,6 +13,7 @@ import type { Content } from '../contracts/content.js'
 import { ErrorCode } from '../../enums/error.js'
 import JsonRpcException from '../exceptions/jsonrpc_exception.js'
 import Response from '../../response.js'
+import { UriTemplate } from '../../utils/uri_template.js'
 
 export default class ReadResource implements Method {
   async handle(ctx: McpContext) {
@@ -27,7 +28,18 @@ export default class ReadResource implements Method {
       )
     }
 
-    const item = Object.keys(resourceContext.resources).find((key) => key === params.uri)
+    const item = Object.keys(resourceContext.resources).find((key) => {
+      if (key === params.uri) {
+        return true
+      }
+
+      const uriTemplate = new UriTemplate(key)
+      const variables = uriTemplate.match(params.uri as string)
+      if (variables) {
+        ;(resourceContext as any).args = variables ?? {}
+        return true
+      }
+    })
 
     if (!item) {
       throw new JsonRpcException(

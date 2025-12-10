@@ -13,6 +13,7 @@ import type { McpToolResponse, McpResourceResponse, McpPromptResponse } from '..
 
 import Request from '../request.js'
 import McpResponse from '../response.js'
+import { UriTemplate } from '../utils/uri_template.js'
 
 export default class ServerContext implements McpContext {
   readonly requestType: McpRequestType
@@ -89,6 +90,6 @@ export default class ServerContext implements McpContext {
 
   #isResourceTemplate(resource: any): boolean
   {
-    return resource.getUriTemplate !== undefined
+    return UriTemplate.isTemplate(resource.uri)
   }
 }
