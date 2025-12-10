@@ -9,18 +9,16 @@ import type { ResourceContext } from '../types/context.js'
 import type { Content } from './contracts/content.js'
 
 import string from '@adonisjs/core/helpers/string'
+import { UriTemplate } from '../utils/uri_template.js'
 
-export abstract class Resource {
+export abstract class Resource<T = {}> {
 
+  uri: string = `file://resources/${string.dashCase(this.constructor.name)}`
   abstract name: string
   title?: string
   description?: string
   mimeType?: string
   size?: number
-
-  get uri(): string {
-    return `file://resources/${string.dashCase(this.constructor.name)}`
-  }
 
   toJson() {
     const data: Record<string, unknown> = {
@@ -31,8 +29,8 @@ export abstract class Resource {
       mimeType: this.mimeType,
     }
 
-    if ((this as any).getUriTemplate !== undefined) {
-      data.uriTemplate = (this as any).getUriTemplate()
+    if (UriTemplate.isTemplate(this.uri)) {
+      data.uriTemplate = this.uri
     } else {
       data.uri = this.uri
     }
@@ -40,6 +38,5 @@ export abstract class Resource {
     return data
   }
 
-
-  abstract handle(ctx?: ResourceContext): Promise<Content>
+  abstract handle(ctx?: ResourceContext & { args?: T }): Promise<Content>
 }

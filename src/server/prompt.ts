@@ -5,11 +5,11 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import type { InferJSONSchema, JSONSchema } from '../types/method.js'
+import type { JSONSchema } from '../types/method.js'
 import type { PromptContext } from '../types/context.js'
 import type { Content } from './contracts/content.js'
 
-export abstract class Prompt<T extends JSONSchema> {
+export abstract class Prompt<T extends JSONSchema = JSONSchema> {
   abstract name: string
   title?: string
   description?: string
@@ -32,7 +32,7 @@ export abstract class Prompt<T extends JSONSchema> {
     }
   }
 
-  abstract handle(ctx?: PromptContext & { args: InferJSONSchema<T> }): Promise<Content | Content[]>
+  abstract handle(ctx?: PromptContext<T>): Promise<Content | Content[]>
 }
 
 export type AnyPrompt = Prompt<JSONSchema>
