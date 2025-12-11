@@ -16,6 +16,7 @@ import Role from '../../enums/role.js'
 export default class Text implements Content {
   #text: string
   #role: Role
+  #meta?: Record<string, unknown>
 
   constructor(text: string | unknown) {
     if (typeof text === 'string') {
@@ -27,25 +28,25 @@ export default class Text implements Content {
   }
 
   async toTool(_tool: Tool): Promise<TextContent> {
-    return {
+    return this.#mergeMeta({
       type: 'text' as const,
       text: this.#text,
-    }
+    }) as TextContent
   }
 
   async toPrompt(_prompt: Prompt): Promise<TextContent> {
-    return {
+    return this.#mergeMeta({
       type: 'text' as const,
       text: this.#text,
-    }
+    }) as TextContent
   }
 
   async toResource(resource: Resource): Promise<TextResourceContents> {
-    return {
+    return this.#mergeMeta({
       text: this.#text,
       uri: resource.uri,
-      mimeType: resource.mimeType,
-    }
+      mimeType: resource.mimeType
+    }) as TextResourceContents
   }
 
   asAssistant(): this {
@@ -60,5 +61,18 @@ export default class Text implements Content {
 
   get role() {
     return this.#role
+  }
+
+  withMeta(meta: Record<string, unknown>): this {
+    this.#meta = meta
+    return this
+  }
+
+  #mergeMeta(object: TextContent | TextResourceContents): TextContent | TextResourceContents {
+    if (this.#meta) {
+      return { ...object, _meta: this.#meta }
+    }
+
+    return object
   }
 }

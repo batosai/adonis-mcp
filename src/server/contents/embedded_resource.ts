@@ -20,6 +20,7 @@ export default class EmbeddedResource implements Content {
   #resource?: Resource
   #role: 'assistant' | 'user'
   #ctx?: ResourceContext
+  #meta?: Record<string, unknown>
 
   constructor(uri: string) {
     this.#uri = uri
@@ -46,10 +47,10 @@ export default class EmbeddedResource implements Content {
     }
     const content = await this.#resource.handle(this.#ctx)
 
-    return {
+    return this.#mergeMeta({
       type: 'resource' as const,
       resource: await content.toResource(this.#resource),
-    }
+    })
   }
 
   async toPrompt(_prompt: Prompt): Promise<EmbeddedResourceContent> {
@@ -58,10 +59,10 @@ export default class EmbeddedResource implements Content {
     }
     const content = await this.#resource.handle(this.#ctx)
 
-    return {
+    return this.#mergeMeta({
       type: 'resource' as const,
       resource: await content.toResource(this.#resource),
-    }
+    })
   }
 
   async toResource(_resource: Resource): Promise<never> {
@@ -83,5 +84,18 @@ export default class EmbeddedResource implements Content {
 
   get role() {
     return this.#role
+  }
+
+  withMeta(meta: Record<string, unknown>): this {
+    this.#meta = meta
+    return this
+  }
+
+  #mergeMeta(object: EmbeddedResourceContent): EmbeddedResourceContent {
+    if (this.#meta) {
+      return { ...object, _meta: this.#meta }
+    }
+
+    return object
   }
 }

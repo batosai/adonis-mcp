@@ -7,30 +7,34 @@
 
 import type { Content } from '../server/contracts/content.js'
 
-export type TextPrompt = Content & {
+type HasMeta = {
+  withMeta: (meta: Record<string, unknown>) => Content
+}
+
+export type TextPrompt = Content & HasMeta & {
   asAssistant: () => Content
   asUser: () => Content
 }
 
-export type ImagePrompt = Content & {
+export type ImagePrompt = Content & HasMeta & {
   asAssistant: () => Content
   asUser: () => Content
 }
 
-export type AudioPrompt = Content & {
+export type AudioPrompt = Content & HasMeta & {
   asAssistant: () => Content
   asUser: () => Content
 }
 
-export type EmbeddedResource = Content & {
+export type EmbeddedResource = Content & HasMeta & {
   asAssistant: () => Content
   asUser: () => Content
 }
 
-export type Text = Content
-export type Blob = Content
-export type Image = Content
-export type Audio = Content
-export type ResourceLink = Content
+export type Text = Content & HasMeta
+export type Blob = Content & HasMeta
+export type Image = Content & HasMeta
+export type Audio = Content & HasMeta
+export type ResourceLink = Content & HasMeta
 export type Structured = Content
 export type Error = Content

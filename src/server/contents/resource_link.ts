@@ -17,6 +17,7 @@ import { createError } from '@adonisjs/core/exceptions'
 export default class ResourceLink implements Content {
   #uri: string
   #resource: Resource | null
+  #meta?: Record<string, unknown>
 
   constructor(uri: string) {
     this.#uri = uri
@@ -41,7 +42,7 @@ export default class ResourceLink implements Content {
       throw createError('Resource not found.', 'E_RESOURCE_NOT_FOUND')
     }
 
-    return {
+    return this.#mergeMeta({
       type: 'resource_link' as const,
       name: this.#resource.name,
       uri: this.#uri,
@@ -49,7 +50,7 @@ export default class ResourceLink implements Content {
       title: this.#resource.title,
       description: this.#resource.description,
       size: this.#resource.size,
-    }
+    })
   }
 
   async toPrompt(_prompt: Prompt): Promise<never> {
@@ -64,5 +65,18 @@ export default class ResourceLink implements Content {
       'Resource link content may not be used in resources.',
       'E_RESOURCE_LINK_NOT_SUPPORTED'
     )
+  }
+
+  withMeta(meta: Record<string, unknown>): this {
+    this.#meta = meta
+    return this
+  }
+
+  #mergeMeta(object: ResourceLinkContent): ResourceLinkContent {
+    if (this.#meta) {
+      return { ...object, _meta: this.#meta }
+    }
+
+    return object
   }
 }

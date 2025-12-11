@@ -41,12 +41,12 @@ export default class<T extends McpRequestType = McpRequestType> implements McpRe
     return new Blob(text)
   }
 
-  image(data: string, mimeType: string, _meta?: Record<string, unknown>) {
-    return new Image(data, mimeType, _meta)
+  image(data: string, mimeType: string) {
+    return new Image(data, mimeType)
   }
 
-  audio(data: string, mimeType: string, _meta?: Record<string, unknown>) {
-    return new Audio(data, mimeType, _meta)
+  audio(data: string, mimeType: string) {
+    return new Audio(data, mimeType)
   }
 
   structured(object: Record<string, unknown>) {

@@ -14,6 +14,8 @@ import { createError } from '@adonisjs/core/exceptions'
 
 export default class Blob implements Content {
   #text: string
+  #meta?: Record<string, unknown>
+
 
   constructor(text: string | Buffer) {
     if (typeof text === 'string') {
@@ -32,10 +34,23 @@ export default class Blob implements Content {
   }
 
   async toResource(resource: Resource): Promise<BlobResourceContents> {
-    return {
+    return this.#mergeMeta({
       blob: this.#text,
       uri: resource.uri,
       mimeType: resource.mimeType,
+    })
+  }
+
+  withMeta(meta: Record<string, unknown>): this {
+    this.#meta = meta
+    return this
+  }
+
+  #mergeMeta(object: BlobResourceContents): BlobResourceContents {
+    if (this.#meta) {
+      return { ...object, _meta: this.#meta }
     }
+
+    return object
   }
 }

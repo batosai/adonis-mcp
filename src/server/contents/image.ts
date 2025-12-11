@@ -18,31 +18,28 @@ export default class Image implements Content {
   #data: string
   #mimeType: string
   #role: Role
-  #_meta?: Record<string, unknown>
+  #meta?: Record<string, unknown>
 
-  constructor(data: string, mimeType: string, _meta?: Record<string, unknown>) {
+  constructor(data: string, mimeType: string) {
     this.#data = data
     this.#mimeType = mimeType
-    this.#_meta = _meta
     this.#role = Role.USER
   }
 
   async toTool(_tool: Tool): Promise<ImageContent> {
-    return {
+    return this.#mergeMeta({
       type: 'image' as const,
       data: this.#data,
       mimeType: this.#mimeType,
-      _meta: this.#_meta,
-    }
+    })
   }
 
   async toPrompt(_prompt: Prompt): Promise<ImageContent> {
-    return {
+    return this.#mergeMeta({
       type: 'image' as const,
       data: this.#data,
       mimeType: this.#mimeType,
-      _meta: this.#_meta,
-    }
+    })
   }
 
   async toResource(_resource: Resource): Promise<never> {
@@ -61,5 +58,18 @@ export default class Image implements Content {
 
   get role() {
     return this.#role
+  }
+
+  withMeta(meta: Record<string, unknown>): this {
+    this.#meta = meta
+    return this
+  }
+
+  #mergeMeta(object: ImageContent): ImageContent {
+    if (this.#meta) {
+      return { ...object, _meta: this.#meta }
+    }
+
+    return object
   }
 }
