@@ -6,7 +6,7 @@
   })
 }}}
 import type { ToolContext } from '@jrmc/adonis-mcp/types/context'
-import type { BaseSchema, InferJSONSchema } from '@jrmc/adonis-mcp/types/method'
+import type { BaseSchema } from '@jrmc/adonis-mcp/types/method'
 
 import { Tool } from '@jrmc/adonis-mcp'
 
@@ -14,14 +14,12 @@ type Schema = BaseSchema<{
   text: { type: "string" }
 }>
 
-type Context = ToolContext & { args: InferJSONSchema<Schema> }
-
 export default class {{ className }} extends Tool<Schema> {
   name = '{{ name }}'
   title = 'Tool title'
   description = 'Tool description'
 
-  async handle({ args, response }: Context) {
+  async handle({ args, response }: ToolContext<Schema>) {
     console.log(args.text)
     return response.text('Hello, world!')
   }

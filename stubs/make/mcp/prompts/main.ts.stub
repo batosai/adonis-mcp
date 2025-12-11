@@ -6,7 +6,7 @@
   })
 }}}
 import type { PromptContext } from '@jrmc/adonis-mcp/types/context'
-import type { BaseSchema, InferJSONSchema } from '@jrmc/adonis-mcp/types/method'
+import type { BaseSchema } from '@jrmc/adonis-mcp/types/method'
 
 import { Prompt } from '@jrmc/adonis-mcp'
 
@@ -14,14 +14,13 @@ type Schema = BaseSchema<{
   text: { type: "string" }
 }>
 
-type Context = PromptContext & { args: InferJSONSchema<Schema> }
 
 export default class {{ className }} extends Prompt<Schema> {
   name = '{{ name }}'
   title = 'Prompt title'
   description = 'Prompt description'
 
-  async handle({ args, response }: Context) {
+  async handle({ args, response }: PromptContext<Schema>) {
     console.log(args.text)
     return [
       response.text('Hello, world!')
