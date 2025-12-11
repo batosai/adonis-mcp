@@ -7,7 +7,11 @@
 
 import type { ToolList, ResourceList, PromptList } from '../../types/method.js'
 import type { McpRequest, McpRequestType } from '../../types/request.js'
-import type { McpResourceResponse, McpToolResponse, McpPromptResponse } from '../../types/response.js'
+import type {
+  McpResourceResponse,
+  McpToolResponse,
+  McpPromptResponse,
+} from '../../types/response.js'
 
 export interface McpContext {
   requestType: McpRequestType

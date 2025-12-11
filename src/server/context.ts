@@ -72,7 +72,11 @@ export default class ServerContext implements McpContext {
     return this.#filterResources({ includeTemplates: true })
   }
 
-  async #filterResources({ includeTemplates }: { includeTemplates: boolean }): Promise<ResourceList> {
+  async #filterResources({
+    includeTemplates,
+  }: {
+    includeTemplates: boolean
+  }): Promise<ResourceList> {
     const resourceEntries = Object.entries(this.resources)
     const filteredEntries = await Promise.all(
       resourceEntries.map(async ([key, resource]: [string, string]) => {
@@ -82,14 +86,13 @@ export default class ServerContext implements McpContext {
         return (includeTemplates ? isTemplate : !isTemplate) ? [key, resource] : null
       })
     )
-    
+
     return Object.fromEntries(
       filteredEntries.filter((entry): entry is [string, string] => entry !== null)
     ) as ResourceList
   }
 
-  #isResourceTemplate(resource: any): boolean
-  {
+  #isResourceTemplate(resource: any): boolean {
     return UriTemplate.isTemplate(resource.uri)
   }
 }

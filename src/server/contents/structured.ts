@@ -29,10 +29,16 @@ export default class Structured implements Content {
   }
 
   async toPrompt(_prompt: Prompt): Promise<never> {
-    throw createError('Structured content may not be used in prompts.', 'E_STRUCTURED_NOT_SUPPORTED')
+    throw createError(
+      'Structured content may not be used in prompts.',
+      'E_STRUCTURED_NOT_SUPPORTED'
+    )
   }
 
   async toResource(_resource: Resource): Promise<never> {
-    throw createError('Structured content may not be used in resources.', 'E_STRUCTURED_NOT_SUPPORTED')
+    throw createError(
+      'Structured content may not be used in resources.',
+      'E_STRUCTURED_NOT_SUPPORTED'
+    )
   }
 }

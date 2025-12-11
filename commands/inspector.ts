@@ -32,10 +32,9 @@ export default class Inspector extends BaseCommand {
       return
     }
 
-
     if (this.transport === 'http') {
       const router = await this.app.container.make('router')
-    
+
       const serverUrl = router
         .builder()
         .prefixUrl(`http://${process.env.HOST}:${process.env.PORT}`)

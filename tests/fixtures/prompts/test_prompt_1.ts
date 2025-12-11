@@ -11,7 +11,7 @@ import type { BaseSchema, InferJSONSchema } from '../../../src/types/method.js'
 import Role from '../../../src/enums/role.js'
 
 type Schema = BaseSchema<{
-  text: { type: "string" }
+  text: { type: 'string' }
 }>
 
 type Context = PromptContext & { args: InferJSONSchema<Schema> }
@@ -39,4 +39,3 @@ export default class TestPrompt1 extends Prompt<Schema> {
     return response.text(`Hello from test prompt 1: ${args.text}`)
   }
 }
-

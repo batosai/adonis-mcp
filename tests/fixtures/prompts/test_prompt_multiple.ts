@@ -22,4 +22,3 @@ export default class TestPromptMultiple extends Prompt<Schema> {
     return [response.text('First message').asUser(), response.text('Second message').asAssistant()]
   }
 }
-

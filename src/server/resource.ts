@@ -12,7 +12,6 @@ import string from '@adonisjs/core/helpers/string'
 import { UriTemplate } from '../utils/uri_template.js'
 
 export abstract class Resource<T = {}> {
-
   uri: string = `file://resources/${string.dashCase(this.constructor.name)}`
   abstract name: string
   title?: string
