@@ -38,6 +38,9 @@
     "./commands/*": "./build/commands/*.js",
     "./controllers/*": "./build/src/controllers/*.js",
     "./contents/*": "./build/src/server/contents/*.js",
+    "./annotations": "./build/src/server/annotations/annotations.js",
+    "./tool_annotations": "./build/src/server/annotations/tool_annotations.js",
+    "./enums/*": "./build/src/enums/*.js",
     "./mcp_provider": "./build/providers/mcp_provider.js"
   },
   "devDependencies": {

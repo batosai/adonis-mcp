@@ -8,11 +8,14 @@
 import type { JSONSchema } from '../types/method.js'
 import type { ToolContext } from '../types/context.js'
 import type { Content } from './contracts/content.js'
+import type { ToolAnnotations } from '../types/annotation.js'
 
 export abstract class Tool<T extends JSONSchema = JSONSchema> {
   abstract name: string
   title?: string
   description?: string
+  annotations?: ToolAnnotations
+  meta?: Record<string, unknown>
 
   schema(): T {
     return {
@@ -29,6 +32,8 @@ export abstract class Tool<T extends JSONSchema = JSONSchema> {
       title: this.title,
       description: this.description,
       inputSchema: schema,
+      annotations: this.annotations,
+      _meta: this.meta,
     }
   }
 

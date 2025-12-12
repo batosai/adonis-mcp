@@ -1,3 +1,10 @@
+/**
+ * @jrmc/adonis-mcp
+ *
+ * @license MIT
+ * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
+ */
+
 import type { ResourceContext } from '../types/context.js'
 import type { ResourceList } from '../types/method.js'
 

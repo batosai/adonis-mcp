@@ -7,6 +7,7 @@
 
 import type { ResourceContext } from '../types/context.js'
 import type { Content } from './contracts/content.js'
+import type { Annotations } from '../types/annotation.js'
 
 import string from '@adonisjs/core/helpers/string'
 import { UriTemplate } from '../utils/uri_template.js'
@@ -18,6 +19,8 @@ export abstract class Resource<T = {}> {
   description?: string
   mimeType?: string
   size?: number
+  annotations?: Annotations
+  meta?: Record<string, unknown>
 
   toJson() {
     const data: Record<string, unknown> = {
@@ -26,6 +29,8 @@ export abstract class Resource<T = {}> {
       description: this.description,
       size: this.size,
       mimeType: this.mimeType,
+      annotations: this.annotations,
+      _meta: this.meta,
     }
 
     if (UriTemplate.isTemplate(this.uri)) {

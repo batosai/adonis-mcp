@@ -13,6 +13,7 @@ export abstract class Prompt<T extends JSONSchema = JSONSchema> {
   abstract name: string
   title?: string
   description?: string
+  meta?: Record<string, unknown>
 
   schema(): T {
     return {
@@ -29,6 +30,7 @@ export abstract class Prompt<T extends JSONSchema = JSONSchema> {
       title: this.title,
       description: this.description,
       inputSchema: schema,
+      _meta: this.meta,
     }
   }
 
