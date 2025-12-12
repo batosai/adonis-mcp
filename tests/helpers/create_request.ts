@@ -106,3 +106,10 @@ export function createPromptsGetRequest(
     id
   )
 }
+
+export function createListResourceTemplatesRequest(
+  cursor?: string,
+  id: string | number = 1
+): JsonRpcRequest {
+  return createJsonRpcRequest('resources/templates/list', cursor ? { cursor } : undefined, id)
+}

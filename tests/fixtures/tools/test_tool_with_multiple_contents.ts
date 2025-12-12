@@ -27,3 +27,5 @@ export default class TestToolWithMultipleContents extends Tool<JSONSchema> {
   }
 }
 
+
+
