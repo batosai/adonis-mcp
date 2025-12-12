@@ -17,7 +17,7 @@ AdonisJS MCP - Server MCP for your AdonisJS applications.
 - [x] Fake transport (for testing)
 - [x] Advanced pagination support
 - [x] Meta support
-- [ ] Annotation (@isReadOnly)
+- [x] Annotations
 - [ ] Output tool
 - [ ] Completion
 - [ ] Error(review)
@@ -419,6 +419,209 @@ Metadata is particularly useful when:
 - You need to track the source of data
 - You want to include performance metrics
 - You need to pass additional context to the client
+
+### Annotations
+
+Annotations allow you to provide additional metadata about your tools and resources to help MCP clients better understand their behavior and characteristics.
+
+#### Tool Annotations
+
+Tools support the following annotations that describe their operational characteristics:
+
+##### `@isReadOnly()`
+
+Indicates that a tool only reads data and does not modify any state:
+
+```typescript
+import { Tool } from '@jrmc/adonis-mcp'
+import { isReadOnly } from '@jrmc/adonis-mcp/tool_annotations'
+
+@isReadOnly()
+export default class GetUserTool extends Tool {
+  name = 'get_user'
+  
+  async handle({ args, response }: ToolContext) {
+    const user = await User.find(args.id)
+    return response.text(JSON.stringify(user))
+  }
+}
+```
+
+You can also explicitly set it to false:
+
+```typescript
+@isReadOnly(false)
+export default class UpdateUserTool extends Tool {
+  // ...
+}
+```
+
+##### `@isOpenWorld()`
+
+Indicates that a tool can access information from the internet or external sources:
+
+```typescript
+import { isOpenWorld } from '@jrmc/adonis-mcp/tool_annotations'
+
+@isOpenWorld()
+export default class FetchWeatherTool extends Tool {
+  name = 'fetch_weather'
+  
+  async handle({ args, response }: ToolContext) {
+    const weather = await externalApi.getWeather(args.city)
+    return response.text(JSON.stringify(weather))
+  }
+}
+```
+
+##### `@isDestructive()`
+
+Indicates that a tool performs destructive operations like deleting data:
+
+```typescript
+import { isDestructive } from '@jrmc/adonis-mcp/tool_annotations'
+
+@isDestructive()
+export default class DeleteUserTool extends Tool {
+  name = 'delete_user'
+  
+  async handle({ args, response }: ToolContext) {
+    await User.query().where('id', args.id).delete()
+    return response.text('User deleted successfully')
+  }
+}
+```
+
+##### `@isIdempotent()`
+
+Indicates that a tool can be safely called multiple times with the same arguments without causing different effects:
+
+```typescript
+import { isIdempotent } from '@jrmc/adonis-mcp/tool_annotations'
+
+@isIdempotent()
+export default class SetUserStatusTool extends Tool {
+  name = 'set_user_status'
+  
+  async handle({ args, response }: ToolContext) {
+    await User.query().where('id', args.id).update({ status: args.status })
+    return response.text('Status updated')
+  }
+}
+```
+
+##### Combining Multiple Annotations
+
+You can use multiple annotations on the same tool:
+
+```typescript
+import { isReadOnly, isOpenWorld, isIdempotent } from '@jrmc/adonis-mcp/tool_annotations'
+
+@isReadOnly()
+@isOpenWorld()
+@isIdempotent()
+export default class SearchOnlineTool extends Tool {
+  name = 'search_online'
+  
+  async handle({ args, response }: ToolContext) {
+    const results = await searchEngine.search(args.query)
+    return response.text(JSON.stringify(results))
+  }
+}
+```
+
+#### Resource Annotations
+
+Resources support the following annotations to provide additional context:
+
+##### `@priority()`
+
+Specifies the importance of a resource as a number between 0.0 and 1.0:
+
+```typescript
+import { Resource } from '@jrmc/adonis-mcp'
+import { priority } from '@jrmc/adonis-mcp/annotations'
+
+@priority(0.9)
+export default class ImportantDocResource extends Resource {
+  name = 'important_doc.txt'
+  uri = 'file:///important_doc.txt'
+  
+  async handle({ response }: ResourceContext) {
+    return response.text('Critical documentation content')
+  }
+}
+```
+
+##### `@audience()`
+
+Specifies the intended audience for a resource (user, assistant, or both):
+
+```typescript
+import { Resource } from '@jrmc/adonis-mcp'
+import { audience } from '@jrmc/adonis-mcp/annotations'
+import Role from '@jrmc/adonis-mcp/enums/role'
+
+@audience(Role.USER)
+export default class UserManualResource extends Resource {
+  name = 'user_manual.txt'
+  uri = 'file:///user_manual.txt'
+  
+  async handle({ response }: ResourceContext) {
+    return response.text('User manual content')
+  }
+}
+```
+
+You can also specify multiple audiences:
+
+```typescript
+@audience([Role.USER, Role.ASSISTANT])
+export default class SharedDocResource extends Resource {
+  // ...
+}
+```
+
+##### `@lastModified()`
+
+Indicates when a resource was last updated (ISO 8601 timestamp):
+
+```typescript
+import { Resource } from '@jrmc/adonis-mcp'
+import { lastModified } from '@jrmc/adonis-mcp/annotations'
+
+@lastModified('2024-12-12T10:00:00Z')
+export default class DocumentResource extends Resource {
+  name = 'document.txt'
+  uri = 'file:///document.txt'
+  
+  async handle({ response }: ResourceContext) {
+    return response.text('Document content')
+  }
+}
+```
+
+##### Combining Resource Annotations
+
+You can use multiple annotations on the same resource:
+
+```typescript
+import { Resource } from '@jrmc/adonis-mcp'
+import { priority, audience, lastModified } from '@jrmc/adonis-mcp/annotations'
+import Role from '@jrmc/adonis-mcp/enums/role'
+
+@priority(0.8)
+@audience([Role.USER, Role.ASSISTANT])
+@lastModified('2024-12-12T10:00:00Z')
+export default class ApiDocResource extends Resource {
+  name = 'api_docs.txt'
+  uri = 'file:///api_docs.txt'
+  
+  async handle({ response }: ResourceContext) {
+    return response.text('API documentation content')
+  }
+}
+```
 
 ### Creating a Resource
 
