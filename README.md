@@ -16,9 +16,8 @@ AdonisJS MCP - Server MCP for your AdonisJS applications.
 - [x] Stdio transport
 - [x] Fake transport (for testing)
 - [x] Advanced pagination support
-- [x] Resource templates
-- [ ] Meta
-- [ ] Annotation
+- [x] Meta support
+- [ ] Annotation (@isReadOnly)
 - [ ] Output tool
 - [ ] Completion
 - [ ] Error(review)
@@ -248,6 +247,8 @@ For tools, you can use:
 - `response.text(text: string)`: Return plain text content
 - `response.image(data: string, mimeType: string)`: Return image content (base64 encoded)
 - `response.audio(data: string, mimeType: string)`: Return audio content (base64 encoded)
+- `response.structured(object: Record<string, unknown>)`: Return structured JSON data
+- `response.resourceLink(uri: string)`: Return a link to a resource
 - `response.error(message: string)`: Return an error message
 - `response.send(content: Content | Content[])`: Send custom content objects
 
@@ -256,9 +257,19 @@ async handle({ args, response }: ToolContext<Schema>) {
   // Return text
   return response.text(JSON.stringify({ success: true }))
   
+  // Return structured data
+  return response.structured({
+    temperature: 22.5,
+    conditions: 'Partly cloudy',
+    humidity: 65
+  })
+  
   // Return image
   const imageData = await fs.readFile('path/to/image.png', 'base64')
   return response.image(imageData, 'image/png')
+  
+  // Return a resource link
+  return response.resourceLink('file:///path/to/resource.txt')
   
   // Return error
   return response.error('Something went wrong')
@@ -328,6 +339,86 @@ export default class AddBookmarkTool extends Tool<Schema> {
   }
 }
 ```
+
+## Advanced Features
+
+### Structured Output
+
+The `response.structured()` method allows you to return JSON data in a structured format. This is particularly useful when you want to return data that can be easily parsed and used by the MCP client without additional processing:
+
+```typescript
+import type { ToolContext } from '@jrmc/adonis-mcp/types/context'
+import { Tool } from '@jrmc/adonis-mcp'
+
+export default class GetWeatherTool extends Tool {
+  name = 'get_weather'
+  title = 'Get Weather'
+  description = 'Get current weather data'
+
+  async handle({ args, response }: ToolContext) {
+    const weatherData = {
+      temperature: 22.5,
+      conditions: 'Partly cloudy',
+      humidity: 65,
+      windSpeed: 12,
+      location: args.location
+    }
+    
+    return response.structured(weatherData)
+  }
+}
+```
+
+**Note:** Structured content can only be used in tools, not in prompts or resources.
+
+### Resource Links
+
+Resource links allow you to reference other resources in your tool responses. This is useful when you want to point to additional information without embedding the entire resource content:
+
+```typescript
+import type { ToolContext } from '@jrmc/adonis-mcp/types/context'
+import { Tool } from '@jrmc/adonis-mcp'
+
+export default class GetDocumentationTool extends Tool {
+  name = 'get_documentation'
+  title = 'Get Documentation'
+  description = 'Get documentation for a specific topic'
+
+  async handle({ args, response }: ToolContext) {
+    return [
+      response.text('Here is the documentation for your topic:'),
+      response.resourceLink(`file:///docs/${args.topic}.md`)
+    ]
+  }
+}
+```
+
+The resource link will include metadata about the resource (name, mimeType, title, description, size) without fetching the actual content. The MCP client can then decide whether to fetch the resource content separately.
+
+**Note:** Resource links can only be used in tools, not in prompts or resources.
+
+### Metadata with `withMeta()`
+
+The `withMeta()` method is available on all content types and allows you to attach custom metadata to your responses. This metadata can be used by MCP clients for various purposes such as logging, analytics, or custom processing:
+
+```typescript
+async handle({ args, response }: ToolContext<Schema>) {
+  const users = await User.all()
+  
+  return response.text(JSON.stringify(users)).withMeta({
+    source: 'database',
+    queryTime: Date.now(),
+    count: users.length,
+    cacheHit: false
+  })
+}
+```
+
+Metadata is particularly useful when:
+- You want to provide debugging information
+- You need to track the source of data
+- You want to include performance metrics
+- You need to pass additional context to the client
 
 ### Creating a Resource
 
@@ -509,10 +600,14 @@ For prompts, you can use the same response methods as tools, but you must return
 - `response.audio(data: string, mimeType: string)`: Return audio content (base64 encoded)
 - `response.embeddedResource(uri: string)`: Embed another resource in the prompt response
 
+All response methods also support the `withMeta()` method to add metadata:
+
 ```typescript
 async handle({ args, response }: PromptContext<Schema>) {
   return [
-    response.text('Here is the code to review:'),
+    response.text('Here is the code to review:').withMeta({ 
+      language: args.language 
+    }),
     response.embeddedResource('file:///code.py'),
     response.text('Please provide feedback.')
   ]
