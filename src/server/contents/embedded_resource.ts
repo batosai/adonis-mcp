@@ -14,13 +14,15 @@ import type { ResourceList } from '../../types/method.js'
 import type { ResourceContext } from '../../types/context.js'
 
 import { createError } from '@adonisjs/core/exceptions'
+import { findResource } from '../../utils/find_resource_pattern.js'
 
 export default class EmbeddedResource implements Content {
   #uri: string
   #resource?: Resource
   #role: 'assistant' | 'user'
-  #ctx?: ResourceContext
   #meta?: Record<string, unknown>
+
+  #ctx?: ResourceContext
 
   constructor(uri: string) {
     this.#uri = uri
@@ -29,14 +31,12 @@ export default class EmbeddedResource implements Content {
 
   async preProcess(resourceList: ResourceList, ctx: ResourceContext): Promise<this> {
     this.#ctx = ctx
-    const item = resourceList[this.#uri]
 
-    if (!item) {
-      throw createError(`Resource ${this.#uri} not found.`, 'E_RESOURCE_NOT_FOUND')
-    }
-
-    const { default: Resource } = await import(item)
-    this.#resource = new Resource()
+    this.#resource = await findResource({
+      uri: this.#uri, 
+      resourceList, 
+      ctx
+    })
 
     return this
   }

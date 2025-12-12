@@ -37,5 +37,5 @@ export abstract class Resource<T = {}> {
     return data
   }
 
-  abstract handle(ctx?: ResourceContext & { args?: T }): Promise<Content>
+  abstract handle(ctx?: ResourceContext<T>): Promise<Content>
 }

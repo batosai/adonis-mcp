@@ -13,14 +13,14 @@ import type { Content } from '../contracts/content.js'
 import { ErrorCode } from '../../enums/error.js'
 import JsonRpcException from '../exceptions/jsonrpc_exception.js'
 import Response from '../../response.js'
-import { UriTemplate } from '../../utils/uri_template.js'
+import { findResource } from '../../utils/find_resource_pattern.js'
 
 export default class ReadResource implements Method {
   async handle(ctx: McpContext) {
     const resourceContext = ctx as unknown as ResourceContext
     const params = ctx.request.params
 
-    if (!params?.uri) {
+    if (!params?.uri || typeof params.uri !== 'string') {
       throw new JsonRpcException(
         `The resource URI is required.`,
         ErrorCode.InvalidParams,
@@ -28,30 +28,12 @@ export default class ReadResource implements Method {
       )
     }
 
-    const item = Object.keys(resourceContext.resources).find((key) => {
-      if (key === params.uri) {
-        return true
-      }
-
-      const uriTemplate = new UriTemplate(key)
-      const variables = uriTemplate.match(params.uri as string)
-      if (variables) {
-        ;(resourceContext as any).args = variables ?? {}
-        return true
-      }
+    const resource = await findResource({
+      uri: params.uri, 
+      resourceList: resourceContext.resources, 
+      ctx: resourceContext
     })
 
-    if (!item) {
-      throw new JsonRpcException(
-        `The resource ${params.uri} was not found.`,
-        ErrorCode.MethodNotFound,
-        resourceContext.request.id
-      )
-    }
-
-    const { default: Resource } = await import(resourceContext.resources[item])
-
-    const resource = new Resource(resourceContext)
     const content = await resource.handle(resourceContext)
 
     const data: Content[] = [content]
