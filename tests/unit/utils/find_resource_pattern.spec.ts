@@ -147,7 +147,7 @@ test.group('findResourcePattern - Context args extraction', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const key = findResourcePattern({ uri, resourceList, ctx })
+    const key = findResourcePattern({ uri, resourceList, ctx: ctx as any })
 
     assert.equal(key, 'file:///users/{id}')
     assert.exists((ctx as any).args)
@@ -165,7 +165,7 @@ test.group('findResourcePattern - Context args extraction', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const key = findResourcePattern({ uri, resourceList, ctx })
+    const key = findResourcePattern({ uri, resourceList, ctx: ctx as any })
 
     assert.equal(key, 'file:///users/{userId}/posts/{postId}')
     assert.exists((ctx as any).args)
@@ -183,7 +183,7 @@ test.group('findResourcePattern - Context args extraction', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const key = findResourcePattern({ uri, resourceList, ctx })
+    const key = findResourcePattern({ uri, resourceList, ctx: ctx as any })
 
     assert.equal(key, 'file:///api{?page,limit}')
     assert.exists((ctx as any).args)
@@ -216,7 +216,7 @@ test.group('findResourcePattern - Context args extraction', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const key = findResourcePattern({ uri, resourceList, ctx })
+    const key = findResourcePattern({ uri, resourceList, ctx: ctx as any })
 
     assert.equal(key, uri)
     // args should not be set for exact match (or be undefined/empty)
@@ -235,7 +235,7 @@ test.group('findResource - Resource loading', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const resource = await findResource({ uri, resourceList, ctx })
+    const resource = await findResource({ uri, resourceList, ctx: ctx as any })
 
     assert.exists(resource)
     assert.equal(resource.name, 'test-resource-1')
@@ -254,7 +254,7 @@ test.group('findResource - Resource loading', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const resource = await findResource({ uri, resourceList, ctx })
+    const resource = await findResource({ uri, resourceList, ctx: ctx as any })
 
     assert.exists(resource)
     assert.equal(resource.name, 'test-resource-template-1')
@@ -273,7 +273,7 @@ test.group('findResource - Resource loading', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const resource = await findResource({ uri, resourceList, ctx })
+    const resource = await findResource({ uri, resourceList, ctx: ctx as any })
 
     assert.exists(resource)
     assert.equal(resource.name, 'test-resource-template-3')
@@ -293,7 +293,7 @@ test.group('findResource - Resource loading', () => {
     const ctx = createTestContext(request, { resources: resourceList })
 
     try {
-      await findResource({ uri, resourceList, ctx })
+      await findResource({ uri, resourceList, ctx: ctx as any })
       assert.fail('Should have thrown an error')
     } catch (error: any) {
       assert.equal(error.code, ErrorCode.MethodNotFound)
@@ -312,7 +312,7 @@ test.group('findResource - Resource loading', () => {
     const ctx = createTestContext(request, { resources: resourceList })
 
     try {
-      await findResource({ uri, resourceList, ctx })
+      await findResource({ uri, resourceList, ctx: ctx as any })
       assert.fail('Should have thrown an error')
     } catch (error: any) {
       assert.equal(error.requestId, requestId)
@@ -332,7 +332,7 @@ test.group('findResource - Resource instantiation', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const resource = await findResource({ uri, resourceList, ctx })
+    const resource = await findResource({ uri, resourceList, ctx: ctx as any })
 
     // The uri should be set to the actual requested URI, not the template
     assert.equal(resource.uri, uri)
@@ -350,8 +350,8 @@ test.group('findResource - Resource instantiation', () => {
     const ctx1 = createTestContext(request, { resources: resourceList })
     const ctx2 = createTestContext(request, { resources: resourceList })
 
-    const resource1 = await findResource({ uri, resourceList, ctx: ctx1 })
-    const resource2 = await findResource({ uri, resourceList, ctx: ctx2 })
+    const resource1 = await findResource({ uri, resourceList, ctx: ctx1 as any })
+    const resource2 = await findResource({ uri, resourceList, ctx: ctx2 as any })
 
     // Should be different instances
     assert.notStrictEqual(resource1, resource2)
@@ -372,7 +372,7 @@ test.group('findResource - Complex scenarios', () => {
     const uri1 = 'file:///users/123'
     const request1 = createResourcesReadRequest(uri1)
     const ctx1 = createTestContext(request1, { resources: resourceList })
-    const resource1 = await findResource({ uri: uri1, resourceList, ctx: ctx1 })
+    const resource1 = await findResource({ uri: uri1, resourceList, ctx: ctx1 as any })
 
     assert.equal(resource1.name, 'test-resource-template-1')
     assert.deepEqual((ctx1 as any).args, { id: '123' })
@@ -381,7 +381,7 @@ test.group('findResource - Complex scenarios', () => {
     const uri2 = 'file:///users/123/posts/456'
     const request2 = createResourcesReadRequest(uri2)
     const ctx2 = createTestContext(request2, { resources: resourceList })
-    const resource2 = await findResource({ uri: uri2, resourceList, ctx: ctx2 })
+    const resource2 = await findResource({ uri: uri2, resourceList, ctx: ctx2 as any })
 
     assert.equal(resource2.name, 'test-resource-template-3')
     assert.deepEqual((ctx2 as any).args, { userId: '123', postId: '456' })
@@ -398,7 +398,7 @@ test.group('findResource - Complex scenarios', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const resource = await findResource({ uri, resourceList, ctx })
+    const resource = await findResource({ uri, resourceList, ctx: ctx as any })
 
     assert.exists(resource)
     assert.equal(resource.name, 'test-resource-template-2')
