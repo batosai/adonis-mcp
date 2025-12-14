@@ -8,7 +8,7 @@
 /**
  * Helper to create a test context for MCP methods
  */
-import type { JsonRpcRequest } from '../../src/types/request.js'
+import type { JsonRpcRequest } from '../../src/types/jsonrpc.js'
 import type { ServerContextOptions } from '../../src/types/context.js'
 import ServerContext from '../../src/server/context.js'
 

@@ -5,6 +5,8 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
+import type { PromptContext } from '../../../../src/types/context.js'
+
 import { test } from '@japa/runner'
 import GetPrompt from '../../../../src/server/methods/get_prompt.js'
 import { createTestContext } from '../../../helpers/create_context.js'
@@ -19,7 +21,7 @@ const promptMultipleModule = '../../../fixtures/prompts/test_prompt_multiple.ts'
 test.group('GetPrompt Method', () => {
   test('should throw error when prompt name is missing', async ({ assert }) => {
     const request = createJsonRpcRequest('prompts/get', {})
-    const context = createTestContext(request)
+    const context = createTestContext(request) as PromptContext
     const method = new GetPrompt()
 
     try {
@@ -35,7 +37,7 @@ test.group('GetPrompt Method', () => {
     const request = createPromptsGetRequest('non-existent-prompt')
     const context = createTestContext(request, {
       prompts: {},
-    })
+    }) as PromptContext
     const method = new GetPrompt()
 
     try {
@@ -55,7 +57,7 @@ test.group('GetPrompt Method', () => {
       prompts: {
         [name]: prompt1Path,
       },
-    })
+    }) as PromptContext
     const method = new GetPrompt()
 
     const response = await method.handle(context)
@@ -87,7 +89,7 @@ test.group('GetPrompt Method', () => {
       prompts: {
         [name]: prompt2Path,
       },
-    })
+    }) as PromptContext
     const method = new GetPrompt()
 
     const response = await method.handle(context)
@@ -119,7 +121,7 @@ test.group('GetPrompt Method', () => {
       prompts: {
         [name]: prompt2Path,
       },
-    })
+    }) as PromptContext
     const method = new GetPrompt()
 
     const response = await method.handle(context)
@@ -145,7 +147,7 @@ test.group('GetPrompt Method', () => {
       prompts: {
         [name]: promptMultiplePath,
       },
-    })
+    }) as PromptContext
     const method = new GetPrompt()
 
     const response = await method.handle(context)

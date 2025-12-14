@@ -5,7 +5,6 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import type { McpContext } from '../contracts/context.js'
 import type { Method } from '../../types/method.js'
 import type { ResourceContext } from '../../types/context.js'
 import type { Content } from '../contracts/content.js'
@@ -16,25 +15,24 @@ import Response from '../../response.js'
 import { findResource } from '../../utils/find_resource_pattern.js'
 
 export default class ReadResource implements Method {
-  async handle(ctx: McpContext) {
-    const resourceContext = ctx as unknown as ResourceContext
+  async handle(ctx: ResourceContext) {
     const params = ctx.request.params
 
     if (!params?.uri || typeof params.uri !== 'string') {
       throw new JsonRpcException(
         `The resource URI is required.`,
         ErrorCode.InvalidParams,
-        resourceContext.request.id
+        ctx.request.id
       )
     }
 
     const resource = await findResource({
       uri: params.uri, 
-      resourceList: resourceContext.resources, 
-      ctx: resourceContext
+      resourceList: ctx.resources, 
+      ctx
     })
 
-    const content = await resource.handle(resourceContext)
+    const content = await resource.handle(ctx)
 
     const data: Content[] = [content]
 

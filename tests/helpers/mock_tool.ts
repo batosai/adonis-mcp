@@ -11,6 +11,9 @@
 import { Tool } from '../../src/server/tool.js'
 import type { JSONSchema } from '../../src/types/method.js'
 
+import Text from '../../src/server/contents/text.js'
+
+
 export class MockTool extends Tool<JSONSchema> {
   constructor(
     public name: string,
@@ -32,7 +35,7 @@ export class MockTool extends Tool<JSONSchema> {
   }
 
   async handle() {
-    return { result: 'mock' }
+    return new Text('mock')
   }
 }
 

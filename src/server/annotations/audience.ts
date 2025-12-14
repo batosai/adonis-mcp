@@ -7,7 +7,7 @@
 
 import { Resource } from '../resource.js'
 import type Role from '../../enums/role.js'
-import type { Annotations } from '../../types/annotation.js'
+import type { Annotations } from '../../types/jsonrpc.js'
 
 /**
  * Decorator to specify the intended audience for a resource or tool

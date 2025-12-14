@@ -8,13 +8,11 @@
 import type { ToolList, ResourceList, PromptList } from '../../types/method.js'
 import type { McpRequest, McpRequestType } from '../../types/request.js'
 import type {
-  McpResourceResponse,
-  McpToolResponse,
-  McpPromptResponse,
+  McpResponse,
 } from '../../types/response.js'
 
-export interface McpContext {
-  requestType: McpRequestType
+export interface Context {
+  requestMethod: McpRequestType
 
   supportedProtocolVersions: string[]
   serverCapabilities: Record<string, any>
@@ -27,12 +25,8 @@ export interface McpContext {
   resources: ResourceList
   resourceTemplates?: string[]
   prompts: PromptList
-  request: McpRequest
-  response: this['requestType'] extends 'resource'
-    ? McpResourceResponse
-    : this['requestType'] extends 'prompt'
-      ? McpPromptResponse
-      : McpToolResponse
+  request: McpRequest<this['requestMethod']>
+  response: McpResponse<this['requestMethod']>
 
   getPerPage(requestedPerPage?: number): number
   getResources(): Promise<ResourceList>

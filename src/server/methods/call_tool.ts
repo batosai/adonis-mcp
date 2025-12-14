@@ -5,7 +5,6 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import type { McpContext } from '../contracts/context.js'
 import type { Method } from '../../types/method.js'
 import type { ToolContext, ResourceContext } from '../../types/context.js'
 import type { Content } from '../contracts/content.js'
@@ -19,44 +18,43 @@ import EmbeddedResource from '../contents/embedded_resource.js'
 import Structured from '../contents/structured.js'
 
 export default class CallTool implements Method {
-  async handle(ctx: McpContext) {
-    const toolContext = ctx as unknown as ToolContext
-    const params = toolContext.request.params
+  async handle(ctx: ToolContext) {
+    const params = ctx.request.params
 
     if (!params?.name) {
       throw new JsonRpcException(
         `The tool name is required.`,
         ErrorCode.InvalidParams,
-        toolContext.request.id
+        ctx.request.id
       )
     }
 
-    const item = Object.keys(toolContext.tools).find((key) => key === params.name)
+    const item = Object.keys(ctx.tools).find((key) => key === params.name)
 
     if (!item) {
       throw new JsonRpcException(
         `The tool ${params.name} was not found.`,
         ErrorCode.MethodNotFound,
-        toolContext.request.id
+        ctx.request.id
       )
     }
 
     let Tool
     try {
-      const module = await import(toolContext.tools[item])
+      const module = await import(ctx.tools[item])
       Tool = module.default
     } catch (error: any) {
       throw new JsonRpcException(
         `Failed to import tool ${params.name}: ${error.message}`,
         ErrorCode.InternalError,
-        toolContext.request.id
+        ctx.request.id
       )
     }
 
-    ;(toolContext as any).args = params.arguments ?? {}
+    ;(ctx as any).args = params.arguments ?? {}
 
-    const tool = new Tool(toolContext)
-    const contents = await tool.handle(toolContext)
+    const tool = new Tool(ctx)
+    const contents = await tool.handle(ctx)
 
     let data: Content[]
     if (!Array.isArray(contents)) {

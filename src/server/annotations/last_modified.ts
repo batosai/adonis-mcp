@@ -6,7 +6,7 @@
  */
 
 import { Resource } from '../resource.js'
-import type { Annotations } from '../../types/annotation.js'
+import type { Annotations } from '../../types/jsonrpc.js'
 
 /**
  * Decorator to indicate when a resource was last updated

@@ -12,7 +12,7 @@ import { audience } from '../../../../src/server/annotations/audience.js'
 import { lastModified } from '../../../../src/server/annotations/last_modified.js'
 import Text from '../../../../src/server/contents/text.js'
 import Role from '../../../../src/enums/role.js'
-import type { Annotations } from '../../../../src/types/annotation.js'
+import type { Annotations } from '../../../../src/types/jsonrpc.js'
 
 class TestResource extends Resource {
   name = 'test'

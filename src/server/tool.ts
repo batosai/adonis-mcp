@@ -8,7 +8,7 @@
 import type { JSONSchema } from '../types/method.js'
 import type { ToolContext } from '../types/context.js'
 import type { Content } from './contracts/content.js'
-import type { ToolAnnotations } from '../types/annotation.js'
+import type { ToolAnnotations } from '../types/jsonrpc.js'
 
 export abstract class Tool<T extends JSONSchema = JSONSchema> {
   abstract name: string

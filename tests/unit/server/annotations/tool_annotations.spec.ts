@@ -13,7 +13,7 @@ import { isDestructive } from '../../../../src/server/annotations/is_destructive
 import { isIdempotent } from '../../../../src/server/annotations/is_idempotent.js'
 import Text from '../../../../src/server/contents/text.js'
 import type { JSONSchema } from '../../../../src/types/method.js'
-import type { ToolAnnotations } from '../../../../src/types/annotation.js'
+import type { ToolAnnotations } from '../../../../src/types/jsonrpc.js'
 
 class TestTool extends Tool<JSONSchema> {
   name = 'test'

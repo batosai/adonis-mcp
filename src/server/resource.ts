@@ -7,7 +7,7 @@
 
 import type { ResourceContext } from '../types/context.js'
 import type { Content } from './contracts/content.js'
-import type { Annotations } from '../types/annotation.js'
+import type { Annotations } from '../types/jsonrpc.js'
 
 import string from '@adonisjs/core/helpers/string'
 import { UriTemplate } from '../utils/uri_template.js'

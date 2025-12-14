@@ -5,53 +5,21 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import type { JsonRpcRequest } from './jsonrpc.js'
+import type { CallToolRequest, ReadResourceRequest, GetPromptRequest, InitializeRequest, PingRequest, ListToolsRequest, ListResourcesRequest, ListResourceTemplatesRequest, ListPromptsRequest, CompleteRequest, SubscribeRequest, UnsubscribeRequest } from './jsonrpc.js'
 
-// Base type for request types
-export type McpRequestType = 'tool' | 'resource' | 'prompt'
+export type McpRequestType = 'tools/call' | 'resources/read' | 'prompts/get' | 'initialize' | 'ping' | 'tools/list' | 'resources/list' | 'resources/templates/list' | 'prompts/list' | 'completion/complete' | 'resources/subscribe' | 'resources/unsubscribe'
 
-type InitializeRequest = JsonRpcRequest & {
-  method: 'initialize'
-  params: {
-    protocolVersion: string
-    capabilities: {
-      tools: boolean
-      prompts: boolean
-      resources: boolean
-      logging: boolean
-      elicitation: Record<string, unknown>
-      roots: unknown
-    }
-    clientInfo: {
-      name: string
-      version: string
-    }
-  }
-}
-
-type ToolsCallRequest = JsonRpcRequest & {
-  method: 'tools/call'
-  params: {
-    name: string
-    arguments?: Record<string, unknown>
-    _meta?: Record<string, unknown>
-  }
-}
-
-type ResourcesReadRequest = JsonRpcRequest & {
-  method: 'resources/read'
-  params: {
-    uri: string
-  }
-}
-
-type GetPromptRequest = JsonRpcRequest & {
-  method: 'prompts/get'
-  params: { arguments?: { [key: string]: string }; name: string }
-}
-
-export type McpRequest =
-  | InitializeRequest
-  | ToolsCallRequest
-  | ResourcesReadRequest
-  | GetPromptRequest
+export type McpRequest<T> = 
+| T extends 'tools/call' ? CallToolRequest : 
+| T extends 'resources/read' ? ReadResourceRequest : 
+| T extends 'prompts/get' ? GetPromptRequest : 
+| T extends 'initialize' ? InitializeRequest : 
+| T extends 'ping' ? PingRequest : 
+| T extends 'tools/list' ? ListToolsRequest : 
+| T extends 'resources/list' ? ListResourcesRequest : 
+| T extends 'resources/templates/list' ? ListResourceTemplatesRequest : 
+| T extends 'prompts/list' ? ListPromptsRequest : 
+| T extends 'completion/complete' ? CompleteRequest : 
+| T extends 'resources/subscribe' ? SubscribeRequest : 
+| T extends 'resources/unsubscribe' ? UnsubscribeRequest : 
+| never

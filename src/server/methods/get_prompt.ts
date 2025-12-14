@@ -5,7 +5,6 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import type { McpContext } from '../contracts/context.js'
 import type { Method } from '../../types/method.js'
 import type { PromptContext, ResourceContext } from '../../types/context.js'
 import type Role from '../../enums/role.js'
@@ -16,34 +15,33 @@ import EmbeddedResource from '../contents/embedded_resource.js'
 import Response from '../../response.js'
 
 export default class GetPrompt implements Method {
-  async handle(ctx: McpContext) {
-    const promptContext = ctx as unknown as PromptContext
-    const params = promptContext.request.params
+  async handle(ctx: PromptContext) {
+    const params = ctx.request.params
 
     if (!params?.name) {
       throw new JsonRpcException(
         `The prompt name is required.`,
         ErrorCode.InvalidParams,
-        promptContext.request.id
+        ctx.request.id
       )
     }
 
-    const item = Object.keys(promptContext.prompts).find((key) => key === params.name)
+    const item = Object.keys(ctx.prompts).find((key) => key === params.name)
 
     if (!item) {
       throw new JsonRpcException(
         `The prompt ${params.name} was not found.`,
         ErrorCode.MethodNotFound,
-        promptContext.request.id
+        ctx.request.id
       )
     }
 
-    const { default: Prompt } = await import(promptContext.prompts[item])
+    const { default: Prompt } = await import(ctx.prompts[item])
 
-    ;(promptContext as any).args = params.arguments ?? {}
+    ;(ctx as any).args = params.arguments ?? {}
 
-    const prompt = new Prompt(promptContext)
-    const contents = await prompt.handle(promptContext)
+    const prompt = new Prompt(ctx)
+    const contents = await prompt.handle(ctx)
 
     let data: any[]
     if (!Array.isArray(contents)) {
@@ -56,7 +54,7 @@ export default class GetPrompt implements Method {
       throw new JsonRpcException(
         `The prompt ${params.name} returned no content.`,
         ErrorCode.InternalError,
-        promptContext.request.id
+        ctx.request.id
       )
     }
 
@@ -66,7 +64,7 @@ export default class GetPrompt implements Method {
         throw new JsonRpcException(
           `Invalid content returned from prompt ${params.name}.`,
           ErrorCode.InternalError,
-          promptContext.request.id
+          ctx.request.id
         )
       }
 
@@ -84,7 +82,7 @@ export default class GetPrompt implements Method {
       throw new JsonRpcException(
         `The prompt ${params.name} returned no valid messages.`,
         ErrorCode.InternalError,
-        promptContext.request.id
+        ctx.request.id
       )
     }
 

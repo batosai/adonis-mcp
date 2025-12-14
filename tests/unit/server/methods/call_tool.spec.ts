@@ -5,6 +5,8 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
+import type { ToolContext } from '../../../../src/types/context.js'
+
 import { test } from '@japa/runner'
 import CallTool from '../../../../src/server/methods/call_tool.js'
 import { createTestContext } from '../../../helpers/create_context.js'
@@ -19,7 +21,7 @@ const toolWithMultipleContentsModule = '../../../fixtures/tools/test_tool_with_m
 test.group('CallTool Method', () => {
   test('should throw error when tool name is missing', async ({ assert }) => {
     const request = createJsonRpcRequest('tools/call', {})
-    const context = createTestContext(request)
+    const context = createTestContext(request) as ToolContext
     const method = new CallTool()
 
     try {
@@ -35,7 +37,7 @@ test.group('CallTool Method', () => {
     const request = createToolsCallRequest('non-existent-tool')
     const context = createTestContext(request, {
       tools: {},
-    })
+    }) as ToolContext
     const method = new CallTool()
 
     try {
@@ -55,7 +57,7 @@ test.group('CallTool Method', () => {
       tools: {
         [name]: toolPath,
       },
-    })
+    }) as ToolContext
     const method = new CallTool()
 
     const response = await method.handle(context)
@@ -84,7 +86,7 @@ test.group('CallTool Method', () => {
       tools: {
         [name]: toolPath,
       },
-    })
+    }) as ToolContext
     const method = new CallTool()
 
     const response = await method.handle(context)
@@ -113,7 +115,7 @@ test.group('CallTool Method', () => {
       tools: {
         [name]: toolPath,
       },
-    })
+    }) as ToolContext
     const method = new CallTool()
 
     const response = await method.handle(context)
@@ -141,7 +143,7 @@ test.group('CallTool Method', () => {
       tools: {
         [name]: toolPath,
       },
-    })
+    }) as ToolContext
     const method = new CallTool()
 
     try {

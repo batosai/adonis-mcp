@@ -8,7 +8,6 @@
 import type { ApplicationService } from '@adonisjs/core/types'
 import type { RouteGroup } from '@adonisjs/core/http'
 import type { McpConfig } from '../src/types/config.js'
-import type { McpRequestType } from '../src/types/request.js'
 
 import { fsReadAll } from '@adonisjs/core/helpers'
 import McpServer from '../src/server.js'
@@ -51,7 +50,7 @@ export default class McpProvider {
     this.registerMethods('prompt')
   }
 
-  async registerMethods(type: McpRequestType) {
+  async registerMethods(type: 'tool' | 'resource' | 'prompt') {
     const server = await this.app.container.make('jrmc.mcp')
     const path = this.app.makePath(this.app.rcFile.directories['mcp'] || 'app/mcp/')
     const files = await fsReadAll(path, {

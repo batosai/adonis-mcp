@@ -6,7 +6,7 @@
  */
 
 import { Tool } from '../tool.js'
-import type { ToolAnnotations } from '../../types/annotation.js'
+import type { ToolAnnotations } from '../../types/jsonrpc.js'
 
 export function isOpenWorld(openWorld: true | false = true) {
   return function <T extends { new (...args: any[]): { annotations?: ToolAnnotations } }>(

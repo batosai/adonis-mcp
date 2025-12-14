@@ -5,18 +5,18 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import type { McpContext } from './contracts/context.js'
+import type { Context } from './contracts/context.js'
+import type { McpResponse } from '../types/response.js'
 import type { ServerContextOptions } from '../types/context.js'
 import type { ToolList, ResourceList, PromptList } from '../types/method.js'
 import type { McpRequest, McpRequestType } from '../types/request.js'
-import type { McpToolResponse, McpResourceResponse, McpPromptResponse } from '../types/response.js'
 
 import Request from '../request.js'
-import McpResponse from '../response.js'
+import Response from '../response.js'
 import { UriTemplate } from '../utils/uri_template.js'
 
-export default class ServerContext implements McpContext {
-  readonly requestType: McpRequestType
+export default class ServerContext implements Context {
+  readonly requestMethod: McpRequestType
 
   supportedProtocolVersions: string[]
   serverCapabilities: Record<string, any>
@@ -28,24 +28,11 @@ export default class ServerContext implements McpContext {
   tools: ToolList
   resources: ResourceList
   prompts: PromptList
-  request: McpRequest
-  response: this['requestType'] extends 'resource'
-    ? McpResourceResponse
-    : this['requestType'] extends 'prompt'
-      ? McpPromptResponse
-      : McpToolResponse
+  request: McpRequest<this['requestMethod']>
+  response: McpResponse<this['requestMethod']>
 
   constructor(options: ServerContextOptions) {
-    if (options.jsonRpcRequest.method === 'resources/read') {
-      this.requestType = 'resource'
-      this.response = new McpResponse<'resource'>(options.jsonRpcRequest) as any
-    } else if (options.jsonRpcRequest.method === 'prompts/get') {
-      this.requestType = 'prompt'
-      this.response = new McpResponse<'prompt'>(options.jsonRpcRequest) as any
-    } else {
-      this.requestType = 'tool'
-      this.response = new McpResponse<'tool'>(options.jsonRpcRequest) as any
-    }
+    this.requestMethod = options.jsonRpcRequest.method as McpRequestType
 
     this.supportedProtocolVersions = options.supportedProtocolVersions
     this.serverCapabilities = options.serverCapabilities
@@ -57,7 +44,9 @@ export default class ServerContext implements McpContext {
     this.tools = options.tools
     this.resources = options.resources
     this.prompts = options.prompts
-    this.request = new Request(options.jsonRpcRequest) as McpRequest
+
+    this.request = new Request(options.jsonRpcRequest) as McpRequest<this['requestMethod']>
+    this.response = new Response<this['requestMethod']>(options.jsonRpcRequest) as unknown as McpResponse<this['requestMethod']>
   }
 
   getPerPage(requestedPerPage?: number): number {

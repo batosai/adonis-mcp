@@ -6,8 +6,8 @@
  */
 
 import type { HttpContext } from '@adonisjs/core/http'
-import type { McpContext } from '../contracts/context.js'
 import type { Transport } from '../contracts/transport.js'
+import type { McpContext } from '../../types/context.js'
 import type { JsonRpcResponse } from '../../types/jsonrpc.js'
 
 export default class HttpTransport implements Transport {

@@ -5,7 +5,7 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import type { McpRequestType } from './request.js'
+import type { Response } from '../server/contracts/response.js'
 import type {
   TextContent,
   ImageContent,
@@ -17,19 +17,6 @@ import type {
   EmbeddedResource,
   ResourceLink,
 } from './jsonrpc.js'
-import type {
-  Text,
-  TextPrompt,
-  Blob,
-  Image,
-  ImagePrompt,
-  Audio,
-  AudioPrompt,
-  Structured,
-  Error,
-  ResourceLink as ResourceLinkContent,
-  EmbeddedResource as EmbeddedResourceContent,
-} from './content.js'
 
 export type ToolResponse =
   | Promise<TextContent>
@@ -49,30 +36,18 @@ export type PromptResponse =
   | Promise<ErrorBuilder>
   | Promise<EmbeddedResource>
 
-type TextResponseType<T extends McpRequestType> = T extends 'prompt' ? TextPrompt : Text
-
-type ImageResponseType<T extends McpRequestType> = T extends 'prompt' ? ImagePrompt : Image
-
-type AudioResponseType<T extends McpRequestType> = T extends 'prompt' ? AudioPrompt : Audio
-
-export interface McpResponse<T extends McpRequestType = McpRequestType> {
-  readonly type: T
-  text(text: string): TextResponseType<T>
-  blob(text: string): Blob
-  image(data: string, mimeType: string, _meta?: Record<string, unknown>): ImageResponseType<T>
-  audio(data: string, mimeType: string, _meta?: Record<string, unknown>): AudioResponseType<T>
-  structured(object: Record<string, unknown>): Structured
-  resourceLink(uri: string): ResourceLinkContent
-  embeddedResource(uri: string): EmbeddedResourceContent
-  error(message: string): Error
-}
-
 export type McpToolResponse = Pick<
-  McpResponse<'tool'>,
+  Response<'tools/call'>,
   'text' | 'image' | 'audio' | 'structured' | 'resourceLink' | 'embeddedResource' | 'error'
 >
-export type McpResourceResponse = Pick<McpResponse<'resource'>, 'text' | 'blob'>
+export type McpResourceResponse = Pick<Response<'resources/read'>, 'text' | 'blob'>
 export type McpPromptResponse = Pick<
-  McpResponse<'prompt'>,
+  Response<'prompts/get'>,
   'text' | 'image' | 'audio' | 'embeddedResource' | 'error'
 >
+
+export type McpResponse<T> = 
+  T extends 'resources/read' ? McpResourceResponse : 
+  T extends 'prompts/get' ? McpPromptResponse : 
+  T extends 'tools/call' ? McpToolResponse : 
+  never

@@ -8,7 +8,7 @@
 /**
  * Helper to create JSON-RPC requests for testing
  */
-import type { JsonRpcRequest } from '../../src/types/request.js'
+import type { JsonRpcRequest } from '../../src/types/jsonrpc.js'
 
 export function createJsonRpcRequest(
   method: string,

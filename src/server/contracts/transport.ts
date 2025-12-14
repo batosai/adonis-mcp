@@ -5,7 +5,7 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import type { McpContext } from './context.js'
+import type { McpContext } from '../../types/context.js'
 import type { JsonRpcResponse } from '../../types/jsonrpc.js'
 
 export interface Transport {

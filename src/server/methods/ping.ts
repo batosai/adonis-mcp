@@ -5,7 +5,7 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import type { McpContext } from '../contracts/context.js'
+import type { McpContext } from '../../types/context.js'
 import type { Method } from '../../types/method.js'
 
 import Response from '../../response.js'

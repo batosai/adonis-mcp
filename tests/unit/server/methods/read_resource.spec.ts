@@ -5,6 +5,8 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
+import type { ResourceContext } from '../../../../src/types/context.js'
+
 import { test } from '@japa/runner'
 import ReadResource from '../../../../src/server/methods/read_resource.js'
 import { createTestContext } from '../../../helpers/create_context.js'
@@ -24,7 +26,7 @@ const template3Module = '../../../fixtures/resources/test_resource_template_3.ts
 test.group('ReadResource Method', () => {
   test('should throw error when resource URI is missing', async ({ assert }) => {
     const request = createJsonRpcRequest('resources/read', {})
-    const context = createTestContext(request)
+    const context = createTestContext(request) as ResourceContext
     const method = new ReadResource()
 
     try {
@@ -40,7 +42,7 @@ test.group('ReadResource Method', () => {
     const request = createResourcesReadRequest('file:///non-existent-resource.txt')
     const context = createTestContext(request, {
       resources: {},
-    })
+    }) as ResourceContext
     const method = new ReadResource()
 
     try {
@@ -60,7 +62,7 @@ test.group('ReadResource Method', () => {
       resources: {
         [uri]: resource1Path,
       },
-    })
+    }) as ResourceContext
     const method = new ReadResource()
 
     const response = await method.handle(context)
@@ -89,7 +91,7 @@ test.group('ReadResource Method', () => {
       resources: {
         [uri]: resource2Path,
       },
-    })
+    }) as ResourceContext
     const method = new ReadResource()
 
     const response = await method.handle(context)
@@ -119,7 +121,7 @@ test.group('ReadResource Method', () => {
       resources: {
         [uri]: resource1Path,
       },
-    })
+    }) as ResourceContext
     const method = new ReadResource()
 
     const response = await method.handle(context)
@@ -139,7 +141,7 @@ test.group('ReadResource Method - Templates', () => {
       resources: {
         'file:///users/{id}': template1Path,
       },
-    })
+    }) as ResourceContext
     const method = new ReadResource()
 
     const response = await method.handle(context)
@@ -168,7 +170,7 @@ test.group('ReadResource Method - Templates', () => {
       resources: {
         'file:///users/{userId}/posts/{postId}': template3Path,
       },
-    })
+    }) as ResourceContext
     const method = new ReadResource()
 
     const response = await method.handle(context)
@@ -191,7 +193,7 @@ test.group('ReadResource Method - Templates', () => {
       resources: {
         'file:///api{?page,limit}': template2Path,
       },
-    })
+    }) as ResourceContext
     const method = new ReadResource()
 
     const response = await method.handle(context)
@@ -214,7 +216,7 @@ test.group('ReadResource Method - Templates', () => {
       resources: {
         'file:///users/{id}': template1Path,
       },
-    })
+    }) as ResourceContext
     const method = new ReadResource()
 
     const response = await method.handle(context)
@@ -233,7 +235,7 @@ test.group('ReadResource Method - Templates', () => {
       resources: {
         'file:///users/{id}': template1Path,
       },
-    })
+    }) as ResourceContext
     const method = new ReadResource()
 
     try {
@@ -255,7 +257,7 @@ test.group('ReadResource Method - Templates', () => {
         'file:///users/123': resource1Path, // Exact match
         'file:///users/{id}': template1Path, // Template match
       },
-    })
+    }) as ResourceContext
     const method = new ReadResource()
 
     const response = await method.handle(context)
@@ -280,7 +282,7 @@ test.group('ReadResource Method - Templates', () => {
     // Test first pattern
     const uri1 = 'file:///users/123'
     const request1 = createResourcesReadRequest(uri1)
-    const context1 = createTestContext(request1, { resources })
+    const context1 = createTestContext(request1, { resources }) as ResourceContext
     const method1 = new ReadResource()
     const response1 = await method1.handle(context1)
     const content1 = (response1.result?.contents as any[])[0]
@@ -289,7 +291,7 @@ test.group('ReadResource Method - Templates', () => {
     // Test second pattern
     const uri2 = 'file:///users/123/posts/456'
     const request2 = createResourcesReadRequest(uri2)
-    const context2 = createTestContext(request2, { resources })
+    const context2 = createTestContext(request2, { resources }) as ResourceContext
     const method2 = new ReadResource()
     const response2 = await method2.handle(context2)
     const content2 = (response2.result?.contents as any[])[0]
@@ -304,7 +306,7 @@ test.group('ReadResource Method - Templates', () => {
       resources: {
         'file:///users/{id}': template1Path,
       },
-    })
+    }) as ResourceContext
     const method = new ReadResource()
 
     const response = await method.handle(context)
@@ -322,7 +324,7 @@ test.group('ReadResource Method - Templates', () => {
       resources: {
         'file:///users/{id}': template1Path,
       },
-    })
+    }) as ResourceContext
     const method = new ReadResource()
 
     const response = await method.handle(context)
@@ -340,7 +342,7 @@ test.group('ReadResource Method - Templates', () => {
       resources: {
         'file:///api{?page,limit}': template2Path,
       },
-    })
+    }) as ResourceContext
     const method = new ReadResource()
 
     const response = await method.handle(context)
