@@ -5,6 +5,7 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
+import type { ListResourcesResult } from '../../types/jsonrpc.js'
 import type { McpContext } from '../../types/context.js'
 import type { Method } from '../../types/method.js'
 
@@ -45,6 +46,6 @@ export default class ListResources implements Method {
       nextCursor = paginatedResources.nextCursor
     }
 
-    return Response.toJsonRpc({ id: ctx.request.id, result: { resources, nextCursor } })
+    return Response.toJsonRpc({ id: ctx.request.id, result: { resources, nextCursor } as ListResourcesResult })
   }
 }

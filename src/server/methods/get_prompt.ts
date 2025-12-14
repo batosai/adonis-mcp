@@ -5,14 +5,23 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
+import type { GetPromptResult, PromptMessage } from '../../types/jsonrpc.js'
 import type { Method } from '../../types/method.js'
 import type { PromptContext, ResourceContext } from '../../types/context.js'
+import type { Content } from '../contracts/content.js'
 import type Role from '../../enums/role.js'
 
 import { ErrorCode } from '../../enums/error.js'
 import JsonRpcException from '../exceptions/jsonrpc_exception.js'
 import EmbeddedResource from '../contents/embedded_resource.js'
+import Text from '../contents/text.js'
+import Image from '../contents/image.js'
+import Audio from '../contents/audio.js'
 import Response from '../../response.js'
+
+// type PromptContent = Content & { 
+//   role: Role
+// }
 
 export default class GetPrompt implements Method {
   async handle(ctx: PromptContext) {
@@ -43,7 +52,7 @@ export default class GetPrompt implements Method {
     const prompt = new Prompt(ctx)
     const contents = await prompt.handle(ctx)
 
-    let data: any[]
+    let data: Content[]
     if (!Array.isArray(contents)) {
       data = [contents]
     } else {
@@ -58,24 +67,25 @@ export default class GetPrompt implements Method {
       )
     }
 
-    let messages: { role: Role; content: Record<string, any> }[] = []
+    let messages: PromptMessage[] = []
     for await (const content of data) {
-      if (!content || !content.role) {
-        throw new JsonRpcException(
-          `Invalid content returned from prompt ${params.name}.`,
-          ErrorCode.InternalError,
-          ctx.request.id
-        )
-      }
-
       if (content instanceof EmbeddedResource) {
-        await content.preProcess(ctx.resources, ctx as unknown as ResourceContext)
+        await content.preProcess(ctx as unknown as ResourceContext)
       }
 
-      messages.push({
-        role: content.role as Role,
-        content: await content.toPrompt(prompt),
-      })
+      if (content instanceof Text || content instanceof Image || content instanceof Audio || content instanceof EmbeddedResource) {
+        if (!content || !content.role) {
+          throw new JsonRpcException(
+            `Invalid content returned from prompt ${params.name}.`,
+            ErrorCode.InternalError,
+            ctx.request.id
+          )
+        }
+        messages.push({
+          role: content.role as Role,
+          content: await content.toPrompt(prompt),
+        })
+      }
     }
 
     if (messages.length === 0) {
@@ -86,7 +96,7 @@ export default class GetPrompt implements Method {
       )
     }
 
-    const result = {
+    const result: GetPromptResult = {
       description: prompt.description,
       messages,
     }

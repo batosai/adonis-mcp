@@ -10,7 +10,6 @@ import type { ResourceLink as ResourceLinkContent } from '../../types/jsonrpc.js
 import type { AnyTool as Tool } from '../tool.js'
 import type { AnyPrompt as Prompt } from '../prompt.js'
 import type { Resource } from '../resource.js'
-import type { ResourceList } from '../../types/method.js'
 import type { ResourceContext } from '../../types/context.js'
 
 import { createError } from '@adonisjs/core/exceptions'
@@ -26,10 +25,10 @@ export default class ResourceLink implements Content {
     this.#resource = null
   }
 
-  async preProcess(resourceList: ResourceList, ctx: ResourceContext): Promise<this> {
+  async preProcess(ctx: ResourceContext): Promise<this> {
     this.#resource = await findResource({
       uri: this.#uri, 
-      resourceList, 
+      resourceList: ctx.resources, 
       ctx
     })
 

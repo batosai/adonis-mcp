@@ -63,7 +63,7 @@ test.group('ResourceLink Content - preProcess and toTool', () => {
     const ctx = createTestContext(request, { resources: resourceList })
 
     const link = new ResourceLink(uri)
-    await link.preProcess(resourceList, ctx as any)
+    await link.preProcess(ctx as any)
 
     const result = await link.toTool(mockTool)
 
@@ -90,7 +90,7 @@ test.group('ResourceLink Content - preProcess and toTool', () => {
 
     const link = new ResourceLink(uri)
     link.withMeta({ linkType: 'reference', importance: 'high' })
-    await link.preProcess(resourceList, ctx as any)
+    await link.preProcess(ctx as any)
 
     const result = await link.toTool(mockTool)
 
@@ -116,7 +116,7 @@ test.group('ResourceLink Content - preProcess and toTool', () => {
 
     const link = new ResourceLink(uri)
     link.withMeta({ dynamic: true, userId: 123 })
-    await link.preProcess(resourceList, ctx as any)
+    await link.preProcess(ctx as any)
 
     const result = await link.toTool(mockTool)
 
@@ -146,7 +146,7 @@ test.group('ResourceLink Content - preProcess and toTool', () => {
     const link = new ResourceLink(uri)
     link.withMeta({ first: 'meta' })
     link.withMeta({ second: 'meta' })
-    await link.preProcess(resourceList, ctx as any)
+    await link.preProcess(ctx as any)
 
     const result = await link.toTool(mockTool)
 
@@ -163,7 +163,7 @@ test.group('ResourceLink Content - preProcess and toTool', () => {
     const ctx = createTestContext(request, { resources: resourceList })
 
     const link = new ResourceLink(uri)
-    await link.preProcess(resourceList, ctx as any)
+    await link.preProcess(ctx as any)
 
     const result = await link.toTool(mockTool)
 
@@ -188,7 +188,7 @@ test.group('ResourceLink Content - withMeta edge cases', () => {
 
     const link = new ResourceLink(uri)
     link.withMeta({})
-    await link.preProcess(resourceList, ctx as any)
+    await link.preProcess(ctx as any)
 
     const result = await link.toTool(mockTool)
 
@@ -205,7 +205,7 @@ test.group('ResourceLink Content - withMeta edge cases', () => {
 
     const link = new ResourceLink(uri)
     link.withMeta({ shared: 'meta', timestamp: Date.now() })
-    await link.preProcess(resourceList, ctx as any)
+    await link.preProcess(ctx as any)
 
     const result1 = await link.toTool(mockTool)
     const result2 = await link.toTool(mockTool)
@@ -224,7 +224,7 @@ test.group('ResourceLink Content - withMeta edge cases', () => {
     const ctx = createTestContext(request, { resources: resourceList })
 
     const link = new ResourceLink(uri)
-    await link.preProcess(resourceList, ctx as any)
+    await link.preProcess(ctx as any)
 
     const result = await link.toTool(mockTool)
 
@@ -248,7 +248,7 @@ test.group('ResourceLink Content - withMeta edge cases', () => {
       tags: ['important', 'external'],
       validation: { status: 'valid', checkedAt: '2024-01-01' },
     })
-    await link.preProcess(resourceList, ctx as any)
+    await link.preProcess(ctx as any)
 
     const result = await link.toTool(mockTool)
 
@@ -273,7 +273,7 @@ test.group('ResourceLink Content - withMeta edge cases', () => {
       breadcrumbs: ['root', 'folder', 'file'],
       permissions: { read: true, write: false },
     })
-    await link.preProcess(resourceList, ctx as any)
+    await link.preProcess(ctx as any)
 
     const result = await link.toTool(mockTool)
 
@@ -307,7 +307,7 @@ test.group('ResourceLink Content - Error handling', () => {
     const link = new ResourceLink(uri)
 
     try {
-      await link.preProcess(resourceList, ctx as any)
+      await link.preProcess(ctx as any)
       assert.fail('Should have thrown an error')
     } catch (error: any) {
       assert.include(error.message, 'was not found')
@@ -333,7 +333,7 @@ test.group('ResourceLink Content - Integration with templates', () => {
       resolvedId: '456',
       matchedPattern: true,
     })
-    await link.preProcess(resourceList, ctx as any)
+    await link.preProcess(ctx as any)
 
     const result = await link.toTool(mockTool)
 
@@ -343,3 +343,5 @@ test.group('ResourceLink Content - Integration with templates', () => {
     assert.equal(result._meta?.resolvedId, '456')
   })
 })
+
+

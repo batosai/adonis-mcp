@@ -9,7 +9,6 @@ import { test } from '@japa/runner'
 import EmbeddedResource from '../../../../src/server/contents/embedded_resource.js'
 import { createTestContext } from '../../../helpers/create_context.js'
 import { createResourcesReadRequest } from '../../../helpers/create_request.js'
-import Role from '../../../../src/enums/role.js'
 
 const resource1Module = '../../../fixtures/resources/test_resource_1.ts'
 const template1Module = '../../../fixtures/resources/test_resource_template_1.ts'
@@ -71,7 +70,7 @@ test.group('EmbeddedResource Content - preProcess and toTool', () => {
     const ctx = createTestContext(request, { resources: resourceList })
 
     const embedded = new EmbeddedResource(uri)
-    await embedded.preProcess(resourceList, ctx as any)
+    await embedded.preProcess(ctx as any)
 
     const result = await embedded.toTool(mockTool)
 
@@ -94,7 +93,7 @@ test.group('EmbeddedResource Content - preProcess and toTool', () => {
 
     const embedded = new EmbeddedResource(uri)
     embedded.withMeta({ embedType: 'inline', priority: 'high' })
-    await embedded.preProcess(resourceList, ctx as any)
+    await embedded.preProcess(ctx as any)
 
     const result = await embedded.toTool(mockTool)
 
@@ -119,7 +118,7 @@ test.group('EmbeddedResource Content - preProcess and toTool', () => {
 
     const embedded = new EmbeddedResource(uri)
     embedded.withMeta({ templateMatch: true })
-    await embedded.preProcess(resourceList, ctx as any)
+    await embedded.preProcess(ctx as any)
 
     const result = await embedded.toTool(mockTool)
 
@@ -146,7 +145,7 @@ test.group('EmbeddedResource Content - preProcess and toTool', () => {
     const embedded = new EmbeddedResource(uri)
     embedded.withMeta({ first: 'meta' })
     embedded.withMeta({ second: 'meta' })
-    await embedded.preProcess(resourceList, ctx as any)
+    await embedded.preProcess(ctx as any)
 
     const result = await embedded.toTool(mockTool)
 
@@ -168,7 +167,7 @@ test.group('EmbeddedResource Content - preProcess and toPrompt', () => {
     const ctx = createTestContext(request, { resources: resourceList })
 
     const embedded = new EmbeddedResource(uri)
-    await embedded.preProcess(resourceList, ctx as any)
+    await embedded.preProcess(ctx as any)
 
     const result = await embedded.toPrompt(mockPrompt)
 
@@ -191,7 +190,7 @@ test.group('EmbeddedResource Content - preProcess and toPrompt', () => {
 
     const embedded = new EmbeddedResource(uri)
     embedded.withMeta({ context: 'prompt-context', relevance: 0.9 })
-    await embedded.preProcess(resourceList, ctx as any)
+    await embedded.preProcess(ctx as any)
 
     const result = await embedded.toPrompt(mockPrompt)
 
@@ -213,7 +212,7 @@ test.group('EmbeddedResource Content - preProcess and toPrompt', () => {
 
     const embedded = new EmbeddedResource(uri)
     embedded.asAssistant().withMeta({ generated: true })
-    await embedded.preProcess(resourceList, ctx as any)
+    await embedded.preProcess(ctx as any)
 
     const result = await embedded.toPrompt(mockPrompt)
 
@@ -234,7 +233,7 @@ test.group('EmbeddedResource Content - withMeta edge cases', () => {
 
     const embedded = new EmbeddedResource(uri)
     embedded.withMeta({})
-    await embedded.preProcess(resourceList, ctx as any)
+    await embedded.preProcess(ctx as any)
 
     const result = await embedded.toTool(mockTool)
 
@@ -251,7 +250,7 @@ test.group('EmbeddedResource Content - withMeta edge cases', () => {
 
     const embedded = new EmbeddedResource(uri)
     embedded.withMeta({ shared: 'meta', id: 456 })
-    await embedded.preProcess(resourceList, ctx as any)
+    await embedded.preProcess(ctx as any)
 
     const toolResult = await embedded.toTool(mockTool)
     const promptResult = await embedded.toPrompt(mockPrompt)
@@ -271,7 +270,7 @@ test.group('EmbeddedResource Content - withMeta edge cases', () => {
     const ctx = createTestContext(request, { resources: resourceList })
 
     const embedded = new EmbeddedResource(uri)
-    await embedded.preProcess(resourceList, ctx as any)
+    await embedded.preProcess(ctx as any)
 
     const toolResult = await embedded.toTool(mockTool)
     const promptResult = await embedded.toPrompt(mockPrompt)
@@ -297,7 +296,7 @@ test.group('EmbeddedResource Content - withMeta edge cases', () => {
       permissions: ['read', 'execute'],
       metadata: { size: 1024, type: 'document' },
     })
-    await embedded.preProcess(resourceList, ctx as any)
+    await embedded.preProcess(ctx as any)
 
     const result = await embedded.toTool(mockTool)
 
@@ -338,3 +337,5 @@ test.group('EmbeddedResource Content - Error handling', () => {
     }
   })
 })
+
+

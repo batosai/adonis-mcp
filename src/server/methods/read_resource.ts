@@ -5,6 +5,7 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
+import type { ReadResourceResult } from '../../types/jsonrpc.js'
 import type { Method } from '../../types/method.js'
 import type { ResourceContext } from '../../types/context.js'
 import type { Content } from '../contracts/content.js'
@@ -36,7 +37,7 @@ export default class ReadResource implements Method {
 
     const data: Content[] = [content]
 
-    const result: Record<string, any> = { contents: [] }
+    const result: ReadResourceResult = { contents: [] }
     data.forEach(async (content) => {
       result.contents.push(await content.toResource(resource))
     })

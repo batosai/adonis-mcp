@@ -316,7 +316,7 @@ type Implementation  = {
   version: string
 }
 
-type PromptMessage = {
+export type PromptMessage = {
   content: ContentBlock
   role: Role
 }

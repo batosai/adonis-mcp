@@ -5,6 +5,7 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
+import type { ListToolsResult } from '../../types/jsonrpc.js'
 import type { McpContext } from '../../types/context.js'
 import type { Method } from '../../types/method.js'
 
@@ -45,6 +46,6 @@ export default class ListTools implements Method {
       nextCursor = paginatedTools.nextCursor
     }
 
-    return Response.toJsonRpc({ id: ctx.request.id, result: { tools, nextCursor } })
+    return Response.toJsonRpc({ id: ctx.request.id, result: { tools, nextCursor } as ListToolsResult })
   }
 }

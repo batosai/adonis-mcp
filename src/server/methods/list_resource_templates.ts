@@ -5,6 +5,7 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
+import type { ListResourceTemplatesResult } from '../../types/jsonrpc.js'
 import type { McpContext } from '../../types/context.js'
 import type { Method } from '../../types/method.js'
 
@@ -45,6 +46,6 @@ export default class ListResourceTemplates implements Method {
       nextCursor = paginatedResources.nextCursor
     }
 
-    return Response.toJsonRpc({ id: ctx.request.id, result: { resourceTemplates, nextCursor } })
+    return Response.toJsonRpc({ id: ctx.request.id, result: { resourceTemplates, nextCursor } as ListResourceTemplatesResult })
   }
 }

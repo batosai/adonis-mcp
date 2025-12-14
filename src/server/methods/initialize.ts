@@ -5,6 +5,7 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
+import type { InitializeResult } from '../../types/jsonrpc.js'
 import type { McpContext } from '../../types/context.js'
 import type { Method } from '../../types/method.js'
 
@@ -33,7 +34,7 @@ export default class Initialize implements Method {
 
     const protocolVersion = requestedVersion ?? ctx.supportedProtocolVersions[0]
 
-    const result = {
+    const result: InitializeResult = {
       protocolVersion,
       capabilities: ctx.serverCapabilities,
       serverInfo: {

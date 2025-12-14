@@ -5,6 +5,7 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
+import type { ListPromptsResult } from '../../types/jsonrpc.js'
 import type { McpContext } from '../../types/context.js'
 import type { Method } from '../../types/method.js'
 
@@ -45,6 +46,6 @@ export default class ListPrompts implements Method {
       nextCursor = paginatedPrompts.nextCursor
     }
 
-    return Response.toJsonRpc({ id: ctx.request.id, result: { prompts, nextCursor } })
+    return Response.toJsonRpc({ id: ctx.request.id, result: { prompts, nextCursor } as ListPromptsResult })
   }
 }

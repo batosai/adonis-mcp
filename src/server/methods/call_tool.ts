@@ -5,6 +5,7 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
+import type { CallToolResult, ContentBlock } from '../../types/jsonrpc.js'
 import type { Method } from '../../types/method.js'
 import type { ToolContext, ResourceContext } from '../../types/context.js'
 import type { Content } from '../contracts/content.js'
@@ -64,20 +65,20 @@ export default class CallTool implements Method {
     }
 
     let isError = false
-    const result: Record<string, any> = { content: [] }
-    for await (const content of data) {
-      if (content instanceof ResourceLink || content instanceof EmbeddedResource) {
-        await content.preProcess(ctx.resources, ctx as unknown as ResourceContext)
+    const result: CallToolResult = { content: [] }
+    for await (const obj of data) {
+      if (obj instanceof ResourceLink || obj instanceof EmbeddedResource) {
+        await obj.preProcess(ctx as unknown as ResourceContext)
       }
 
-      if (content instanceof Structured) {
-        result.structuredContent = content.structuredContent
-      }
-
-      result.content.push(await content.toTool(tool))
-
-      if (content instanceof ErrorContent) {
+      if (obj instanceof Structured) {
+        result.structuredContent = obj.structuredContent
+      } else if (obj instanceof ErrorContent) {
         isError = true
+        result.content.push(await obj.toTool(tool))
+      }
+      else {
+        result.content.push(await obj.toTool(tool) as ContentBlock)
       }
     }
 
