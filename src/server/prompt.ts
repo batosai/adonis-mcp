@@ -39,7 +39,7 @@ export abstract class Prompt<T extends JSONSchema = JSONSchema> {
 
   async complete(ctx?: CompleteContext<T>): Promise<Completion> {
     return await ctx!.response.complete({
-      values: []
+      values: [],
     })
   }
 }

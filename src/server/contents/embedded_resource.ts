@@ -32,9 +32,9 @@ export default class EmbeddedResource implements Content {
     this.#ctx = ctx
 
     this.#resource = await findResource({
-      uri: this.#uri, 
-      resourceList: ctx.resources, 
-      ctx
+      uri: this.#uri,
+      resourceList: ctx.resources,
+      ctx,
     })
 
     return this

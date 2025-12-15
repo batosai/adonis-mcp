@@ -343,5 +343,3 @@ test.group('ResourceLink Content - Integration with templates', () => {
     assert.equal(result._meta?.resolvedId, '456')
   })
 })
-
-

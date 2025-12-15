@@ -11,25 +11,29 @@ type HasMeta = {
   withMeta: (meta: Record<string, unknown>) => Content
 }
 
-export type TextPrompt = Content & HasMeta & {
-  asAssistant: () => Content
-  asUser: () => Content
-}
+export type TextPrompt = Content &
+  HasMeta & {
+    asAssistant: () => Content
+    asUser: () => Content
+  }
 
-export type ImagePrompt = Content & HasMeta & {
-  asAssistant: () => Content
-  asUser: () => Content
-}
+export type ImagePrompt = Content &
+  HasMeta & {
+    asAssistant: () => Content
+    asUser: () => Content
+  }
 
-export type AudioPrompt = Content & HasMeta & {
-  asAssistant: () => Content
-  asUser: () => Content
-}
+export type AudioPrompt = Content &
+  HasMeta & {
+    asAssistant: () => Content
+    asUser: () => Content
+  }
 
-export type EmbeddedResource = Content & HasMeta & {
-  asAssistant: () => Content
-  asUser: () => Content
-}
+export type EmbeddedResource = Content &
+  HasMeta & {
+    asAssistant: () => Content
+    asUser: () => Content
+  }
 
 export type Text = Content & HasMeta
 export type Blob = Content & HasMeta

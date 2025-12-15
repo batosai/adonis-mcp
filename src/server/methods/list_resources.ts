@@ -46,6 +46,9 @@ export default class ListResources implements Method {
       nextCursor = paginatedResources.nextCursor
     }
 
-    return Response.toJsonRpc({ id: ctx.request.id, result: { resources, nextCursor } as ListResourcesResult })
+    return Response.toJsonRpc({
+      id: ctx.request.id,
+      result: { resources, nextCursor } as ListResourcesResult,
+    })
   }
 }

@@ -337,5 +337,3 @@ test.group('EmbeddedResource Content - Error handling', () => {
     }
   })
 })
-
-

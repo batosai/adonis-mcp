@@ -46,7 +46,9 @@ export default class ServerContext implements Context {
     this.prompts = options.prompts
 
     this.request = new Request(options.jsonRpcRequest) as McpRequest<this['requestMethod']>
-    this.response = new Response<this['requestMethod']>(options.jsonRpcRequest) as unknown as McpResponse<this['requestMethod']>
+    this.response = new Response<this['requestMethod']>(
+      options.jsonRpcRequest
+    ) as unknown as McpResponse<this['requestMethod']>
   }
 
   getPerPage(requestedPerPage?: number): number {

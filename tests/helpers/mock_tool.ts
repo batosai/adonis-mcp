@@ -13,7 +13,6 @@ import type { JSONSchema } from '../../src/types/method.js'
 
 import Text from '../../src/server/contents/text.js'
 
-
 export class MockTool extends Tool<JSONSchema> {
   constructor(
     public name: string,

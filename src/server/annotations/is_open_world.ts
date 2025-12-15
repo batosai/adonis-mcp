@@ -26,4 +26,3 @@ export function isOpenWorld(openWorld: true | false = true) {
     }
   }
 }
-

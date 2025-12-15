@@ -204,4 +204,3 @@ test.group('Resource Annotations - Multiple decorators', () => {
     assert.deepEqual(resource.annotations?.audience, [Role.USER])
   })
 })
-

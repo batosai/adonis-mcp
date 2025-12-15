@@ -46,6 +46,9 @@ export default class ListResourceTemplates implements Method {
       nextCursor = paginatedResources.nextCursor
     }
 
-    return Response.toJsonRpc({ id: ctx.request.id, result: { resourceTemplates, nextCursor } as ListResourceTemplatesResult })
+    return Response.toJsonRpc({
+      id: ctx.request.id,
+      result: { resourceTemplates, nextCursor } as ListResourceTemplatesResult,
+    })
   }
 }

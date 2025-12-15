@@ -46,6 +46,9 @@ export default class ListPrompts implements Method {
       nextCursor = paginatedPrompts.nextCursor
     }
 
-    return Response.toJsonRpc({ id: ctx.request.id, result: { prompts, nextCursor } as ListPromptsResult })
+    return Response.toJsonRpc({
+      id: ctx.request.id,
+      result: { prompts, nextCursor } as ListPromptsResult,
+    })
   }
 }

@@ -46,7 +46,7 @@ export abstract class Resource<T = {}> {
 
   async complete(ctx?: CompleteContext<T>): Promise<Completion> {
     return await ctx!.response.complete({
-      values: []
+      values: [],
     })
   }
 }

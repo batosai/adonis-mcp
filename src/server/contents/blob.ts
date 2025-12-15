@@ -16,7 +16,6 @@ export default class Blob implements Content {
   #text: string
   #meta?: Record<string, unknown>
 
-
   constructor(text: string | Buffer) {
     if (typeof text === 'string') {
       this.#text = Buffer.from(text).toString('base64')

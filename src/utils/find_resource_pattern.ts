@@ -12,7 +12,15 @@ import { UriTemplate } from './uri_template.js'
 import { ErrorCode } from '../enums/error.js'
 import JsonRpcException from '../server/exceptions/jsonrpc_exception.js'
 
-export function findResourcePattern({uri, resourceList, ctx}: {uri: string, resourceList: ResourceList, ctx?: ResourceContext}) {
+export function findResourcePattern({
+  uri,
+  resourceList,
+  ctx,
+}: {
+  uri: string
+  resourceList: ResourceList
+  ctx?: ResourceContext
+}) {
   return Object.keys(resourceList).find((key) => {
     if (key === uri) {
       return true
@@ -29,9 +37,16 @@ export function findResourcePattern({uri, resourceList, ctx}: {uri: string, reso
   })
 }
 
-
-export async function findResource({uri, resourceList, ctx}: {uri: string, resourceList: ResourceList, ctx: ResourceContext}) {
-  const key = findResourcePattern({uri, resourceList, ctx})
+export async function findResource({
+  uri,
+  resourceList,
+  ctx,
+}: {
+  uri: string
+  resourceList: ResourceList
+  ctx: ResourceContext
+}) {
+  const key = findResourcePattern({ uri, resourceList, ctx })
 
   if (!key) {
     throw new JsonRpcException(

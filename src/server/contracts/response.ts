@@ -21,7 +21,6 @@ import type {
   EmbeddedResource as EmbeddedResourceContent,
 } from '../../types/content.js'
 
-
 type TextResponseType<T extends McpRequestType> = T extends 'prompts/get' ? TextPrompt : Text
 type ImageResponseType<T extends McpRequestType> = T extends 'prompts/get' ? ImagePrompt : Image
 type AudioResponseType<T extends McpRequestType> = T extends 'prompts/get' ? AudioPrompt : Audio

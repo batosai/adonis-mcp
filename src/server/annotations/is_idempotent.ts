@@ -26,4 +26,3 @@ export function isIdempotent(idempotent: true | false = true) {
     }
   }
 }
-

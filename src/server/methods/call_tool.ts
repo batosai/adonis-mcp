@@ -76,9 +76,8 @@ export default class CallTool implements Method {
       } else if (obj instanceof ErrorContent) {
         isError = true
         result.content.push(await obj.toTool(tool))
-      }
-      else {
-        result.content.push(await obj.toTool(tool) as ContentBlock)
+      } else {
+        result.content.push((await obj.toTool(tool)) as ContentBlock)
       }
     }
 

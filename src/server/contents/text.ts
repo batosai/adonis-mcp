@@ -45,7 +45,7 @@ export default class Text implements Content {
     return this.#mergeMeta({
       text: this.#text,
       uri: resource.uri,
-      mimeType: resource.mimeType
+      mimeType: resource.mimeType,
     }) as TextResourceContents
   }
 

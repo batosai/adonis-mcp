@@ -5,8 +5,19 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import type { JsonRpcRequest, CallToolRequest, ReadResourceRequest, GetPromptRequest, CompleteRequest } from './jsonrpc.js'
-import type { McpResourceResponse, McpToolResponse, McpPromptResponse, McpCompleteResponse } from './response.js'
+import type {
+  JsonRpcRequest,
+  CallToolRequest,
+  ReadResourceRequest,
+  GetPromptRequest,
+  CompleteRequest,
+} from './jsonrpc.js'
+import type {
+  McpResourceResponse,
+  McpToolResponse,
+  McpPromptResponse,
+  McpCompleteResponse,
+} from './response.js'
 import type { Context } from '../server/contracts/context.js'
 import type { InferJSONSchema, JSONSchema } from './method.js'
 

@@ -233,4 +233,3 @@ test.group('Tool Annotations - Multiple decorators', () => {
     assert.equal(tool.annotations?.title, 'Custom Title')
   })
 })
-

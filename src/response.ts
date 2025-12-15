@@ -77,7 +77,7 @@ export default class<T extends McpRequestType = McpRequestType> implements Respo
       jsonrpc: '2.0' as const,
       id,
       result,
-      error
+      error,
     } as const
   }
 }

@@ -18,7 +18,11 @@ export default class Completion implements Method {
     const params = ctx.request.params
 
     if (!params?.argument?.name || !params?.argument?.value) {
-      throw new JsonRpcException('The argument name and value are required.', ErrorCode.InvalidParams, ctx.request.id)
+      throw new JsonRpcException(
+        'The argument name and value are required.',
+        ErrorCode.InvalidParams,
+        ctx.request.id
+      )
     }
 
     const argument = params.argument
@@ -50,7 +54,7 @@ export default class Completion implements Method {
     ;(ctx as any).args = { ...args, [argument.name]: argument.value }
 
     const result = {
-      completion: await entity.complete(ctx)
+      completion: await entity.complete(ctx),
     } as CompleteResult
 
     return Response.toJsonRpc({ id: ctx.request.id, result })

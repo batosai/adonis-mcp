@@ -14,7 +14,7 @@ export type JsonRpcRequest = {
   method: string
   params?: {
     cursor?: string
-    _meta?: { 
+    _meta?: {
       progressToken?: ProgressToken
       [key: string]: unknown
     }
@@ -141,13 +141,13 @@ export type ContentBlock =
 // REQUEST TYPES
 
 export type PromptReference = {
-  name: string;
-  title?: string;
-  type: "ref/prompt"
+  name: string
+  title?: string
+  type: 'ref/prompt'
 }
 
 export type ResourceTemplateReference = {
-  type: "ref/resource"
+  type: 'ref/resource'
   uri: string
 }
 
@@ -160,8 +160,8 @@ export type InitializeRequest = JsonRpcRequest & {
   }
 }
 
-export type PingRequest = JsonRpcRequest &{
-  method: "ping"
+export type PingRequest = JsonRpcRequest & {
+  method: 'ping'
   params?: {
     _meta?: { progressToken?: ProgressToken; [key: string]: unknown }
     [key: string]: unknown
@@ -177,7 +177,7 @@ export type CallToolRequest = JsonRpcRequest & {
 }
 
 export type ListToolsRequest = JsonRpcRequest & {
-  method: "tools/list"
+  method: 'tools/list'
   params?: { cursor?: string }
 }
 
@@ -190,31 +190,32 @@ export type ReadResourceRequest = JsonRpcRequest & {
 
 export type ListResourcesRequest = JsonRpcRequest & {
   method: 'resources/list'
-  params?: { 
-    cursor?: string 
+  params?: {
+    cursor?: string
   }
 }
 export type ListResourceTemplatesRequest = JsonRpcRequest & {
-  method: "resources/templates/list"
+  method: 'resources/templates/list'
   params?: { cursor?: string }
 }
 
 export type GetPromptRequest = JsonRpcRequest & {
   method: 'prompts/get'
-  params: { 
-    arguments?: { 
-      [key: string]: string }
-       name: string 
+  params: {
+    arguments?: {
+      [key: string]: string
     }
+    name: string
+  }
 }
 
 export type ListPromptsRequest = JsonRpcRequest & {
-  method: "prompts/list"
+  method: 'prompts/list'
   params?: { cursor?: string }
 }
 
 export type CompleteRequest = JsonRpcRequest & {
-  method: "completion/complete"
+  method: 'completion/complete'
   params: {
     argument: { name: string; value: string }
     context?: { arguments?: { [key: string]: string } }
@@ -223,12 +224,12 @@ export type CompleteRequest = JsonRpcRequest & {
 }
 
 export type SubscribeRequest = JsonRpcRequest & {
-  method: "resources/subscribe"
+  method: 'resources/subscribe'
   params: { uri: string }
 }
 
 export type UnsubscribeRequest = JsonRpcRequest & {
-  method: "resources/unsubscribe"
+  method: 'resources/unsubscribe'
   params: { uri: string }
 }
 
@@ -244,10 +245,10 @@ export type InitializeResult = {
 }
 
 export type GetPromptResult = {
-  _meta?: { [key: string]: unknown };
-  description?: string;
-  messages: PromptMessage[];
-  [key: string]: unknown;
+  _meta?: { [key: string]: unknown }
+  description?: string
+  messages: PromptMessage[]
+  [key: string]: unknown
 }
 
 export type ListPromptsResult = {
@@ -318,7 +319,7 @@ type ServerCapabilities = {
   tools?: { listChanged?: boolean }
 }
 
-type Implementation  = {
+type Implementation = {
   name: string
   title?: string
   version: string
@@ -372,13 +373,13 @@ type Tool = {
   inputSchema: {
     properties?: { [key: string]: object }
     required?: string[]
-    type: "object"
-  };
+    type: 'object'
+  }
   name: string
   outputSchema?: {
     properties?: { [key: string]: object }
     required?: string[]
-    type: "object"
-  };
+    type: 'object'
+  }
   title?: string
 }

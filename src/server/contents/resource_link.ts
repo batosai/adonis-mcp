@@ -27,9 +27,9 @@ export default class ResourceLink implements Content {
 
   async preProcess(ctx: ResourceContext): Promise<this> {
     this.#resource = await findResource({
-      uri: this.#uri, 
-      resourceList: ctx.resources, 
-      ctx
+      uri: this.#uri,
+      resourceList: ctx.resources,
+      ctx,
     })
 
     return this

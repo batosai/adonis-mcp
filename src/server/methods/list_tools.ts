@@ -46,6 +46,9 @@ export default class ListTools implements Method {
       nextCursor = paginatedTools.nextCursor
     }
 
-    return Response.toJsonRpc({ id: ctx.request.id, result: { tools, nextCursor } as ListToolsResult })
+    return Response.toJsonRpc({
+      id: ctx.request.id,
+      result: { tools, nextCursor } as ListToolsResult,
+    })
   }
 }

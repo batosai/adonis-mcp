@@ -7,9 +7,7 @@
 
 import type { ToolList, ResourceList, PromptList } from '../../types/method.js'
 import type { McpRequest, McpRequestType } from '../../types/request.js'
-import type {
-  McpResponse,
-} from '../../types/response.js'
+import type { McpResponse } from '../../types/response.js'
 
 export interface Context {
   requestMethod: McpRequestType

@@ -28,9 +28,9 @@ export default class ReadResource implements Method {
     }
 
     const resource = await findResource({
-      uri: params.uri, 
-      resourceList: ctx.resources, 
-      ctx
+      uri: params.uri,
+      resourceList: ctx.resources,
+      ctx,
     })
 
     const content = await resource.handle(ctx)

@@ -19,10 +19,6 @@ import Image from '../contents/image.js'
 import Audio from '../contents/audio.js'
 import Response from '../../response.js'
 
-// type PromptContent = Content & { 
-//   role: Role
-// }
-
 export default class GetPrompt implements Method {
   async handle(ctx: PromptContext) {
     const params = ctx.request.params
@@ -73,7 +69,12 @@ export default class GetPrompt implements Method {
         await content.preProcess(ctx as unknown as ResourceContext)
       }
 
-      if (content instanceof Text || content instanceof Image || content instanceof Audio || content instanceof EmbeddedResource) {
+      if (
+        content instanceof Text ||
+        content instanceof Image ||
+        content instanceof Audio ||
+        content instanceof EmbeddedResource
+      ) {
         if (!content || !content.role) {
           throw new JsonRpcException(
             `Invalid content returned from prompt ${params.name}.`,

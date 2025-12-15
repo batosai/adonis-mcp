@@ -26,4 +26,3 @@ export function isDestructive(destructive: true | false = true) {
     }
   }
 }
-
