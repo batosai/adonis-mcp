@@ -43,5 +43,3 @@ export abstract class Prompt<T extends JSONSchema = JSONSchema> {
     })
   }
 }
-
-export type AnyPrompt = Prompt<JSONSchema>

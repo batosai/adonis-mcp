@@ -7,8 +7,8 @@
 
 import type { ToolResponse, ResourceResponse, PromptResponse } from '../../types/response.js'
 import type { Resource } from '../resource.js'
-import type { AnyTool as Tool } from '../tool.js'
-import type { AnyPrompt as Prompt } from '../prompt.js'
+import type { Tool } from '../tool.js'
+import type { Prompt } from '../prompt.js'
 
 export abstract class Content {
   abstract toTool(tool: Tool): ToolResponse

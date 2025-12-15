@@ -7,8 +7,8 @@
 
 import type { Content } from '../contracts/content.js'
 import type { TextContent, TextResourceContents } from '../../types/jsonrpc.js'
-import type { AnyTool as Tool } from '../tool.js'
-import type { AnyPrompt as Prompt } from '../prompt.js'
+import type { Tool } from '../tool.js'
+import type { Prompt } from '../prompt.js'
 import type { Resource } from '../resource.js'
 
 import Role from '../../enums/role.js'

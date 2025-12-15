@@ -40,4 +40,3 @@ export abstract class Tool<T extends JSONSchema = JSONSchema> {
   abstract handle(ctx?: ToolContext<T>): Promise<Content | Content[]>
 }
 
-export type AnyTool = Tool<JSONSchema>

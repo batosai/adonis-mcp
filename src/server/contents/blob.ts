@@ -8,8 +8,8 @@
 import type { Content } from '../contracts/content.js'
 import type { BlobResourceContents } from '../../types/jsonrpc.js'
 import type { Resource } from '../resource.js'
-import type { AnyTool as Tool } from '../tool.js'
-import type { AnyPrompt as Prompt } from '../prompt.js'
+import type { Tool } from '../tool.js'
+import type { Prompt } from '../prompt.js'
 import { createError } from '@adonisjs/core/exceptions'
 
 export default class Blob implements Content {
