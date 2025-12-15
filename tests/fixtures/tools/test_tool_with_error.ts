@@ -26,6 +26,3 @@ export default class TestToolWithError extends Tool<JSONSchema> {
     return response.error('An error occurred')
   }
 }
-
-
-

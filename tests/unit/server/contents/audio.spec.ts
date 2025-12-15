@@ -271,7 +271,11 @@ test.group('Audio Content - Role and chaining', () => {
 
   test('should support complex chaining', async ({ assert }) => {
     const audio = new Audio('data', 'audio/wav')
-    const result = audio.asUser().withMeta({ quality: 'high' }).asAssistant().withMeta({ processed: true })
+    const result = audio
+      .asUser()
+      .withMeta({ quality: 'high' })
+      .asAssistant()
+      .withMeta({ processed: true })
 
     assert.equal(audio.role, Role.ASSISTANT)
     const output = await audio.toTool(mockTool)

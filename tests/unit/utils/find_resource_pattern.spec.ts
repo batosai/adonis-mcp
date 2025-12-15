@@ -6,10 +6,7 @@
  */
 
 import { test } from '@japa/runner'
-import {
-  findResourcePattern,
-  findResource,
-} from '../../../src/utils/find_resource_pattern.js'
+import { findResourcePattern, findResource } from '../../../src/utils/find_resource_pattern.js'
 import { createTestContext } from '../../helpers/create_context.js'
 import { createResourcesReadRequest } from '../../helpers/create_request.js'
 import { ErrorCode } from '../../../src/enums/error.js'
@@ -129,9 +126,7 @@ test.group('findResourcePattern - Template match', () => {
 
     // Should return the first match (order depends on Object.keys)
     assert.isString(key)
-    assert.isTrue(
-      key === 'file:///users/{id}' || key === 'file:///users/{userId}'
-    )
+    assert.isTrue(key === 'file:///users/{id}' || key === 'file:///users/{userId}')
   })
 })
 

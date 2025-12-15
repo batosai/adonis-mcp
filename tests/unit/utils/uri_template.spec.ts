@@ -63,27 +63,18 @@ test.group('UriTemplate - Constructor and toString', () => {
   })
 
   test('should throw error for unclosed template expression', ({ assert }) => {
-    assert.throws(
-      () => new UriTemplate('file:///users/{id'),
-      'Unclosed template expression'
-    )
+    assert.throws(() => new UriTemplate('file:///users/{id'), 'Unclosed template expression')
   })
 
   test('should throw error for template exceeding max length', ({ assert }) => {
     const longTemplate = 'a'.repeat(1000001)
-    assert.throws(
-      () => new UriTemplate(longTemplate),
-      /Template exceeds maximum length/
-    )
+    assert.throws(() => new UriTemplate(longTemplate), /Template exceeds maximum length/)
   })
 
   test('should throw error for too many expressions', ({ assert }) => {
     // Create a template with 10001 expressions (exceeds MAX_TEMPLATE_EXPRESSIONS)
     const manyExpressions = Array(10001).fill('{x}').join('')
-    assert.throws(
-      () => new UriTemplate(manyExpressions),
-      /Template contains too many expressions/
-    )
+    assert.throws(() => new UriTemplate(manyExpressions), /Template contains too many expressions/)
   })
 })
 
@@ -271,10 +262,7 @@ test.group('UriTemplate - expand - Complex scenarios', () => {
   test('should validate variable value length', ({ assert }) => {
     const template = new UriTemplate('file:///users/{id}')
     const longValue = 'a'.repeat(1000001)
-    assert.throws(
-      () => template.expand({ id: longValue }),
-      /Variable value exceeds maximum length/
-    )
+    assert.throws(() => template.expand({ id: longValue }), /Variable value exceeds maximum length/)
   })
 })
 
@@ -394,15 +382,15 @@ test.group('UriTemplate - match - Complex scenarios', () => {
   test('should validate URI length', ({ assert }) => {
     const template = new UriTemplate('file:///users/{id}')
     const longUri = 'file:///users/' + 'a'.repeat(1000001)
-    assert.throws(
-      () => template.match(longUri),
-      /URI exceeds maximum length/
-    )
+    assert.throws(() => template.match(longUri), /URI exceeds maximum length/)
   })
 
   test('should validate generated regex pattern length', ({ assert }) => {
     // Create a template that would generate a very long regex
-    const manyVars = Array(5000).fill(0).map((_, i) => `{var${i}}`).join('')
+    const manyVars = Array(5000)
+      .fill(0)
+      .map((_, i) => `{var${i}}`)
+      .join('')
     const template = new UriTemplate(manyVars)
     // Match will return null for non-matching URI, not throw
     const result = template.match('test')
