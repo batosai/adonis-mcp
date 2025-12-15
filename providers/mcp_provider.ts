@@ -52,14 +52,14 @@ export default class McpProvider {
 
   async registerMethods(type: 'tool' | 'resource' | 'prompt') {
     const server = await this.app.container.make('jrmc.mcp')
-    const path = this.app.makePath(this.app.rcFile.directories['mcp'] || 'app/mcp/')
-    const files = await fsReadAll(path, {
+    const mcpPath = this.app.makePath(this.app.rcFile.directories['mcp'] || 'app/mcp/')
+    const files = await fsReadAll(mcpPath, {
       filter: (filePath) => filePath.includes(`_${type}.ts`),
     })
 
     await Promise.all(
       files.map(async (file) => {
-        const path = this.app.makePath(server.config.path!, file)
+        const path = this.app.makePath(mcpPath, file)
         const { default: Method } = await import(path)
         const instance = new Method()
 

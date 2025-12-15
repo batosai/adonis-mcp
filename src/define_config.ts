@@ -8,8 +8,5 @@
 import type { McpConfig } from './types/config.js'
 
 export function defineConfig<T extends McpConfig>(config: T): T {
-  if (!config.path) {
-    config.path = 'app/mcp'
-  }
   return config
 }
