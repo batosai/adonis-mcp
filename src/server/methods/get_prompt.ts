@@ -35,9 +35,9 @@ export default class GetPrompt implements Method {
       )
     }
 
-    const item = Object.keys(ctx.prompts).find((key) => key === params.name)
+    const pathToPrompt = ctx.prompts[params.name]
 
-    if (!item) {
+    if (!pathToPrompt) {
       throw new JsonRpcException(
         `The prompt ${params.name} was not found.`,
         ErrorCode.MethodNotFound,
@@ -45,7 +45,7 @@ export default class GetPrompt implements Method {
       )
     }
 
-    const { default: Prompt } = await import(ctx.prompts[item])
+    const { default: Prompt } = await import(pathToPrompt)
 
     ;(ctx as any).args = params.arguments ?? {}
 

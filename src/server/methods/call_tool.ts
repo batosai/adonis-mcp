@@ -30,9 +30,9 @@ export default class CallTool implements Method {
       )
     }
 
-    const item = Object.keys(ctx.tools).find((key) => key === params.name)
+    const pathToTool = ctx.tools[params.name]
 
-    if (!item) {
+    if (!pathToTool) {
       throw new JsonRpcException(
         `The tool ${params.name} was not found.`,
         ErrorCode.MethodNotFound,
@@ -42,7 +42,7 @@ export default class CallTool implements Method {
 
     let Tool
     try {
-      const module = await import(ctx.tools[item])
+      const module = await import(pathToTool)
       Tool = module.default
     } catch (error: any) {
       throw new JsonRpcException(

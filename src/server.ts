@@ -52,6 +52,7 @@ export default class Server {
     'resources/templates/list': () => import('./server/methods/list_resource_templates.js'),
     'prompts/list': () => import('./server/methods/list_prompts.js'),
     'prompts/get': () => import('./server/methods/get_prompt.js'),
+    'completion/complete': () => import('./server/methods/completion.js'),
     'ping': () => import('./server/methods/ping.js'),
   }
 
@@ -77,6 +78,10 @@ export default class Server {
     if (config.defaultPaginationLength) {
       this.defaultPaginationLength = config.defaultPaginationLength
     }
+
+    if (config.completions) {
+      this.addCapability('completions')
+    }
   }
 
   addCapability(key: string, value: boolean = true) {
@@ -86,7 +91,11 @@ export default class Server {
 
       existing[child] = value
       this.capabilities[root] = existing
+
+      return
     }
+
+    this.capabilities[key] = {}
   }
 
   addTool(item: ToolList) {

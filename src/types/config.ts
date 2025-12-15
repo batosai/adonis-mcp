@@ -12,4 +12,5 @@ export type McpConfig = {
   path?: string
   maxPaginationLength?: number
   defaultPaginationLength?: number
+  completions?: boolean
 }

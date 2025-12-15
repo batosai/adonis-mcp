@@ -6,6 +6,7 @@
  */
 
 import type { McpRequestType } from '../../types/request.js'
+import type { Completion } from '../../types/jsonrpc.js'
 import type {
   Text,
   TextPrompt,
@@ -35,4 +36,5 @@ export interface Response<T extends McpRequestType = McpRequestType> {
   resourceLink(uri: string): ResourceLinkContent
   embeddedResource(uri: string): EmbeddedResourceContent
   error(message: string): Error
+  complete(completion: Completion): Completion
 }

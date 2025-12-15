@@ -232,7 +232,7 @@ export type UnsubscribeRequest = JsonRpcRequest & {
   params: { uri: string }
 }
 
-// result types
+// Result types
 
 export type InitializeResult = {
   _meta?: { [key: string]: unknown }
@@ -292,7 +292,15 @@ export type ListToolsResult = {
   [key: string]: unknown
 }
 
+export type CompleteResult = {
+  _meta?: { [key: string]: unknown }
+  completion: Completion
+  [key: string]: unknown
+}
+
 //
+
+export type Completion = { hasMore?: boolean; total?: number; values: string[] }
 
 type ClientCapabilities = {
   elicitation?: object

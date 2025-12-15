@@ -5,9 +5,9 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import type { ResourceContext } from '../types/context.js'
+import type { ResourceContext, CompleteContext } from '../types/context.js'
 import type { Content } from './contracts/content.js'
-import type { Annotations } from '../types/jsonrpc.js'
+import type { Annotations, Completion } from '../types/jsonrpc.js'
 
 import string from '@adonisjs/core/helpers/string'
 import { UriTemplate } from '../utils/uri_template.js'
@@ -43,4 +43,10 @@ export abstract class Resource<T = {}> {
   }
 
   abstract handle(ctx?: ResourceContext<T>): Promise<Content>
+
+  async complete(ctx?: CompleteContext<T>): Promise<Completion> {
+    return await ctx!.response.complete({
+      values: []
+    })
+  }
 }

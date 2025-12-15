@@ -5,8 +5,8 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import type { JsonRpcRequest, CallToolRequest, ReadResourceRequest, GetPromptRequest } from './jsonrpc.js'
-import type { McpResourceResponse, McpToolResponse, McpPromptResponse } from './response.js'
+import type { JsonRpcRequest, CallToolRequest, ReadResourceRequest, GetPromptRequest, CompleteRequest } from './jsonrpc.js'
+import type { McpResourceResponse, McpToolResponse, McpPromptResponse, McpCompleteResponse } from './response.js'
 import type { Context } from '../server/contracts/context.js'
 import type { InferJSONSchema, JSONSchema } from './method.js'
 
@@ -37,6 +37,13 @@ export type PromptContext<T extends JSONSchema = JSONSchema> = Omit<
   request: GetPromptRequest
   response: McpPromptResponse
   args?: InferJSONSchema<T>
+}
+
+export type CompleteContext<T = {}> = Omit<McpContext, 'response' | 'requestMethod'> & {
+  requestMethod: 'completion/complete'
+  request: CompleteRequest
+  response: McpCompleteResponse
+  args?: T
 }
 
 export type ServerContextOptions = Omit<

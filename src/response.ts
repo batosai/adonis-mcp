@@ -5,7 +5,7 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import type { JsonRpcResponse } from './types/jsonrpc.js'
+import type { JsonRpcResponse, Completion } from './types/jsonrpc.js'
 import type { Response } from './server/contracts/response.js'
 import type { McpRequestType } from './types/request.js'
 import type { JsonRpcRequest } from './types/jsonrpc.js'
@@ -27,8 +27,12 @@ export default class<T extends McpRequestType = McpRequestType> implements Respo
       this.type = 'resources/read' as T
     } else if (jsonRpcRequest.method === 'prompts/get') {
       this.type = 'prompts/get' as T
-    } else {
+    } else if (jsonRpcRequest.method === 'prompts/get') {
       this.type = 'tools/call' as T
+    } else if (jsonRpcRequest.method === 'completion/complete') {
+      this.type = 'completion/complete' as T
+    } else {
+      this.type = 'ping' as T
     }
   }
 
@@ -62,6 +66,10 @@ export default class<T extends McpRequestType = McpRequestType> implements Respo
 
   error(message: string) {
     return new Error(message)
+  }
+
+  complete(completion: Completion) {
+    return completion
   }
 
   static toJsonRpc({ id, result, error }: Omit<JsonRpcResponse, 'jsonrpc'>): JsonRpcResponse {

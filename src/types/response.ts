@@ -45,9 +45,11 @@ export type McpPromptResponse = Pick<
   Response<'prompts/get'>,
   'text' | 'image' | 'audio' | 'embeddedResource' | 'error'
 >
+export type McpCompleteResponse = Pick<Response<'completion/complete'>, 'complete'>
 
 export type McpResponse<T> = 
   T extends 'resources/read' ? McpResourceResponse : 
   T extends 'prompts/get' ? McpPromptResponse : 
-  T extends 'tools/call' ? McpToolResponse : 
+  T extends 'tools/call' ? McpToolResponse :
+  T extends 'completion/complete' ? McpCompleteResponse :
   never
