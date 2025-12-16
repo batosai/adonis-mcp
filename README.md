@@ -19,6 +19,7 @@ AdonisJS MCP - Server MCP for your AdonisJS applications.
 - [x] Meta support
 - [x] Annotations
 - [x] Completion
+- [x] Inspector
 - [ ] Output tool
 - [ ] Error(review)
 - [ ] Stream
@@ -31,6 +32,8 @@ AdonisJS MCP - Server MCP for your AdonisJS applications.
 - [ ] JSON Schema with Vine ??
 - [ ] Login
 - [ ] Documentation
+- [ ] Kit Stater
+- [ ] Demos
 
 ## Installation & Configuration
 
@@ -1026,6 +1029,39 @@ The package supports multiple transport mechanisms:
 ### Pagination
 
 The `tools/list` and `resources/list` methods support cursor-based pagination to handle large numbers of tools and resources efficiently. This is particularly useful when you have many tools or resources registered in your application. [More information](https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/pagination)
+
+## Testing & Debugging
+
+### MCP Inspector
+
+The MCP Inspector is a powerful tool for debugging and testing your MCP server. It provides a graphical interface to interact with your tools, resources, and prompts.
+
+To open the MCP Inspector, use the following command:
+
+```bash
+node ace mcp:inspector
+```
+
+By default, this command uses HTTP transport. You can specify a different transport type:
+
+```bash
+# Use HTTP transport (default)
+node ace mcp:inspector http
+
+# Use stdio transport
+node ace mcp:inspector stdio
+```
+
+**Important notes:**
+
+- The inspector can only be used in development environment (not in production)
+- For HTTP transport, make sure your server is running and the MCP route is configured
+- The inspector will automatically connect to your MCP server and allow you to:
+  - List and test all available tools
+  - Browse and read resources
+  - Execute prompts with different arguments
+  - Inspect request/response payloads
+  - Debug any issues with your MCP implementation
 
 ## Support
 
