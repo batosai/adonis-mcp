@@ -6,16 +6,9 @@
  */
 
 import { test } from '@japa/runner'
-import { fileURLToPath, pathToFileURL } from 'node:url'
-import { dirname, join } from 'node:path'
 import ListResources from '../../../../src/server/methods/list_resources.js'
 import { createTestContext } from '../../../helpers/create_context.js'
 import { createListResourcesRequest } from '../../../helpers/create_request.js'
-import { ErrorCode } from '../../../../src/enums/error.js'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
-const fixturesDir = join(__dirname, '../../fixtures/resources')
 
 // Import resource fixtures using relative paths
 const resource1Module = '../../../fixtures/resources/test_resource_1.ts'

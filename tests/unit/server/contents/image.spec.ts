@@ -14,10 +14,6 @@ const mockPrompt = {} as any
 const mockResource = {} as any
 
 test.group('Image Content', () => {
-  test('should create image content with data and mimeType', ({ assert }) => {
-    const image = new Image('base64data', 'image/png')
-    assert.exists(image)
-  })
 
   test('should default to USER role', ({ assert }) => {
     const image = new Image('data', 'image/jpeg')

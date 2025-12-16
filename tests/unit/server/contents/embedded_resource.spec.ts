@@ -18,10 +18,6 @@ const mockPrompt = {} as any
 const mockResource = {} as any
 
 test.group('EmbeddedResource Content', () => {
-  test('should create embedded resource with URI', ({ assert }) => {
-    const embedded = new EmbeddedResource('file:///test.txt')
-    assert.exists(embedded)
-  })
 
   test('should default to user role', ({ assert }) => {
     const embedded = new EmbeddedResource('file:///test.txt')

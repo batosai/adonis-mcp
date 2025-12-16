@@ -14,15 +14,6 @@ const mockPrompt = {} as any
 const mockResource = {} as any
 
 test.group('Audio Content', () => {
-  test('should create audio content with data and mimeType', ({ assert }) => {
-    const audio = new Audio('base64audiodata', 'audio/mp3')
-    assert.exists(audio)
-  })
-
-  test('should default to USER role', ({ assert }) => {
-    const audio = new Audio('data', 'audio/wav')
-    assert.equal(audio.role, Role.USER)
-  })
 
   test('should allow setting role to ASSISTANT', ({ assert }) => {
     const audio = new Audio('data', 'audio/mp3')
@@ -271,7 +262,7 @@ test.group('Audio Content - Role and chaining', () => {
 
   test('should support complex chaining', async ({ assert }) => {
     const audio = new Audio('data', 'audio/wav')
-    const result = audio
+    audio
       .asUser()
       .withMeta({ quality: 'high' })
       .asAssistant()

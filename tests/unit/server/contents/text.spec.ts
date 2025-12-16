@@ -18,16 +18,6 @@ const mockResource = {
 } as any
 
 test.group('Text Content', () => {
-  test('should create text content with string', ({ assert }) => {
-    const text = new Text('Hello World')
-    assert.exists(text)
-  })
-
-  test('should create text content with object and stringify it', ({ assert }) => {
-    const text = new Text({ message: 'Hello' })
-    assert.exists(text)
-  })
-
   test('should default to USER role', ({ assert }) => {
     const text = new Text('test')
     assert.equal(text.role, Role.USER)

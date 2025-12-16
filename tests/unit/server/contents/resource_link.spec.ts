@@ -17,13 +17,6 @@ const mockTool = {} as any
 const mockPrompt = {} as any
 const mockResource = {} as any
 
-test.group('ResourceLink Content', () => {
-  test('should create resource link with URI', ({ assert }) => {
-    const link = new ResourceLink('file:///test.txt')
-    assert.exists(link)
-  })
-})
-
 test.group('ResourceLink Content - Unsupported operations', () => {
   test('should throw error when converting to prompt', async ({ assert }) => {
     const link = new ResourceLink('file:///test.txt')

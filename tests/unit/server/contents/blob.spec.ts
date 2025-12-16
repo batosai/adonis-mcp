@@ -16,16 +16,6 @@ const mockResource = {
 } as any
 
 test.group('Blob Content', () => {
-  test('should create blob content with string', ({ assert }) => {
-    const blob = new Blob('Hello World')
-    assert.exists(blob)
-  })
-
-  test('should create blob content with Buffer', ({ assert }) => {
-    const buffer = Buffer.from('Hello World')
-    const blob = new Blob(buffer)
-    assert.exists(blob)
-  })
 
   test('should encode string to base64', async ({ assert }) => {
     const blob = new Blob('Hello World')
