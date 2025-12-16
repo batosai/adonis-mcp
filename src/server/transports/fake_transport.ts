@@ -32,8 +32,6 @@ export default class FakeTransport implements Transport {
     this.bindAuthCallbacks = []
   }
 
-  shield(_method: string) {}
-
   getLastMessage(): JsonRpcResponse | undefined {
     return this.sentMessages[this.sentMessages.length - 1]
   }

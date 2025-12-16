@@ -114,6 +114,11 @@ export default class Server {
   }
 
   async handle(jsonRequest: JsonRpcRequest) {
+    // INGORE NOTIFICATIONS FOR NOW
+    if (jsonRequest.method.startsWith('notifications/')) {
+      return null
+    }
+
     const mcpContext = this.createContext(jsonRequest)
 
     if (!this.#transport) {
@@ -123,14 +128,7 @@ export default class Server {
       this.#transport.bindAuth?.(mcpContext)
     }
 
-    this.#transport.shield(jsonRequest.method)
-
     try {
-      // INGORE NOTIFICATIONS FOR NOW
-      if (jsonRequest.method.startsWith('notifications/')) {
-        return null
-      }
-
       if (Object.keys(this.methods).includes(jsonRequest.method)) {
         const lazyMethod = this.methods[jsonRequest.method as keyof typeof this.methods]
         const { default: method } = await lazyMethod()

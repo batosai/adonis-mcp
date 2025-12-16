@@ -11,6 +11,5 @@ import type { JsonRpcResponse } from '../../types/jsonrpc.js'
 export interface Transport {
   bindBouncer?(mcpContext: McpContext): void
   bindAuth?(mcpContext: McpContext): void
-  shield(method: string): void
   send(message: JsonRpcResponse, sessionId?: string): void
 }

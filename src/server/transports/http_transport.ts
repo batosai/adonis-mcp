@@ -19,6 +19,10 @@ export default class HttpTransport implements Transport {
     this.#sessionId = ctx.request.header('MCP-Session-Id')
   }
 
+  get sessionId() {
+    return this.#sessionId
+  }
+
   bindBouncer(mcpContext: McpContext) {
     if ('bouncer' in this.#ctx) {
       // @ts-ignore
@@ -33,27 +37,9 @@ export default class HttpTransport implements Transport {
     }
   }
 
-  shield(method: string) {
-    if (method === 'initialize') {
-      return
-    }
-
-    if ('session' in this.#ctx) {
-      // @ts-ignore
-      if (this.#sessionId !== this.#ctx.session.get('mcp-session-id')) {
-        this.#ctx.response.notFound()
-      }
-    }
-  }
-
   send(message: JsonRpcResponse, sessionId?: string) {
     if (sessionId) {
       this.#ctx.response.safeHeader('MCP-Session-Id', sessionId)
-      
-      if ('session' in this.#ctx) {
-        // @ts-ignore
-        this.#ctx.session.put('mcp-session-id', sessionId)
-      }
     }
 
     this.#ctx.response.json(message)
