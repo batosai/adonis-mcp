@@ -20,10 +20,9 @@ AdonisJS MCP - Server MCP for your AdonisJS applications.
 - [x] Annotations
 - [x] Completion
 - [x] Inspector
+- [x] Session
 - [ ] Output tool
 - [ ] Error(review)
-- [ ] Stream
-- [ ] Session
 - [ ] Vine
 - [ ] Bounce
 - [ ] Auth

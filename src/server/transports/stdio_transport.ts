@@ -40,6 +40,8 @@ export default class StdioTransport extends EventEmitter implements Transport {
     }
   }
 
+  shield(_method: string) {}
+
   send(message: JsonRpcResponse) {
     this.#stdout.write(serializeMessage(message))
   }

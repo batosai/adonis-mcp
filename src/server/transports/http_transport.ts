@@ -12,23 +12,50 @@ import type { JsonRpcResponse } from '../../types/jsonrpc.js'
 
 export default class HttpTransport implements Transport {
   #ctx: HttpContext
+  #sessionId?: string
+
   constructor(ctx: HttpContext) {
     this.#ctx = ctx
+    this.#sessionId = ctx.request.header('MCP-Session-Id')
   }
 
   bindBouncer(mcpContext: McpContext) {
     if ('bouncer' in this.#ctx) {
-      ;(mcpContext as any).bouncer = this.#ctx.bouncer
+      // @ts-ignore
+      mcpContext.bouncer = this.#ctx.bouncer
     }
   }
 
   bindAuth(mcpContext: McpContext) {
     if ('auth' in this.#ctx) {
-      ;(mcpContext as any).auth = this.#ctx.auth
+      // @ts-ignore
+      mcpContext.auth = this.#ctx.auth
     }
   }
 
-  send(message: JsonRpcResponse) {
+  shield(method: string) {
+    if (method === 'initialize') {
+      return
+    }
+
+    if ('session' in this.#ctx) {
+      // @ts-ignore
+      if (this.#sessionId !== this.#ctx.session.get('mcp-session-id')) {
+        this.#ctx.response.notFound()
+      }
+    }
+  }
+
+  send(message: JsonRpcResponse, sessionId?: string) {
+    if (sessionId) {
+      this.#ctx.response.safeHeader('MCP-Session-Id', sessionId)
+      
+      if ('session' in this.#ctx) {
+        // @ts-ignore
+        this.#ctx.session.put('mcp-session-id', sessionId)
+      }
+    }
+
     this.#ctx.response.json(message)
   }
 }

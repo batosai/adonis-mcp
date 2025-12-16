@@ -17,6 +17,7 @@ import JsonRpcException from './server/exceptions/jsonrpc_exception.js'
 
 export default class Server {
   #transport?: Transport
+
   config: McpConfig
   name: string = 'AdonisJS MCP Server'
   version: string = '1.0.0'
@@ -122,8 +123,10 @@ export default class Server {
       this.#transport.bindAuth?.(mcpContext)
     }
 
+    this.#transport.shield(jsonRequest.method)
+
     try {
-      // TODO
+      // INGORE NOTIFICATIONS FOR NOW
       if (jsonRequest.method.startsWith('notifications/')) {
         return null
       }
@@ -135,7 +138,11 @@ export default class Server {
 
         const response = await instance.handle(mcpContext)
 
-        this.#transport.send(response)
+        if (jsonRequest.method === 'initialize') {
+          this.#transport.send(response, this.generateSessionId())
+        } else {
+          this.#transport.send(response)
+        }
       } else {
         throw new JsonRpcException(
           `The method ${jsonRequest.method} was not found.`,
