@@ -18,8 +18,8 @@ AdonisJS MCP - Server MCP for your AdonisJS applications.
 - [x] Advanced pagination support
 - [x] Meta support
 - [x] Annotations
+- [x] Completion
 - [ ] Output tool
-- [ ] Completion
 - [ ] Error(review)
 - [ ] Stream
 - [ ] Session
@@ -196,6 +196,23 @@ You can also specify a custom path:
 ```typescript
 router.mcp('/custom-mcp-path').use(middleware.auth())
 ```
+
+> **⚠️ Important: CSRF Protection**
+>
+> If you have CSRF protection enabled in your application, you **must** exclude the MCP route from CSRF validation. MCP clients typically don't include CSRF tokens in their requests.
+>
+> In your `config/shield.ts` file, add the MCP route to the CSRF exceptions:
+>
+> ```typescript
+> export const shieldConfig = defineConfig({
+>   csrf: {
+>     enabled: true,
+>     exceptRoutes: [
+>       '/mcp', // Or your custom MCP path
+>     ],
+>   },
+> })
+> ```
 
 ### Using Authentication
 
@@ -861,6 +878,141 @@ export default class CodeReviewPrompt extends Prompt<Schema> {
     } as Schema
   }
 }
+```
+
+## Completions
+
+Completions provide argument suggestions for prompts and resources, helping users fill in parameters interactively. This feature must be enabled in your configuration and can be implemented for both prompts and resources.
+
+### Enabling Completions
+
+First, enable completions in your `config/mcp.ts`:
+
+```typescript
+import { defineConfig } from '@jrmc/adonis-mcp'
+
+export default defineConfig({
+  name: 'adonis-mcp-server',
+  version: '1.0.0',
+  completions: true, // Enable completions
+})
+```
+
+### Implementing Completions in Prompts
+
+Add a `complete()` method to your prompt to provide argument suggestions:
+
+```typescript
+import type { PromptContext, CompleteContext } from '@jrmc/adonis-mcp/types/context'
+import type { BaseSchema } from '@jrmc/adonis-mcp/types/method'
+
+import { Prompt } from '@jrmc/adonis-mcp'
+
+type Schema = BaseSchema<{
+  language: { type: "string" }
+  code: { type: "string" }
+}>
+
+export default class CodeReviewPrompt extends Prompt<Schema> {
+  name = 'code_review'
+  title = 'Code Review'
+  description = 'Review code and provide feedback'
+
+  async handle({ args, response }: PromptContext<Schema>) {
+    return [
+      response.text(`Please review this ${args.language} code:\n\n${args.code}`)
+    ]
+  }
+
+  async complete({ args, response }: CompleteContext<Schema>) {
+    // Provide language suggestions when the user types
+    if (args?.language !== undefined) {
+      return response.complete({
+        values: ['python', 'javascript', 'typescript', 'java', 'go', 'rust']
+      })
+    }
+    
+    return response.complete({ values: [] })
+  }
+
+  schema() {
+    return {
+      type: "object",
+      properties: {
+        language: {
+          type: "string",
+          description: "Programming language"
+        },
+        code: {
+          type: "string",
+          description: "Code to review"
+        }
+      },
+      required: ["language", "code"]
+    } as Schema
+  }
+}
+```
+
+### Implementing Completions in Resources
+
+Resources with URI templates can also provide completions for their path parameters:
+
+```typescript
+import type { ResourceContext, CompleteContext } from '@jrmc/adonis-mcp/types/context'
+import { Resource } from '@jrmc/adonis-mcp'
+
+type Args = {
+  directory: string
+  name: string
+}
+
+export default class ConfigFileResource extends Resource<Args> {
+  name = 'config_file'
+  uri = 'file://{directory}/{name}.txt'
+  mimeType = 'text/plain'
+  title = 'Configuration File'
+  description = 'Access configuration files'
+
+  async handle({ args, response }: ResourceContext<Args>) {
+    const content = await readConfigFile(args.directory, args.name)
+    return response.text(content)
+  }
+
+  async complete({ args, response }: CompleteContext<Args>) {
+    // Provide suggestions based on available directories and files
+    if (args?.name !== undefined) {
+      return response.complete({
+        values: ['config', 'settings', 'environment', 'database']
+      })
+    }
+    
+    if (args?.directory !== undefined) {
+      return response.complete({
+        values: ['production', 'staging', 'development']
+      })
+    }
+    
+    return response.complete({ values: [] })
+  }
+}
+```
+
+### Completion Context
+
+The `complete()` method receives a `CompleteContext` that includes:
+
+- `args`: The current argument values (partial or complete)
+- `response`: The response object with a `complete()` method
+
+The response format includes:
+
+```typescript
+response.complete({
+  values: string[],     // Array of suggested values
+  hasMore?: boolean,    // Optional: indicates if more values are available
+  total?: number        // Optional: total number of available values
+})
 ```
 
 ### Transports
