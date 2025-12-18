@@ -2,6 +2,8 @@
 
 export type Variables = Record<string, string | string[]>
 
+import { createError } from '@adonisjs/core/exceptions'
+
 const MAX_TEMPLATE_LENGTH = 1000000 // 1MB
 const MAX_VARIABLE_LENGTH = 1000000 // 1MB
 const MAX_TEMPLATE_EXPRESSIONS = 10000
@@ -21,7 +23,7 @@ export class UriTemplate {
 
   private static validateLength(str: string, max: number, context: string): void {
     if (str.length > max) {
-      throw new Error(`${context} exceeds maximum length of ${max} characters (got ${str.length})`)
+      throw createError(`${context} exceeds maximum length of ${max} characters (got ${str.length})`, 'E_URI_TEMPLATE_LENGTH_EXCEEDED')
     }
   }
   private readonly template: string
@@ -60,12 +62,13 @@ export class UriTemplate {
           currentText = ''
         }
         const end = template.indexOf('}', i)
-        if (end === -1) throw new Error('Unclosed template expression')
+        if (end === -1) throw createError('Unclosed template expression', 'E_URI_TEMPLATE_UNCLOSED_EXPRESSION')
 
         expressionCount++
         if (expressionCount > MAX_TEMPLATE_EXPRESSIONS) {
-          throw new Error(
-            `Template contains too many expressions (max ${MAX_TEMPLATE_EXPRESSIONS})`
+          throw createError(
+            `Template contains too many expressions (max ${MAX_TEMPLATE_EXPRESSIONS})`,
+            'E_URI_TEMPLATE_TOO_MANY_EXPRESSIONS'
           )
         }
 

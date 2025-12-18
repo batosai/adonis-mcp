@@ -49,7 +49,7 @@ test.group('ReadResource Method', () => {
       await method.handle(context)
       assert.fail('Should have thrown an error')
     } catch (error: any) {
-      assert.equal(error.code, ErrorCode.MethodNotFound)
+      assert.equal(error.code, ErrorCode.InvalidParams)
       assert.equal(error.requestId, request.id)
     }
   })
@@ -242,7 +242,7 @@ test.group('ReadResource Method - Templates', () => {
       await method.handle(context)
       assert.fail('Should have thrown an error')
     } catch (error: any) {
-      assert.equal(error.code, ErrorCode.MethodNotFound)
+      assert.equal(error.code, ErrorCode.InvalidParams)
       assert.include(error.message, uri)
     }
   })

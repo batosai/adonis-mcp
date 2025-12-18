@@ -5,8 +5,10 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import { Resource } from '../resource.js'
 import type { Annotations } from '../../types/jsonrpc.js'
+
+import { Resource } from '../resource.js'
+import { createError } from '@adonisjs/core/exceptions'
 
 /**
  * Decorator to indicate resource importance
@@ -24,7 +26,7 @@ export function priority(priority: number) {
       constructor(...args: any[]) {
         super(...args)
         if (!(this instanceof Resource)) {
-          throw new Error('@priority decorator can only be applied to Resource classes')
+          throw createError('@priority decorator can only be applied to Resource classes', 'E_RESOURCE_DECORATOR')
         }
         if (!this.annotations) {
           this.annotations = {}

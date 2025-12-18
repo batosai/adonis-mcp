@@ -35,7 +35,7 @@ export default class CallTool implements Method {
     if (!pathToTool) {
       throw new JsonRpcException(
         `The tool ${params.name} was not found.`,
-        ErrorCode.MethodNotFound,
+        ErrorCode.InvalidParams,
         ctx.request.id
       )
     }

@@ -27,7 +27,7 @@ export default class Initialize implements Method {
     if (requestedVersion !== null && !ctx.supportedProtocolVersions.includes(requestedVersion)) {
       throw new JsonRpcException(
         'Unsupported protocol version',
-        ErrorCode.InvalidRequest,
+        ErrorCode.InvalidParams,
         ctx.request.id,
         {
           supported: ctx.supportedProtocolVersions,

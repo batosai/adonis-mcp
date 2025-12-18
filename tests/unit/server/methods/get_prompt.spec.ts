@@ -44,7 +44,7 @@ test.group('GetPrompt Method', () => {
       await method.handle(context)
       assert.fail('Should have thrown an error')
     } catch (error: any) {
-      assert.equal(error.code, ErrorCode.MethodNotFound)
+      assert.equal(error.code, ErrorCode.InvalidParams)
       assert.equal(error.requestId, request.id)
     }
   })

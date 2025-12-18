@@ -40,7 +40,7 @@ export default class Completion implements Method {
     }
 
     if (!path) {
-      throw new JsonRpcException(`${key} was not found.`, ErrorCode.MethodNotFound, ctx.request.id)
+      throw new JsonRpcException(`${key} was not found.`, ErrorCode.InvalidParams, ctx.request.id)
     }
 
     const { default: Model } = await import(path)

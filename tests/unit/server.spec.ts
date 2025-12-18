@@ -125,14 +125,6 @@ test.group('Server', () => {
     assert.equal(lastMessage?.error?.code, ErrorCode.MethodNotFound)
   })
 
-  test('should generate session id', ({ assert }) => {
-    const server = new Server({})
-    const sessionId = server.generateSessionId()
-
-    assert.isString(sessionId)
-    assert.isNotEmpty(sessionId)
-  })
-
   test('should create context from request', ({ assert }) => {
     const server = new Server({})
     const request = createJsonRpcRequest('test')

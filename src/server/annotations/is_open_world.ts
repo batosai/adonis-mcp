@@ -5,8 +5,10 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import { Tool } from '../tool.js'
 import type { ToolAnnotations } from '../../types/jsonrpc.js'
+
+import { Tool } from '../tool.js'
+import { createError } from '@adonisjs/core/exceptions'
 
 export function isOpenWorld(openWorld: true | false = true) {
   return function <T extends { new (...args: any[]): { annotations?: ToolAnnotations } }>(
@@ -16,7 +18,7 @@ export function isOpenWorld(openWorld: true | false = true) {
       constructor(...args: any[]) {
         super(...args)
         if (!(this instanceof Tool)) {
-          throw new Error('@isOpenWorld decorator can only be applied to Tool classes')
+          throw createError('@isOpenWorld decorator can only be applied to Tool classes', 'E_TOOL_DECORATOR')
         }
         if (!this.annotations) {
           this.annotations = {}

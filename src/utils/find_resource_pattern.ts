@@ -51,7 +51,7 @@ export async function findResource({
   if (!key) {
     throw new JsonRpcException(
       `The resource ${uri} was not found.`,
-      ErrorCode.MethodNotFound,
+      ErrorCode.InvalidParams,
       ctx.request.id
     )
   }

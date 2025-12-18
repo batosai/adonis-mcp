@@ -36,7 +36,7 @@ export default class GetPrompt implements Method {
     if (!pathToPrompt) {
       throw new JsonRpcException(
         `The prompt ${params.name} was not found.`,
-        ErrorCode.MethodNotFound,
+        ErrorCode.InvalidParams,
         ctx.request.id
       )
     }

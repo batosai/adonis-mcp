@@ -5,9 +5,11 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import { Resource } from '../resource.js'
 import type Role from '../../enums/role.js'
 import type { Annotations } from '../../types/jsonrpc.js'
+
+import { Resource } from '../resource.js'
+import { createError } from '@adonisjs/core/exceptions'
 
 /**
  * Decorator to specify the intended audience for a resource or tool
@@ -21,7 +23,7 @@ export function audience(audience: Role | Role[]) {
       constructor(...args: any[]) {
         super(...args)
         if (!(this instanceof Resource)) {
-          throw new Error('@audience decorator can only be applied to Resource classes')
+          throw createError('@audience decorator can only be applied to Resource classes', 'E_RESOURCE_DECORATOR')
         }
         if (!this.annotations) {
           this.annotations = {}

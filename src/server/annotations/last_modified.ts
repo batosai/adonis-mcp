@@ -5,8 +5,10 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import { Resource } from '../resource.js'
 import type { Annotations } from '../../types/jsonrpc.js'
+
+import { Resource } from '../resource.js'
+import { createError } from '@adonisjs/core/exceptions'
 
 /**
  * Decorator to indicate when a resource was last updated
@@ -20,7 +22,7 @@ export function lastModified(lastModified: string) {
       constructor(...args: any[]) {
         super(...args)
         if (!(this instanceof Resource)) {
-          throw new Error('@lastModified decorator can only be applied to Resource classes')
+          throw createError('@lastModified decorator can only be applied to Resource classes', 'E_RESOURCE_DECORATOR')
         }
         if (!this.annotations) {
           this.annotations = {}

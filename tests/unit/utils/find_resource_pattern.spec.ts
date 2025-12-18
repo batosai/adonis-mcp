@@ -291,7 +291,7 @@ test.group('findResource - Resource loading', () => {
       await findResource({ uri, resourceList, ctx: ctx as any })
       assert.fail('Should have thrown an error')
     } catch (error: any) {
-      assert.equal(error.code, ErrorCode.MethodNotFound)
+      assert.equal(error.code, ErrorCode.InvalidParams)
       assert.include(error.message, 'file:///non-existent.txt')
       assert.include(error.message, 'was not found')
       assert.equal(error.requestId, request.id)
@@ -400,3 +400,6 @@ test.group('findResource - Complex scenarios', () => {
     assert.deepEqual((ctx as any).args, { page: '2', limit: '20' })
   })
 })
+
+
+
