@@ -17,6 +17,14 @@ export async function configure(command: Configure) {
   await codemods.makeUsingStub(stubsRoot, 'config.ts.stub', {})
 
   /**
+   * Create and configuredefault middleware file
+   */
+  await codemods.makeUsingStub(stubsRoot, 'make/middleware/mcp_middleware.ts.stub', {})
+  await codemods.registerMiddleware('router', [
+    { path: '#middleware/mcp_middleware', position: 'after' },
+  ])
+
+  /**
    * Register provider
    */
   await codemods.updateRcFile((rcFile) => {

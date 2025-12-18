@@ -37,11 +37,7 @@ export default class HttpTransport implements Transport {
     }
   }
 
-  send(message: JsonRpcResponse, sessionId?: string) {
-    if (sessionId) {
-      this.#ctx.response.safeHeader('MCP-Session-Id', sessionId)
-    }
-
+  send(message: JsonRpcResponse) {
     this.#ctx.response.json(message)
   }
 }

@@ -136,11 +136,7 @@ export default class Server {
 
         const response = await instance.handle(mcpContext)
 
-        if (jsonRequest.method === 'initialize') {
-          this.#transport.send(response, this.generateSessionId())
-        } else {
-          this.#transport.send(response)
-        }
+        this.#transport.send(response)
       } else {
         throw new JsonRpcException(
           `The method ${jsonRequest.method} was not found.`,
@@ -174,9 +170,5 @@ export default class Server {
       prompts: this.prompts,
       jsonRpcRequest,
     })
-  }
-
-  generateSessionId() {
-    return crypto.randomUUID()
   }
 }
