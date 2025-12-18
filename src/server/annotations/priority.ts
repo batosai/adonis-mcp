@@ -26,7 +26,10 @@ export function priority(priority: number) {
       constructor(...args: any[]) {
         super(...args)
         if (!(this instanceof Resource)) {
-          throw createError('@priority decorator can only be applied to Resource classes', 'E_RESOURCE_DECORATOR')
+          throw createError(
+            '@priority decorator can only be applied to Resource classes',
+            'E_RESOURCE_DECORATOR'
+          )
         }
         if (!this.annotations) {
           this.annotations = {}

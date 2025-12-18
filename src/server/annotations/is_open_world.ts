@@ -18,7 +18,10 @@ export function isOpenWorld(openWorld: true | false = true) {
       constructor(...args: any[]) {
         super(...args)
         if (!(this instanceof Tool)) {
-          throw createError('@isOpenWorld decorator can only be applied to Tool classes', 'E_TOOL_DECORATOR')
+          throw createError(
+            '@isOpenWorld decorator can only be applied to Tool classes',
+            'E_TOOL_DECORATOR'
+          )
         }
         if (!this.annotations) {
           this.annotations = {}

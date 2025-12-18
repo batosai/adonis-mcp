@@ -16,7 +16,6 @@ const mockResource = {
 } as any
 
 test.group('Blob Content', () => {
-
   test('should encode string to base64', async ({ assert }) => {
     const blob = new Blob('Hello World')
     const result = await blob.toResource(mockResource)

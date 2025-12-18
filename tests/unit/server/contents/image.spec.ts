@@ -14,7 +14,6 @@ const mockPrompt = {} as any
 const mockResource = {} as any
 
 test.group('Image Content', () => {
-
   test('should default to USER role', ({ assert }) => {
     const image = new Image('data', 'image/jpeg')
     assert.equal(image.role, Role.USER)

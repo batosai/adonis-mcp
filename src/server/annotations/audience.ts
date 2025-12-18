@@ -23,7 +23,10 @@ export function audience(audience: Role | Role[]) {
       constructor(...args: any[]) {
         super(...args)
         if (!(this instanceof Resource)) {
-          throw createError('@audience decorator can only be applied to Resource classes', 'E_RESOURCE_DECORATOR')
+          throw createError(
+            '@audience decorator can only be applied to Resource classes',
+            'E_RESOURCE_DECORATOR'
+          )
         }
         if (!this.annotations) {
           this.annotations = {}

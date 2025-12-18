@@ -18,7 +18,10 @@ export function isReadOnly(readonly: true | false = true) {
       constructor(...args: any[]) {
         super(...args)
         if (!(this instanceof Tool)) {
-          throw createError('@isReadOnly decorator can only be applied to Tool classes', 'E_TOOL_DECORATOR')
+          throw createError(
+            '@isReadOnly decorator can only be applied to Tool classes',
+            'E_TOOL_DECORATOR'
+          )
         }
         if (!this.annotations) {
           this.annotations = {}

@@ -23,7 +23,10 @@ export class UriTemplate {
 
   private static validateLength(str: string, max: number, context: string): void {
     if (str.length > max) {
-      throw createError(`${context} exceeds maximum length of ${max} characters (got ${str.length})`, 'E_URI_TEMPLATE_LENGTH_EXCEEDED')
+      throw createError(
+        `${context} exceeds maximum length of ${max} characters (got ${str.length})`,
+        'E_URI_TEMPLATE_LENGTH_EXCEEDED'
+      )
     }
   }
   private readonly template: string
@@ -62,7 +65,8 @@ export class UriTemplate {
           currentText = ''
         }
         const end = template.indexOf('}', i)
-        if (end === -1) throw createError('Unclosed template expression', 'E_URI_TEMPLATE_UNCLOSED_EXPRESSION')
+        if (end === -1)
+          throw createError('Unclosed template expression', 'E_URI_TEMPLATE_UNCLOSED_EXPRESSION')
 
         expressionCount++
         if (expressionCount > MAX_TEMPLATE_EXPRESSIONS) {

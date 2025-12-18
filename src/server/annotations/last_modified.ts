@@ -22,7 +22,10 @@ export function lastModified(lastModified: string) {
       constructor(...args: any[]) {
         super(...args)
         if (!(this instanceof Resource)) {
-          throw createError('@lastModified decorator can only be applied to Resource classes', 'E_RESOURCE_DECORATOR')
+          throw createError(
+            '@lastModified decorator can only be applied to Resource classes',
+            'E_RESOURCE_DECORATOR'
+          )
         }
         if (!this.annotations) {
           this.annotations = {}

@@ -400,6 +400,3 @@ test.group('findResource - Complex scenarios', () => {
     assert.deepEqual((ctx as any).args, { page: '2', limit: '20' })
   })
 })
-
-
-
