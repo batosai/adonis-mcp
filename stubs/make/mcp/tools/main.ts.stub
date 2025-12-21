@@ -1,8 +1,9 @@
 {{#var className = `${name}Tool`}}
+{{#var toolName = string(name).snakeCase()}}
 {{#var resourceFileName = string(className).snakeCase().ext('.ts').toString()}}
 {{{
   exports({
-    to: app.makePath(app.rcFile.directories['mcp'] || 'app/mcp/', resourceFileName)
+    to: app.makePath(app.rcFile.directories['mcp'] || 'app/mcp/', `tools/`, resourceFileName)
   })
 }}}
 import type { ToolContext } from '@jrmc/adonis-mcp/types/context'
@@ -11,29 +12,28 @@ import type { BaseSchema } from '@jrmc/adonis-mcp/types/method'
 import { Tool } from '@jrmc/adonis-mcp'
 
 type Schema = BaseSchema<{
-  text: { type: "string" }
+  name: { type: "string" }
 }>
 
 export default class {{ className }} extends Tool<Schema> {
-  name = '{{ name }}'
+  name = '{{ toolName }}'
   title = 'Tool title'
   description = 'Tool description'
 
   async handle({ args, response }: ToolContext<Schema>) {
-    console.log(args.text)
-    return response.text('Hello, world!')
+    return response.text({{ "`Hello, ${args?.name}`" }})
   }
 
   schema() {
     return {
       type: "object",
       properties: {
-        text: {
+        name: {
           type: "string",
           description: "Description text argument"
         },
       },
-      required: ["text"]
+      required: ["name"]
     } as Schema
   }
 }

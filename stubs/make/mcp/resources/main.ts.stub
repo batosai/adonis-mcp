@@ -2,7 +2,7 @@
 {{#var resourceFileName = string(className).snakeCase().ext('.ts').toString()}}
 {{{
   exports({
-    to: app.makePath(app.rcFile.directories['mcp'] || 'app/mcp/', resourceFileName)
+    to: app.makePath(app.rcFile.directories['mcp'] || 'app/mcp/', `resources/`, resourceFileName)
   })
 }}}
 import type { ResourceContext } from '@jrmc/adonis-mcp/types/context'

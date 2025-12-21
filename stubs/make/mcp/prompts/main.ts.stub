@@ -1,8 +1,9 @@
 {{#var className = `${name}Prompt`}}
+{{#var promptName = string(name).snakeCase()}}
 {{#var resourceFileName = string(className).snakeCase().ext('.ts').toString()}}
 {{{
   exports({
-    to: app.makePath(app.rcFile.directories['mcp'] || 'app/mcp/', resourceFileName)
+    to: app.makePath(app.rcFile.directories['mcp'] || 'app/mcp/', `prompts/`, resourceFileName)
   })
 }}}
 import type { PromptContext } from '@jrmc/adonis-mcp/types/context'
@@ -16,7 +17,7 @@ type Schema = BaseSchema<{
 
 
 export default class {{ className }} extends Prompt<Schema> {
-  name = '{{ name }}'
+  name = '{{ promptName }}'
   title = 'Prompt title'
   description = 'Prompt description'
 
