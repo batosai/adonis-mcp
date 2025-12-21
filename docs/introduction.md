@@ -106,7 +106,6 @@ Built-in support for AdonisJS authentication and Bouncer authorization in your M
 - [x] Session
 - [x] Documentation
 - [ ] Output tool
-- [ ] Error (review)
 - [ ] Vine integration
 - [ ] Bounce integration (WIP)
 - [ ] Auth helpers (WIP)

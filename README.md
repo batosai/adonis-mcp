@@ -27,7 +27,6 @@ AdonisJS MCP - Server MCP for your AdonisJS applications.
 - [x] Session
 - [x] Documentation
 - [ ] Output tool
-- [ ] Error (review)
 - [ ] Vine integration
 - [ ] Bounce integration (WIP)
 - [ ] Auth helpers (WIP)
