@@ -27,7 +27,10 @@
     "prepublishOnly": "npm run build",
     "clean": "del-cli build",
     "format": "prettier --write .",
-    "test": "node --loader ts-node/esm --enable-source-maps bin/test.ts"
+    "test": "node --loader ts-node/esm --enable-source-maps bin/test.ts",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "exports": {
     ".": "./build/index.js",
@@ -40,8 +43,10 @@
     "./contents/*": "./build/src/server/contents/*.js",
     "./annotations": "./build/src/server/annotations/annotations.js",
     "./tool_annotations": "./build/src/server/annotations/tool_annotations.js",
+    "./transports/*": "./build/src/server/transports/*.js",
     "./enums/*": "./build/src/enums/*.js",
-    "./mcp_provider": "./build/providers/mcp_provider.js"
+    "./mcp_provider": "./build/providers/mcp_provider.js",
+    "./server": "./build/src/server.js"
   },
   "devDependencies": {
     "@adonisjs/assembler": "^7.8.2",
@@ -57,7 +62,8 @@
     "del-cli": "^7.0.0",
     "prettier": "^3.6.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitepress": "^1.6.4"
   },
   "prettier": "@adonisjs/prettier-config",
   "publishConfig": {
