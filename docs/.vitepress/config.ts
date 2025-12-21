@@ -3,7 +3,17 @@ import { defineConfig } from 'vitepress'
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "Adonis MCP",
-  description: "A VitePress Site",
+  description: "Model Context Protocol for AdonisJS",
+  head: [
+    [
+      'script',
+      {
+        'defer': '',
+        'src': 'https://umami.jrmc.dev/script.js',
+        'data-website-id': 'f972c66b-7885-43fb-a20e-9c77fc1d6347',
+      },
+    ],
+  ],
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     // nav: [
