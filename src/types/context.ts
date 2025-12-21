@@ -21,7 +21,7 @@ import type {
 import type { Context } from '../server/contracts/context.js'
 import type { InferJSONSchema, JSONSchema } from './method.js'
 
-export type McpContext = Context
+export interface McpContext extends Context {}
 
 export type ToolContext<T extends JSONSchema = JSONSchema> = Omit<
   McpContext,
