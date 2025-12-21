@@ -54,8 +54,7 @@ export default class McpProvider {
   async registerMethods(type: 'tool' | 'resource' | 'prompt') {
     const server = await this.app.container.make('jrmc.mcp')
     const mcpPath = this.app.makePath(
-      this.app.rcFile.directories['mcp'] || 
-      'app/mcp/',
+      this.app.rcFile.directories['mcp'] || 'app/mcp/',
       `${string.plural(type)}/`
     )
     const files = await fsReadAll(mcpPath, {
