@@ -6,7 +6,6 @@
  */
 
 import type { CommandOptions } from '@adonisjs/core/types/ace'
-import type { McpConfig } from '@jrmc/adonis-mcp/types/config'
 
 import { args, BaseCommand } from '@adonisjs/core/ace'
 import string from '@adonisjs/core/helpers/string'
@@ -24,13 +23,11 @@ export default class MakeResource extends BaseCommand {
   declare name: string
 
   async run() {
-    const config = this.app.config.get<McpConfig>('mcp', { path: 'app/mcp' })
     const codemods = await this.createCodemods()
     const stubPath = `make/mcp/resources/main.ts.stub`
 
     await codemods.makeUsingStub(stubsRoot, stubPath, {
       name: string.pascalCase(this.name),
-      basePath: config.path,
     })
 
     this.logger.success(`Resource created successfully for: ${this.name}`)
