@@ -146,7 +146,6 @@ export default class Server {
       }
     } catch (error: unknown) {
       if (error instanceof JsonRpcException) {
-        console.log(error)
         return this.#transport.send(error.toJsonRpcResponse())
       }
       return this.#transport.send(
