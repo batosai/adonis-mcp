@@ -58,7 +58,7 @@ export default class McpProvider {
       `${string.plural(type)}/`
     )
     const files = await fsReadAll(mcpPath, {
-      filter: (filePath) => filePath.includes(`_${type}.ts`),
+      filter: (filePath) => !filePath.endsWith('.map') && (filePath.includes(`_${type}.ts`) || filePath.includes(`_${type}.js`)),
     })
 
     await Promise.all(
