@@ -14,7 +14,7 @@ export default class {{ className }} extends Resource {
   uri = 'file:///example.txt'
   mimeType = 'text/plain"'
 
-  title = 'ToResourceol title'
+  title = 'ToResource title'
   description = 'Resource description'
 
   async handle({ response }: ResourceContext) {
