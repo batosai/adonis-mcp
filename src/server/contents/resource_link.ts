@@ -15,18 +15,24 @@ import type { ResourceContext } from '../../types/context.js'
 import { createError } from '@adonisjs/core/exceptions'
 import { findResource } from '../../utils/find_resource_pattern.js'
 
+import applicationService from '@adonisjs/core/services/app'
+
 export default class ResourceLink implements Content {
   #uri: string
   #resource: Resource | null
   #meta?: Record<string, unknown>
 
-  constructor(uri: string) {
+  constructor(
+    uri: string,
+    private app = applicationService
+  ) {
     this.#uri = uri
     this.#resource = null
   }
 
   async preProcess(ctx: ResourceContext): Promise<this> {
     this.#resource = await findResource({
+      app: this.app,
       uri: this.#uri,
       resourceList: ctx.resources,
       ctx,

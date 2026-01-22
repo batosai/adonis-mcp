@@ -5,6 +5,7 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
+import type { ApplicationService } from '@adonisjs/core/types'
 import type { ResourceContext } from '../types/context.js'
 import type { ResourceList } from '../types/method.js'
 
@@ -38,10 +39,12 @@ export function findResourcePattern({
 }
 
 export async function findResource({
+  app,
   uri,
   resourceList,
   ctx,
 }: {
+  app: ApplicationService
   uri: string
   resourceList: ResourceList
   ctx: ResourceContext
@@ -58,7 +61,7 @@ export async function findResource({
 
   const { default: Resource } = await import(resourceList[key])
 
-  const resource = new Resource(ctx)
+  const resource = await app.container.make(Resource)
   resource.uri = uri
 
   return resource

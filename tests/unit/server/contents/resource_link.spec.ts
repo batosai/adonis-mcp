@@ -9,6 +9,7 @@ import { test } from '@japa/runner'
 import ResourceLink from '../../../../src/server/contents/resource_link.js'
 import { createTestContext } from '../../../helpers/create_context.js'
 import { createResourcesReadRequest } from '../../../helpers/create_request.js'
+import { fakeApp } from '../../../helpers/fake_app.js'
 
 const resource1Module = '../../../fixtures/resources/test_resource_1.ts'
 const template1Module = '../../../fixtures/resources/test_resource_template_1.ts'
@@ -19,7 +20,7 @@ const mockResource = {} as any
 
 test.group('ResourceLink Content - Unsupported operations', () => {
   test('should throw error when converting to prompt', async ({ assert }) => {
-    const link = new ResourceLink('file:///test.txt')
+    const link = new ResourceLink('file:///test.txt', fakeApp)
 
     try {
       await link.toPrompt(mockPrompt)
@@ -31,7 +32,7 @@ test.group('ResourceLink Content - Unsupported operations', () => {
   })
 
   test('should throw error when converting to resource', async ({ assert }) => {
-    const link = new ResourceLink('file:///test.txt')
+    const link = new ResourceLink('file:///test.txt', fakeApp)
 
     try {
       await link.toResource(mockResource)
@@ -55,7 +56,7 @@ test.group('ResourceLink Content - preProcess and toTool', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const link = new ResourceLink(uri)
+    const link = new ResourceLink(uri, fakeApp)
     await link.preProcess(ctx as any)
 
     const result = await link.toTool(mockTool)
@@ -81,7 +82,7 @@ test.group('ResourceLink Content - preProcess and toTool', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const link = new ResourceLink(uri)
+    const link = new ResourceLink(uri, fakeApp)
     link.withMeta({ linkType: 'reference', importance: 'high' })
     await link.preProcess(ctx as any)
 
@@ -107,7 +108,7 @@ test.group('ResourceLink Content - preProcess and toTool', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const link = new ResourceLink(uri)
+    const link = new ResourceLink(uri, fakeApp)
     link.withMeta({ dynamic: true, userId: 123 })
     await link.preProcess(ctx as any)
 
@@ -122,7 +123,7 @@ test.group('ResourceLink Content - preProcess and toTool', () => {
   })
 
   test('should allow chaining withMeta', ({ assert }) => {
-    const link = new ResourceLink('file:///test.txt')
+    const link = new ResourceLink('file:///test.txt', fakeApp)
     const returnValue = link.withMeta({ key: 'value' })
 
     assert.strictEqual(returnValue, link)
@@ -136,7 +137,7 @@ test.group('ResourceLink Content - preProcess and toTool', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const link = new ResourceLink(uri)
+    const link = new ResourceLink(uri, fakeApp)
     link.withMeta({ first: 'meta' })
     link.withMeta({ second: 'meta' })
     await link.preProcess(ctx as any)
@@ -155,7 +156,7 @@ test.group('ResourceLink Content - preProcess and toTool', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const link = new ResourceLink(uri)
+    const link = new ResourceLink(uri, fakeApp)
     await link.preProcess(ctx as any)
 
     const result = await link.toTool(mockTool)
@@ -179,7 +180,7 @@ test.group('ResourceLink Content - withMeta edge cases', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const link = new ResourceLink(uri)
+    const link = new ResourceLink(uri, fakeApp)
     link.withMeta({})
     await link.preProcess(ctx as any)
 
@@ -196,7 +197,7 @@ test.group('ResourceLink Content - withMeta edge cases', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const link = new ResourceLink(uri)
+    const link = new ResourceLink(uri, fakeApp)
     link.withMeta({ shared: 'meta', timestamp: Date.now() })
     await link.preProcess(ctx as any)
 
@@ -216,7 +217,7 @@ test.group('ResourceLink Content - withMeta edge cases', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const link = new ResourceLink(uri)
+    const link = new ResourceLink(uri, fakeApp)
     await link.preProcess(ctx as any)
 
     const result = await link.toTool(mockTool)
@@ -232,7 +233,7 @@ test.group('ResourceLink Content - withMeta edge cases', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const link = new ResourceLink(uri)
+    const link = new ResourceLink(uri, fakeApp)
     link.withMeta({
       linkMetadata: {
         cached: false,
@@ -259,7 +260,7 @@ test.group('ResourceLink Content - withMeta edge cases', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const link = new ResourceLink(uri)
+    const link = new ResourceLink(uri, fakeApp)
     link.withMeta({
       relationship: 'parent',
       depth: 2,
@@ -279,7 +280,7 @@ test.group('ResourceLink Content - withMeta edge cases', () => {
 
 test.group('ResourceLink Content - Error handling', () => {
   test('should throw error if toTool is called before preProcess', async ({ assert }) => {
-    const link = new ResourceLink('file:///test.txt')
+    const link = new ResourceLink('file:///test.txt', fakeApp)
 
     try {
       await link.toTool(mockTool)
@@ -297,7 +298,7 @@ test.group('ResourceLink Content - Error handling', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const link = new ResourceLink(uri)
+    const link = new ResourceLink(uri, fakeApp)
 
     try {
       await link.preProcess(ctx as any)
@@ -320,7 +321,7 @@ test.group('ResourceLink Content - Integration with templates', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const link = new ResourceLink(uri)
+    const link = new ResourceLink(uri, fakeApp)
     link.withMeta({
       templateUri: 'file:///users/{id}',
       resolvedId: '456',

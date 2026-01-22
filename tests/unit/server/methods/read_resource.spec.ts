@@ -14,6 +14,7 @@ import {
   createResourcesReadRequest,
   createJsonRpcRequest,
 } from '../../../helpers/create_request.js'
+import { fakeApp } from '../../../helpers/fake_app.js'
 import { ErrorCode } from '../../../../src/enums/error.js'
 
 // Import resource fixtures using relative paths
@@ -30,7 +31,7 @@ test.group('ReadResource Method', () => {
     const method = new ReadResource()
 
     try {
-      await method.handle(context)
+      await method.handle(context, fakeApp)
       assert.fail('Should have thrown an error')
     } catch (error: any) {
       assert.equal(error.code, ErrorCode.InvalidParams)
@@ -46,7 +47,7 @@ test.group('ReadResource Method', () => {
     const method = new ReadResource()
 
     try {
-      await method.handle(context)
+      await method.handle(context, fakeApp)
       assert.fail('Should have thrown an error')
     } catch (error: any) {
       assert.equal(error.code, ErrorCode.InvalidParams)
@@ -65,7 +66,7 @@ test.group('ReadResource Method', () => {
     }) as ResourceContext
     const method = new ReadResource()
 
-    const response = await method.handle(context)
+    const response = await method.handle(context, fakeApp)
 
     assert.exists(response)
     assert.equal(response.jsonrpc, '2.0')
@@ -94,7 +95,7 @@ test.group('ReadResource Method', () => {
     }) as ResourceContext
     const method = new ReadResource()
 
-    const response = await method.handle(context)
+    const response = await method.handle(context, fakeApp)
 
     assert.exists(response)
     assert.equal(response.jsonrpc, '2.0')
@@ -124,7 +125,7 @@ test.group('ReadResource Method', () => {
     }) as ResourceContext
     const method = new ReadResource()
 
-    const response = await method.handle(context)
+    const response = await method.handle(context, fakeApp)
 
     assert.exists(response.result)
     assert.exists(response.result?.contents)
@@ -144,7 +145,7 @@ test.group('ReadResource Method - Templates', () => {
     }) as ResourceContext
     const method = new ReadResource()
 
-    const response = await method.handle(context)
+    const response = await method.handle(context, fakeApp)
 
     assert.exists(response)
     assert.equal(response.jsonrpc, '2.0')
@@ -173,7 +174,7 @@ test.group('ReadResource Method - Templates', () => {
     }) as ResourceContext
     const method = new ReadResource()
 
-    const response = await method.handle(context)
+    const response = await method.handle(context, fakeApp)
 
     assert.exists(response)
     assert.exists(response.result?.contents)
@@ -196,7 +197,7 @@ test.group('ReadResource Method - Templates', () => {
     }) as ResourceContext
     const method = new ReadResource()
 
-    const response = await method.handle(context)
+    const response = await method.handle(context, fakeApp)
 
     assert.exists(response)
     assert.exists(response.result?.contents)
@@ -219,7 +220,7 @@ test.group('ReadResource Method - Templates', () => {
     }) as ResourceContext
     const method = new ReadResource()
 
-    const response = await method.handle(context)
+    const response = await method.handle(context, fakeApp)
     const contents = response.result?.contents as any[]
     const content = contents[0]
 
@@ -239,7 +240,7 @@ test.group('ReadResource Method - Templates', () => {
     const method = new ReadResource()
 
     try {
-      await method.handle(context)
+      await method.handle(context, fakeApp)
       assert.fail('Should have thrown an error')
     } catch (error: any) {
       assert.equal(error.code, ErrorCode.InvalidParams)
@@ -260,7 +261,7 @@ test.group('ReadResource Method - Templates', () => {
     }) as ResourceContext
     const method = new ReadResource()
 
-    const response = await method.handle(context)
+    const response = await method.handle(context, fakeApp)
     const contents = response.result?.contents as any[]
     const content = contents[0]
 
@@ -284,7 +285,7 @@ test.group('ReadResource Method - Templates', () => {
     const request1 = createResourcesReadRequest(uri1)
     const context1 = createTestContext(request1, { resources }) as ResourceContext
     const method1 = new ReadResource()
-    const response1 = await method1.handle(context1)
+    const response1 = await method1.handle(context1, fakeApp)
     const content1 = (response1.result?.contents as any[])[0]
     assert.equal(content1?.text, 'User ID: 123')
 
@@ -293,7 +294,7 @@ test.group('ReadResource Method - Templates', () => {
     const request2 = createResourcesReadRequest(uri2)
     const context2 = createTestContext(request2, { resources }) as ResourceContext
     const method2 = new ReadResource()
-    const response2 = await method2.handle(context2)
+    const response2 = await method2.handle(context2, fakeApp)
     const content2 = (response2.result?.contents as any[])[0]
     assert.equal(content2?.text, 'User: 123, Post: 456')
   })
@@ -309,7 +310,7 @@ test.group('ReadResource Method - Templates', () => {
     }) as ResourceContext
     const method = new ReadResource()
 
-    const response = await method.handle(context)
+    const response = await method.handle(context, fakeApp)
     const contents = response.result?.contents as any[]
     const content = contents[0]
 
@@ -327,7 +328,7 @@ test.group('ReadResource Method - Templates', () => {
     }) as ResourceContext
     const method = new ReadResource()
 
-    const response = await method.handle(context)
+    const response = await method.handle(context, fakeApp)
     const contents = response.result?.contents as any[]
     const content = contents[0]
 
@@ -345,7 +346,7 @@ test.group('ReadResource Method - Templates', () => {
     }) as ResourceContext
     const method = new ReadResource()
 
-    const response = await method.handle(context)
+    const response = await method.handle(context, fakeApp)
     const contents = response.result?.contents as any[]
     const content = contents[0]
 

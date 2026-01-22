@@ -11,6 +11,7 @@ import { test } from '@japa/runner'
 import GetPrompt from '../../../../src/server/methods/get_prompt.js'
 import { createTestContext } from '../../../helpers/create_context.js'
 import { createPromptsGetRequest, createJsonRpcRequest } from '../../../helpers/create_request.js'
+import { fakeApp } from '../../../helpers/fake_app.js'
 import { ErrorCode } from '../../../../src/enums/error.js'
 
 // Import prompt fixtures using relative paths
@@ -25,7 +26,7 @@ test.group('GetPrompt Method', () => {
     const method = new GetPrompt()
 
     try {
-      await method.handle(context)
+      await method.handle(context, fakeApp)
       assert.fail('Should have thrown an error')
     } catch (error: any) {
       assert.equal(error.code, ErrorCode.InvalidParams)
@@ -41,7 +42,7 @@ test.group('GetPrompt Method', () => {
     const method = new GetPrompt()
 
     try {
-      await method.handle(context)
+      await method.handle(context, fakeApp)
       assert.fail('Should have thrown an error')
     } catch (error: any) {
       assert.equal(error.code, ErrorCode.InvalidParams)
@@ -60,7 +61,7 @@ test.group('GetPrompt Method', () => {
     }) as PromptContext
     const method = new GetPrompt()
 
-    const response = await method.handle(context)
+    const response = await method.handle(context, fakeApp)
 
     assert.exists(response)
     assert.equal(response.jsonrpc, '2.0')
@@ -92,7 +93,7 @@ test.group('GetPrompt Method', () => {
     }) as PromptContext
     const method = new GetPrompt()
 
-    const response = await method.handle(context)
+    const response = await method.handle(context, fakeApp)
 
     assert.exists(response)
     assert.equal(response.jsonrpc, '2.0')
@@ -124,7 +125,7 @@ test.group('GetPrompt Method', () => {
     }) as PromptContext
     const method = new GetPrompt()
 
-    const response = await method.handle(context)
+    const response = await method.handle(context, fakeApp)
 
     assert.exists(response)
     assert.equal(response.jsonrpc, '2.0')
@@ -150,7 +151,7 @@ test.group('GetPrompt Method', () => {
     }) as PromptContext
     const method = new GetPrompt()
 
-    const response = await method.handle(context)
+    const response = await method.handle(context, fakeApp)
 
     assert.exists(response)
     assert.equal(response.jsonrpc, '2.0')

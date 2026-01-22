@@ -19,8 +19,10 @@ import Image from '../contents/image.js'
 import Audio from '../contents/audio.js'
 import Response from '../../response.js'
 
+import applicationService from '@adonisjs/core/services/app'
+
 export default class GetPrompt implements Method {
-  async handle(ctx: PromptContext) {
+  async handle(ctx: PromptContext, app = applicationService) {
     const params = ctx.request.params
 
     if (!params?.name) {
@@ -45,8 +47,8 @@ export default class GetPrompt implements Method {
 
     ;(ctx as any).args = params.arguments ?? {}
 
-    const prompt = new Prompt(ctx)
-    const contents = await prompt.handle(ctx)
+    const prompt = await app.container.make(Prompt)
+    const contents = await app.container.call(prompt, 'handle', [ctx])
 
     let data: Content[]
     if (!Array.isArray(contents)) {

@@ -9,6 +9,7 @@ import { test } from '@japa/runner'
 import EmbeddedResource from '../../../../src/server/contents/embedded_resource.js'
 import { createTestContext } from '../../../helpers/create_context.js'
 import { createResourcesReadRequest } from '../../../helpers/create_request.js'
+import { fakeApp } from '../../../helpers/fake_app.js'
 
 const resource1Module = '../../../fixtures/resources/test_resource_1.ts'
 const template1Module = '../../../fixtures/resources/test_resource_template_1.ts'
@@ -64,7 +65,7 @@ test.group('EmbeddedResource Content - preProcess and toTool', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const embedded = new EmbeddedResource(uri)
+    const embedded = new EmbeddedResource(uri, fakeApp)
     await embedded.preProcess(ctx as any)
 
     const result = await embedded.toTool(mockTool)
@@ -86,7 +87,7 @@ test.group('EmbeddedResource Content - preProcess and toTool', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const embedded = new EmbeddedResource(uri)
+    const embedded = new EmbeddedResource(uri, fakeApp)
     embedded.withMeta({ embedType: 'inline', priority: 'high' })
     await embedded.preProcess(ctx as any)
 
@@ -111,7 +112,7 @@ test.group('EmbeddedResource Content - preProcess and toTool', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const embedded = new EmbeddedResource(uri)
+    const embedded = new EmbeddedResource(uri, fakeApp)
     embedded.withMeta({ templateMatch: true })
     await embedded.preProcess(ctx as any)
 
@@ -123,7 +124,7 @@ test.group('EmbeddedResource Content - preProcess and toTool', () => {
   })
 
   test('should allow chaining withMeta', ({ assert }) => {
-    const embedded = new EmbeddedResource('file:///test.txt')
+    const embedded = new EmbeddedResource('file:///test.txt', fakeApp)
     const returnValue = embedded.withMeta({ key: 'value' })
 
     assert.strictEqual(returnValue, embedded)
@@ -137,7 +138,7 @@ test.group('EmbeddedResource Content - preProcess and toTool', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const embedded = new EmbeddedResource(uri)
+    const embedded = new EmbeddedResource(uri, fakeApp)
     embedded.withMeta({ first: 'meta' })
     embedded.withMeta({ second: 'meta' })
     await embedded.preProcess(ctx as any)
@@ -161,7 +162,7 @@ test.group('EmbeddedResource Content - preProcess and toPrompt', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const embedded = new EmbeddedResource(uri)
+    const embedded = new EmbeddedResource(uri, fakeApp)
     await embedded.preProcess(ctx as any)
 
     const result = await embedded.toPrompt(mockPrompt)
@@ -183,7 +184,7 @@ test.group('EmbeddedResource Content - preProcess and toPrompt', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const embedded = new EmbeddedResource(uri)
+    const embedded = new EmbeddedResource(uri, fakeApp)
     embedded.withMeta({ context: 'prompt-context', relevance: 0.9 })
     await embedded.preProcess(ctx as any)
 
@@ -205,7 +206,7 @@ test.group('EmbeddedResource Content - preProcess and toPrompt', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const embedded = new EmbeddedResource(uri)
+    const embedded = new EmbeddedResource(uri, fakeApp)
     embedded.asAssistant().withMeta({ generated: true })
     await embedded.preProcess(ctx as any)
 
@@ -226,7 +227,7 @@ test.group('EmbeddedResource Content - withMeta edge cases', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const embedded = new EmbeddedResource(uri)
+    const embedded = new EmbeddedResource(uri, fakeApp)
     embedded.withMeta({})
     await embedded.preProcess(ctx as any)
 
@@ -243,7 +244,7 @@ test.group('EmbeddedResource Content - withMeta edge cases', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const embedded = new EmbeddedResource(uri)
+    const embedded = new EmbeddedResource(uri, fakeApp)
     embedded.withMeta({ shared: 'meta', id: 456 })
     await embedded.preProcess(ctx as any)
 
@@ -264,7 +265,7 @@ test.group('EmbeddedResource Content - withMeta edge cases', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const embedded = new EmbeddedResource(uri)
+    const embedded = new EmbeddedResource(uri, fakeApp)
     await embedded.preProcess(ctx as any)
 
     const toolResult = await embedded.toTool(mockTool)
@@ -282,7 +283,7 @@ test.group('EmbeddedResource Content - withMeta edge cases', () => {
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
-    const embedded = new EmbeddedResource(uri)
+    const embedded = new EmbeddedResource(uri, fakeApp)
     embedded.withMeta({
       resourceInfo: {
         cached: true,
@@ -309,7 +310,7 @@ test.group('EmbeddedResource Content - withMeta edge cases', () => {
 
 test.group('EmbeddedResource Content - Error handling', () => {
   test('should throw error if toTool is called before preProcess', async ({ assert }) => {
-    const embedded = new EmbeddedResource('file:///test.txt')
+    const embedded = new EmbeddedResource('file:///test.txt', fakeApp)
 
     try {
       await embedded.toTool(mockTool)
@@ -321,7 +322,7 @@ test.group('EmbeddedResource Content - Error handling', () => {
   })
 
   test('should throw error if toPrompt is called before preProcess', async ({ assert }) => {
-    const embedded = new EmbeddedResource('file:///test.txt')
+    const embedded = new EmbeddedResource('file:///test.txt', fakeApp)
 
     try {
       await embedded.toPrompt(mockPrompt)

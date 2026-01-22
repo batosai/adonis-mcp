@@ -37,5 +37,5 @@ export abstract class Tool<T extends JSONSchema = JSONSchema> {
     }
   }
 
-  abstract handle(ctx?: ToolContext<T>): Promise<Content | Content[]>
+  abstract handle(ctx?: ToolContext<T>, ...args: unknown[]): Promise<Content | Content[]>
 }

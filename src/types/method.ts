@@ -5,10 +5,12 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
+import type { ApplicationService } from '@adonisjs/core/types'
 import type { McpContext } from './context.js'
+import type { JsonRpcResponse } from './jsonrpc.js'
 
 export interface Method {
-  handle(ctx: McpContext): Record<string, any>
+  handle(ctx: McpContext, app?: ApplicationService): JsonRpcResponse | Promise<JsonRpcResponse>
 }
 
 export type ToolList = Record<string, string>

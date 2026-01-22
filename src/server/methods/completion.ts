@@ -13,8 +13,10 @@ import { ErrorCode } from '../../enums/error.js'
 import JsonRpcException from '../exceptions/jsonrpc_exception.js'
 import Response from '../../response.js'
 
+import applicationService from '@adonisjs/core/services/app'
+
 export default class Completion implements Method {
-  async handle(ctx: CompleteContext) {
+  async handle(ctx: CompleteContext, app = applicationService) {
     const params = ctx.request.params
 
     if (!params?.argument?.name || !params?.argument?.value) {
@@ -44,7 +46,7 @@ export default class Completion implements Method {
     }
 
     const { default: Model } = await import(path)
-    const entity = new Model(ctx)
+    const entity = await app.container.make(Model)
 
     let args = {}
     if (context?.arguments) {
@@ -54,7 +56,7 @@ export default class Completion implements Method {
     ;(ctx as any).args = { ...args, [argument.name]: argument.value }
 
     const result = {
-      completion: await entity.complete(ctx),
+      completion: await app.container.call(entity, 'complete', [ctx]),
     } as CompleteResult
 
     return Response.toJsonRpc({ id: ctx.request.id, result })

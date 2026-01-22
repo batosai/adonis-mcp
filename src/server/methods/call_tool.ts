@@ -18,8 +18,10 @@ import ResourceLink from '../contents/resource_link.js'
 import EmbeddedResource from '../contents/embedded_resource.js'
 import Structured from '../contents/structured.js'
 
+import applicationService from '@adonisjs/core/services/app'
+
 export default class CallTool implements Method {
-  async handle(ctx: ToolContext) {
+  async handle(ctx: ToolContext, app = applicationService) {
     const params = ctx.request.params
 
     if (!params?.name) {
@@ -54,8 +56,8 @@ export default class CallTool implements Method {
 
     ;(ctx as any).args = params.arguments ?? {}
 
-    const tool = new Tool(ctx)
-    const contents = await tool.handle(ctx)
+    const tool = await app.container.make(Tool)
+    const contents = await app.container.call(tool, 'handle', [ctx])
 
     let data: Content[]
     if (!Array.isArray(contents)) {

@@ -42,10 +42,10 @@ export abstract class Resource<T = {}> {
     return data
   }
 
-  abstract handle(ctx?: ResourceContext<T>): Promise<Content>
+  abstract handle(ctx?: ResourceContext<T>, ...args: unknown[]): Promise<Content>
 
   async complete(ctx?: CompleteContext<T>): Promise<Completion> {
-    return await ctx!.response.complete({
+    return ctx!.response.complete({
       values: [],
     })
   }

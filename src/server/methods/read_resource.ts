@@ -15,8 +15,10 @@ import JsonRpcException from '../exceptions/jsonrpc_exception.js'
 import Response from '../../response.js'
 import { findResource } from '../../utils/find_resource_pattern.js'
 
+import applicationService from '@adonisjs/core/services/app'
+
 export default class ReadResource implements Method {
-  async handle(ctx: ResourceContext) {
+  async handle(ctx: ResourceContext, app = applicationService) {
     const params = ctx.request.params
 
     if (!params?.uri || typeof params.uri !== 'string') {
@@ -28,12 +30,13 @@ export default class ReadResource implements Method {
     }
 
     const resource = await findResource({
+      app,
       uri: params.uri,
       resourceList: ctx.resources,
       ctx,
     })
 
-    const content = await resource.handle(ctx)
+    const content = await app.container.call(resource, 'handle', [ctx])
 
     const data: Content[] = [content]
 

@@ -35,10 +35,10 @@ export abstract class Prompt<T extends JSONSchema = JSONSchema> {
     }
   }
 
-  abstract handle(ctx?: PromptContext<T>): Promise<Content | Content[]>
+  abstract handle(ctx?: PromptContext<T>, ...args: unknown[]): Promise<Content | Content[]>
 
   async complete(ctx?: CompleteContext<T>): Promise<Completion> {
-    return await ctx!.response.complete({
+    return ctx!.response.complete({
       values: [],
     })
   }

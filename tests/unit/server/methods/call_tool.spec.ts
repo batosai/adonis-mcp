@@ -17,6 +17,7 @@ import { ErrorCode } from '../../../../src/enums/error.js'
 const toolWithTextModule = '../../../fixtures/tools/test_tool_with_text.ts'
 const toolWithErrorModule = '../../../fixtures/tools/test_tool_with_error.ts'
 const toolWithMultipleContentsModule = '../../../fixtures/tools/test_tool_with_multiple_contents.ts'
+const { fakeApp } = await import('../../../helpers/fake_app.js')
 
 test.group('CallTool Method', () => {
   test('should throw error when tool name is missing', async ({ assert }) => {
@@ -58,9 +59,10 @@ test.group('CallTool Method', () => {
         [name]: toolPath,
       },
     }) as ToolContext
+
     const method = new CallTool()
 
-    const response = await method.handle(context)
+    const response = await method.handle(context, fakeApp)
 
     assert.exists(response)
     assert.equal(response.jsonrpc, '2.0')
@@ -89,7 +91,7 @@ test.group('CallTool Method', () => {
     }) as ToolContext
     const method = new CallTool()
 
-    const response = await method.handle(context)
+    const response = await method.handle(context, fakeApp)
 
     assert.exists(response)
     assert.equal(response.jsonrpc, '2.0')
@@ -118,7 +120,7 @@ test.group('CallTool Method', () => {
     }) as ToolContext
     const method = new CallTool()
 
-    const response = await method.handle(context)
+    const response = await method.handle(context, fakeApp)
 
     assert.exists(response)
     assert.equal(response.jsonrpc, '2.0')

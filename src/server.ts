@@ -7,7 +7,12 @@
 
 import type { McpConfig } from './types/config.js'
 import type { JsonRpcRequest } from './types/jsonrpc.js'
-import type { ToolList, ResourceList, PromptList } from './types/method.js'
+import type {
+  ToolList,
+  ResourceList,
+  PromptList,
+  Method as MethodInterface,
+} from './types/method.js'
 import type { Transport } from './server/contracts/transport.js'
 
 import { createError } from '@adonisjs/core/exceptions'
@@ -131,10 +136,12 @@ export default class Server {
     try {
       if (Object.keys(this.methods).includes(jsonRequest.method)) {
         const lazyMethod = this.methods[jsonRequest.method as keyof typeof this.methods]
-        const { default: method } = await lazyMethod()
-        const instance = new method()
+        const { default: MethodClass } = await lazyMethod()
+        // Cast the dynamically imported class to a constructor of the Method interface
+        const instance = new (MethodClass as unknown as { new (...args: any[]): MethodInterface })()
 
-        const response = await instance.handle(mcpContext)
+        // Ensure the instance is treated as MethodInterface when calling handle to satisfy TS
+        const response = await (instance as unknown as MethodInterface).handle(mcpContext)
 
         this.#transport.send(response)
       } else {

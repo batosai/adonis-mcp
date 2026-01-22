@@ -15,6 +15,8 @@ import type { ResourceContext } from '../../types/context.js'
 import { createError } from '@adonisjs/core/exceptions'
 import { findResource } from '../../utils/find_resource_pattern.js'
 
+import applicationService from '@adonisjs/core/services/app'
+
 export default class EmbeddedResource implements Content {
   #uri: string
   #resource?: Resource
@@ -23,7 +25,10 @@ export default class EmbeddedResource implements Content {
 
   #ctx?: ResourceContext
 
-  constructor(uri: string) {
+  constructor(
+    uri: string,
+    private app = applicationService
+  ) {
     this.#uri = uri
     this.#role = 'user'
   }
@@ -32,6 +37,7 @@ export default class EmbeddedResource implements Content {
     this.#ctx = ctx
 
     this.#resource = await findResource({
+      app: this.app,
       uri: this.#uri,
       resourceList: ctx.resources,
       ctx,
