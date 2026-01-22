@@ -37,7 +37,7 @@ export abstract class Prompt<T extends JSONSchema = JSONSchema> {
 
   abstract handle(ctx?: PromptContext<T>, ...args: unknown[]): Promise<Content | Content[]>
 
-  async complete(ctx?: CompleteContext<T>): Promise<Completion> {
+  async complete(ctx?: CompleteContext<T>, ..._args: unknown[]): Promise<Completion> {
     return ctx!.response.complete({
       values: [],
     })
