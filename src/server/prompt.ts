@@ -8,6 +8,7 @@
 import type { JSONSchema } from '../types/method.js'
 import type { Completion } from '../types/jsonrpc.js'
 import type { PromptContext, CompleteContext } from '../types/context.js'
+import type { InferJSONSchema } from '../types/method.js'
 import type { Content } from './contracts/content.js'
 
 export abstract class Prompt<T extends JSONSchema = JSONSchema> {
@@ -37,7 +38,10 @@ export abstract class Prompt<T extends JSONSchema = JSONSchema> {
 
   abstract handle(ctx?: PromptContext<T>, ...args: unknown[]): Promise<Content | Content[]>
 
-  async complete(ctx?: CompleteContext<T>, ..._args: unknown[]): Promise<Completion> {
+  async complete(
+    ctx?: CompleteContext<InferJSONSchema<T>>,
+    ..._args: unknown[]
+  ): Promise<Completion> {
     return ctx!.response.complete({
       values: [],
     })
