@@ -327,7 +327,7 @@ Then implement the `complete()` method:
 
 ```typescript
 import type { PromptContext, CompleteContext } from '@jrmc/adonis-mcp/types/context'
-import type { BaseSchema } from '@jrmc/adonis-mcp/types/method'
+import type { BaseSchema, InferJSONSchema } from '@jrmc/adonis-mcp/types/method'
 
 import { Prompt } from '@jrmc/adonis-mcp'
 
@@ -348,7 +348,7 @@ export default class CodeReviewPrompt extends Prompt<Schema> {
     ]
   }
 
-  async complete({ args, response }: CompleteContext<Schema>) {
+  async complete({ args, response }: CompleteContext<InferJSONSchema<Schema>>) {
     // Provide language suggestions when the user types
     if (args?.language !== undefined) {
       return response.complete({
