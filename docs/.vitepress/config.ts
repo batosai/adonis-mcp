@@ -43,6 +43,10 @@ export default defineConfig({
         link: '/prompts'
       },
       {
+        text: 'Dependency Injection',
+        link: '/dependency-injection'
+      },
+      {
         text: 'Sessions',
         link: '/sessions'
       },

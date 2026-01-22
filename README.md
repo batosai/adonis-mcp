@@ -26,11 +26,11 @@ AdonisJS MCP - Server MCP for your AdonisJS applications.
 - [x] Inspector
 - [x] Session
 - [x] Documentation
+- [x] Inject support
 - [ ] Output tool
 - [ ] Vine integration
 - [ ] Bounce integration (WIP)
 - [ ] Auth helpers (WIP)
-- [ ] Inject support
 - [ ] Events
 - [ ] Logger
 - [ ] Alternative transports (SSE)
