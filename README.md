@@ -31,6 +31,8 @@ AdonisJS MCP - Server MCP for your AdonisJS applications.
 - [ ] Bounce integration (WIP)
 - [ ] Auth helpers (WIP)
 - [ ] Inject support
+- [ ] Events
+- [ ] Logger
 - [ ] Alternative transports (SSE)
 - [ ] JSON Schema with Vine ???
 - [ ] Login flow
