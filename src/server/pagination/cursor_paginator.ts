@@ -1,15 +1,20 @@
-export class CursorPaginator {
-  #items: unknown[]
+/** Decoded cursor payload shape */
+interface CursorPayload {
+  offset?: number
+}
+
+export class CursorPaginator<T> {
+  #items: T[]
   #perPage: number
   #cursor?: string
 
-  constructor(items: unknown[], perPage: number, cursor?: string) {
+  constructor(items: T[], perPage: number, cursor?: string) {
     this.#items = items
     this.#perPage = perPage
     this.#cursor = cursor
   }
 
-  public paginate(key: string = 'items'): { [key: string]: unknown } {
+  public paginate<K extends string>(key: K): { [P in K]: T[] } & { nextCursor?: string } {
     const startOffset = this.getStartOffsetFromCursor()
 
     const paginatedItems = this.#items.slice(startOffset, startOffset + this.#perPage)
@@ -24,10 +29,10 @@ export class CursorPaginator {
       result.nextCursor = this.createCursor(startOffset + this.#perPage)
     }
 
-    return result
+    return result as { [P in K]: T[] } & { nextCursor?: string }
   }
 
-  protected getStartOffsetFromCursor() {
+  protected getStartOffsetFromCursor(): number {
     if (!this.#cursor) {
       return 0
     }
@@ -39,21 +44,21 @@ export class CursorPaginator {
         return 0
       }
 
-      const cursorData = JSON.parse(decodedCursor)
+      const cursorData = JSON.parse(decodedCursor) as CursorPayload
 
-      if (!cursorData.hasOwnProperty('offset')) {
+      if (!cursorData.hasOwnProperty('offset') || typeof cursorData.offset !== 'number') {
         return 0
       }
 
-      return parseInt(cursorData.offset)
-    } catch (error) {
+      return cursorData.offset
+    } catch (_error: unknown) {
       //
     }
 
     return 0
   }
 
-  protected createCursor(offset: number) {
+  protected createCursor(offset: number): string {
     return Buffer.from(JSON.stringify({ offset })).toString('base64')
   }
 }
