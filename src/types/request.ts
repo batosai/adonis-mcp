@@ -34,28 +34,19 @@ export type McpRequestType =
   | 'resources/subscribe'
   | 'resources/unsubscribe'
 
-export type McpRequest<T> = T extends 'tools/call'
-  ? CallToolRequest
-  : T extends 'resources/read'
-    ? ReadResourceRequest
-    : T extends 'prompts/get'
-      ? GetPromptRequest
-      : T extends 'initialize'
-        ? InitializeRequest
-        : T extends 'ping'
-          ? PingRequest
-          : T extends 'tools/list'
-            ? ListToolsRequest
-            : T extends 'resources/list'
-              ? ListResourcesRequest
-              : T extends 'resources/templates/list'
-                ? ListResourceTemplatesRequest
-                : T extends 'prompts/list'
-                  ? ListPromptsRequest
-                  : T extends 'completion/complete'
-                    ? CompleteRequest
-                    : T extends 'resources/subscribe'
-                      ? SubscribeRequest
-                      : T extends 'resources/unsubscribe'
-                        ? UnsubscribeRequest
-                        : never
+type RequestMap = {
+  'tools/call': CallToolRequest
+  'resources/read': ReadResourceRequest
+  'prompts/get': GetPromptRequest
+  'initialize': InitializeRequest
+  'ping': PingRequest
+  'tools/list': ListToolsRequest
+  'resources/list': ListResourcesRequest
+  'resources/templates/list': ListResourceTemplatesRequest
+  'prompts/list': ListPromptsRequest
+  'completion/complete': CompleteRequest
+  'resources/subscribe': SubscribeRequest
+  'resources/unsubscribe': UnsubscribeRequest
+}
+
+export type McpRequest<T extends McpRequestType> = RequestMap[T]
