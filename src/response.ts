@@ -27,7 +27,7 @@ export default class<T extends McpRequestType = McpRequestType> implements Respo
       this.type = 'resources/read' as T
     } else if (jsonRpcRequest.method === 'prompts/get') {
       this.type = 'prompts/get' as T
-    } else if (jsonRpcRequest.method === 'prompts/get') {
+    } else if (jsonRpcRequest.method === 'tools/call') {
       this.type = 'tools/call' as T
     } else if (jsonRpcRequest.method === 'completion/complete') {
       this.type = 'completion/complete' as T
