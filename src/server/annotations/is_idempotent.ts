@@ -10,7 +10,7 @@ import type { ToolAnnotations } from '../../types/jsonrpc.js'
 import { Tool } from '../tool.js'
 import { createError } from '@adonisjs/core/exceptions'
 
-export function isIdempotent(idempotent: true | false = true) {
+export function isIdempotent(idempotent: boolean = true) {
   return function <T extends { new (...args: any[]): { annotations?: ToolAnnotations } }>(
     constructor: T
   ) {

@@ -10,7 +10,7 @@ import type { ToolAnnotations } from '../../types/jsonrpc.js'
 import { Tool } from '../tool.js'
 import { createError } from '@adonisjs/core/exceptions'
 
-export function isOpenWorld(openWorld: true | false = true) {
+export function isOpenWorld(openWorld: boolean = true) {
   return function <T extends { new (...args: any[]): { annotations?: ToolAnnotations } }>(
     constructor: T
   ) {
