@@ -49,4 +49,4 @@ type RequestMap = {
   'resources/unsubscribe': UnsubscribeRequest
 }
 
-export type McpRequest<T extends McpRequestType> = RequestMap[T]
+export type McpRequest<T extends McpRequestType> = T extends keyof RequestMap ? RequestMap[T] : never

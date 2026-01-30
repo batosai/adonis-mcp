@@ -13,17 +13,16 @@ export interface Method {
   handle(ctx: McpContext, app?: ApplicationService): JsonRpcResponse | Promise<JsonRpcResponse>
 }
 
-export type ToolList = Record<string, string>
-export type ResourceList = Record<string, string>
-export type PromptList = Record<string, string>
+export type McpRegistryEntry = { path: string; json: Record<string, unknown> }
+export type ToolList = Record<string, McpRegistryEntry>
+export type ResourceList = Record<string, McpRegistryEntry>
+export type PromptList = Record<string, McpRegistryEntry>
 
 export type JSONSchema =
   | { type: 'string' }
   | { type: 'number' }
   | { type: 'boolean' }
-  | { type: 'object'; properties: Record<string, JSONSchema>; required?: string[] }
-
-type ObjectSchema = Extract<JSONSchema, { type: 'object' }>
+  | { type: 'object'; properties: Record<string, JSONSchema>; required?: readonly string[] }
 
 export type InferJSONSchema<S extends JSONSchema> = S['type'] extends 'string'
   ? string
@@ -31,18 +30,23 @@ export type InferJSONSchema<S extends JSONSchema> = S['type'] extends 'string'
     ? number
     : S['type'] extends 'boolean'
       ? boolean
-      : S extends ObjectSchema
-        ? {
-            [K in keyof S['properties'] as K extends string ? K : never]: K extends (
-              S['required'] extends readonly string[] ? S['required'][number] : never
-            )
-              ? InferJSONSchema<S['properties'][K]>
-              : InferJSONSchema<S['properties'][K]> | undefined
+      : S extends {
+            type: 'object'
+            properties: infer P extends Record<string, JSONSchema>
+            required?: infer R
           }
+        ? R extends readonly string[]
+          ? { [K in keyof P as K extends R[number] ? K : never]: InferJSONSchema<P[K]> } & {
+              [K in keyof P as K extends R[number] ? never : K]?: InferJSONSchema<P[K]>
+            }
+          : { [K in keyof P]?: InferJSONSchema<P[K]> }
         : never
 
-export type BaseSchema<P extends Record<string, any> = {}> = {
+export type BaseSchema<
+  P extends Record<string, any> = {},
+  R extends readonly (keyof P & string)[] = readonly (keyof P & string)[],
+> = {
   type: 'object'
   properties: P
-  required?: (keyof P)[]
+  required?: R
 }

@@ -47,12 +47,11 @@ export type McpPromptResponse = Pick<
 >
 export type McpCompleteResponse = Pick<Response<'completion/complete'>, 'complete'>
 
-export type McpResponse<T> = T extends 'resources/read'
-  ? McpResourceResponse
-  : T extends 'prompts/get'
-    ? McpPromptResponse
-    : T extends 'tools/call'
-      ? McpToolResponse
-      : T extends 'completion/complete'
-        ? McpCompleteResponse
-        : never
+type ResponseMap = {
+  'tools/call': McpToolResponse
+  'resources/read': McpResourceResponse
+  'prompts/get': McpPromptResponse
+  'completion/complete': McpCompleteResponse
+}
+
+export type McpResponse<T> = T extends keyof ResponseMap ? ResponseMap[T] : never
