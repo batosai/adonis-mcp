@@ -6,21 +6,42 @@
  */
 
 import { test } from '@japa/runner'
-import { fileURLToPath, pathToFileURL } from 'node:url'
-import { dirname, join } from 'node:path'
 import ListTools from '../../../../src/server/methods/list_tools.js'
 import { createTestContext } from '../../../helpers/create_context.js'
 import { createListToolsRequest } from '../../../helpers/create_request.js'
-import { ErrorCode } from '../../../../src/enums/error.js'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
-const fixturesDir = join(__dirname, '../../fixtures/tools')
 
 // Import tool fixtures using relative paths
 const tool1Module = '../../../fixtures/tools/test_tool_1.ts'
 const tool2Module = '../../../fixtures/tools/test_tool_2.ts'
 const toolNoSchemaModule = '../../../fixtures/tools/test_tool_no_schema.ts'
+
+// JSON payloads matching Tool.toJson() output for each fixture
+const tool1Json: Record<string, unknown> = {
+  name: 'test-tool-1',
+  title: 'Test Tool 1',
+  description: 'First test tool',
+  inputSchema: {
+    type: 'object',
+    properties: { text: { type: 'string', description: 'Text input' } },
+    required: ['text'],
+  },
+}
+const tool2Json: Record<string, unknown> = {
+  name: 'test-tool-2',
+  title: 'Test Tool 2',
+  description: 'Second test tool',
+  inputSchema: {
+    type: 'object',
+    properties: { number: { type: 'number', description: 'Number input' } },
+    required: [],
+  },
+}
+const toolNoSchemaJson: Record<string, unknown> = {
+  name: 'test-tool-no-schema',
+  title: 'Test Tool No Schema',
+  description: 'Tool without schema',
+  inputSchema: { type: 'object', properties: {} },
+}
 
 test.group('ListTools Method', () => {
   test('should list tools successfully', async ({ assert }) => {
@@ -30,8 +51,8 @@ test.group('ListTools Method', () => {
     const request = createListToolsRequest()
     const context = createTestContext(request, {
       tools: {
-        'test-tool-1': tool1Path,
-        'test-tool-2': tool2Path,
+        'test-tool-1': { path: tool1Path, json: tool1Json },
+        'test-tool-2': { path: tool2Path, json: tool2Json },
       },
       defaultPaginationLength: 10,
     })
@@ -73,7 +94,7 @@ test.group('ListTools Method', () => {
     const request = createListToolsRequest()
     const context = createTestContext(request, {
       tools: {
-        'test-tool-no-schema': toolPath,
+        'test-tool-no-schema': { path: toolPath, json: toolNoSchemaJson },
       },
       defaultPaginationLength: 10,
     })
@@ -114,10 +135,13 @@ test.group('ListTools Method', () => {
     const tool1Path = new URL(tool1Module, import.meta.url).href
     const tool2Path = new URL(tool2Module, import.meta.url).href
 
-    const tools: Record<string, string> = {}
+    const tools: Record<string, { path: string; json: Record<string, unknown> }> = {}
     // Create 20 tool entries using the two available tools
     for (let i = 0; i < 20; i++) {
-      tools[`test-tool-${i}`] = i % 2 === 0 ? tool1Path : tool2Path
+      tools[`test-tool-${i}`] = {
+        path: i % 2 === 0 ? tool1Path : tool2Path,
+        json: { name: `test-tool-${i}` },
+      }
     }
 
     const request = createListToolsRequest()
@@ -156,8 +180,8 @@ test.group('ListTools Method', () => {
     const request = createListToolsRequest()
     const context = createTestContext(request, {
       tools: {
-        'test-tool-1': tool1Path,
-        'test-tool-2': tool2Path,
+        'test-tool-1': { path: tool1Path, json: tool1Json },
+        'test-tool-2': { path: tool2Path, json: tool2Json },
       },
       defaultPaginationLength: 10,
     })
@@ -170,36 +194,17 @@ test.group('ListTools Method', () => {
     assert.notExists(response.result?.nextCursor)
   })
 
-  test('should throw error when tool import fails', async ({ assert }) => {
-    const toolPath = pathToFileURL(join(fixturesDir, 'nonexistent-tool.ts')).href
-
-    const request = createListToolsRequest()
-    const context = createTestContext(request, {
-      tools: {
-        'nonexistent-tool': toolPath,
-      },
-      defaultPaginationLength: 10,
-    })
-    const method = new ListTools()
-
-    try {
-      await method.handle(context)
-      assert.fail('Should have thrown an error')
-    } catch (error: any) {
-      assert.equal(error.code, ErrorCode.InternalError)
-      assert.equal(error.requestId, request.id)
-      assert.exists(error.data)
-    }
-  })
-
   test('should respect max pagination length', async ({ assert }) => {
     const tool1Path = new URL(tool1Module, import.meta.url).href
     const tool2Path = new URL(tool2Module, import.meta.url).href
 
-    const tools: Record<string, string> = {}
+    const tools: Record<string, { path: string; json: Record<string, unknown> }> = {}
     // Create 30 tool entries
     for (let i = 0; i < 30; i++) {
-      tools[`test-tool-${i}`] = i % 2 === 0 ? tool1Path : tool2Path
+      tools[`test-tool-${i}`] = {
+        path: i % 2 === 0 ? tool1Path : tool2Path,
+        json: { name: `test-tool-${i}` },
+      }
     }
 
     const request = createListToolsRequest()

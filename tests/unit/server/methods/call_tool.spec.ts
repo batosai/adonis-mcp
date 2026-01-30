@@ -56,7 +56,7 @@ test.group('CallTool Method', () => {
     const request = createToolsCallRequest(name, { message: 'Hello World' })
     const context = createTestContext(request, {
       tools: {
-        [name]: toolPath,
+        [name]: { path: toolPath, json: {} },
       },
     }) as ToolContext
 
@@ -86,7 +86,7 @@ test.group('CallTool Method', () => {
     const request = createToolsCallRequest(name)
     const context = createTestContext(request, {
       tools: {
-        [name]: toolPath,
+        [name]: { path: toolPath, json: {} },
       },
     }) as ToolContext
     const method = new CallTool()
@@ -115,7 +115,7 @@ test.group('CallTool Method', () => {
     const request = createToolsCallRequest(name)
     const context = createTestContext(request, {
       tools: {
-        [name]: toolPath,
+        [name]: { path: toolPath, json: {} },
       },
     }) as ToolContext
     const method = new CallTool()
@@ -143,7 +143,7 @@ test.group('CallTool Method', () => {
     const request = createToolsCallRequest(name)
     const context = createTestContext(request, {
       tools: {
-        [name]: toolPath,
+        [name]: { path: toolPath, json: {} },
       },
     }) as ToolContext
     const method = new CallTool()

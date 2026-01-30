@@ -14,6 +14,24 @@ import { createListResourcesRequest } from '../../../helpers/create_request.js'
 const resource1Module = '../../../fixtures/resources/test_resource_1.ts'
 const resource2Module = '../../../fixtures/resources/test_resource_2.ts'
 
+// JSON payloads matching Resource.toJson() output for each fixture
+const resource1Json: Record<string, unknown> = {
+  name: 'test-resource-1',
+  title: 'Test Resource 1',
+  description: 'First test resource',
+  uri: 'file:///test-resource-1.txt',
+  mimeType: 'text/plain',
+  size: 100,
+}
+const resource2Json: Record<string, unknown> = {
+  name: 'test-resource-2',
+  title: 'Test Resource 2',
+  description: 'Second test resource with blob',
+  uri: 'file:///test-resource-2.bin',
+  mimeType: 'application/octet-stream',
+  size: 200,
+}
+
 test.group('ListResources Method', () => {
   test('should list resources successfully', async ({ assert }) => {
     const resource1Path = new URL(resource1Module, import.meta.url).href
@@ -22,8 +40,8 @@ test.group('ListResources Method', () => {
     const request = createListResourcesRequest()
     const context = createTestContext(request, {
       resources: {
-        'file:///test-resource-1.txt': resource1Path,
-        'file:///test-resource-2.bin': resource2Path,
+        'file:///test-resource-1.txt': { path: resource1Path, json: resource1Json },
+        'file:///test-resource-2.bin': { path: resource2Path, json: resource2Json },
       },
       defaultPaginationLength: 10,
     })
@@ -78,10 +96,13 @@ test.group('ListResources Method', () => {
     const resource1Path = new URL(resource1Module, import.meta.url).href
     const resource2Path = new URL(resource2Module, import.meta.url).href
 
-    const resources: Record<string, string> = {}
+    const resources: Record<string, { path: string; json: Record<string, unknown> }> = {}
     // Create 20 resource entries using the two available resources
     for (let i = 0; i < 20; i++) {
-      resources[`file:///test-resource-${i}.txt`] = i % 2 === 0 ? resource1Path : resource2Path
+      resources[`file:///test-resource-${i}.txt`] = {
+        path: i % 2 === 0 ? resource1Path : resource2Path,
+        json: { uri: `file:///test-resource-${i}.txt`, name: `test-resource-${i}` },
+      }
     }
 
     const request = createListResourcesRequest()
@@ -120,8 +141,8 @@ test.group('ListResources Method', () => {
     const request = createListResourcesRequest()
     const context = createTestContext(request, {
       resources: {
-        'file:///test-resource-1.txt': resource1Path,
-        'file:///test-resource-2.bin': resource2Path,
+        'file:///test-resource-1.txt': { path: resource1Path, json: resource1Json },
+        'file:///test-resource-2.bin': { path: resource2Path, json: resource2Json },
       },
       defaultPaginationLength: 10,
     })
@@ -160,10 +181,13 @@ test.group('ListResources Method', () => {
     const resource1Path = new URL(resource1Module, import.meta.url).href
     const resource2Path = new URL(resource2Module, import.meta.url).href
 
-    const resources: Record<string, string> = {}
+    const resources: Record<string, { path: string; json: Record<string, unknown> }> = {}
     // Create 30 resource entries
     for (let i = 0; i < 30; i++) {
-      resources[`file:///test-resource-${i}.txt`] = i % 2 === 0 ? resource1Path : resource2Path
+      resources[`file:///test-resource-${i}.txt`] = {
+        path: i % 2 === 0 ? resource1Path : resource2Path,
+        json: {},
+      }
     }
 
     const request = createListResourcesRequest()

@@ -12,10 +12,16 @@ import { createResourcesReadRequest } from '../../helpers/create_request.js'
 import { fakeApp } from '../../helpers/fake_app.js'
 import { ErrorCode } from '../../../src/enums/error.js'
 
+import type { McpRegistryEntry } from '../../../src/types/method.js'
+
 const resource1Module = '../../fixtures/resources/test_resource_1.ts'
 const template1Module = '../../fixtures/resources/test_resource_template_1.ts'
 const template2Module = '../../fixtures/resources/test_resource_template_2.ts'
 const template3Module = '../../fixtures/resources/test_resource_template_3.ts'
+
+function entry(path: string): McpRegistryEntry {
+  return { path, json: {} }
+}
 
 test.group('findResourcePattern - Exact URI match', () => {
   test('should find resource with exact URI match', ({ assert }) => {
@@ -23,7 +29,7 @@ test.group('findResourcePattern - Exact URI match', () => {
     const resource1Path = new URL(resource1Module, import.meta.url).href
 
     const resourceList = {
-      [uri]: resource1Path,
+      [uri]: entry(resource1Path),
     }
 
     const key = findResourcePattern({ uri, resourceList })
@@ -36,7 +42,7 @@ test.group('findResourcePattern - Exact URI match', () => {
     const resource1Path = new URL(resource1Module, import.meta.url).href
 
     const resourceList = {
-      'file:///test-resource-1.txt': resource1Path,
+      'file:///test-resource-1.txt': entry(resource1Path),
     }
 
     const key = findResourcePattern({ uri, resourceList })
@@ -50,8 +56,8 @@ test.group('findResourcePattern - Exact URI match', () => {
     const template1Path = new URL(template1Module, import.meta.url).href
 
     const resourceList = {
-      'file:///users/123': resource1Path, // Exact match
-      'file:///users/{id}': template1Path, // Template match
+      'file:///users/123': entry(resource1Path), // Exact match
+      'file:///users/{id}': entry(template1Path), // Template match
     }
 
     const key = findResourcePattern({ uri, resourceList })
@@ -67,7 +73,7 @@ test.group('findResourcePattern - Template match', () => {
     const template1Path = new URL(template1Module, import.meta.url).href
 
     const resourceList = {
-      'file:///users/{id}': template1Path,
+      'file:///users/{id}': entry(template1Path),
     }
 
     const key = findResourcePattern({ uri, resourceList })
@@ -80,7 +86,7 @@ test.group('findResourcePattern - Template match', () => {
     const template3Path = new URL(template3Module, import.meta.url).href
 
     const resourceList = {
-      'file:///users/{userId}/posts/{postId}': template3Path,
+      'file:///users/{userId}/posts/{postId}': entry(template3Path),
     }
 
     const key = findResourcePattern({ uri, resourceList })
@@ -93,7 +99,7 @@ test.group('findResourcePattern - Template match', () => {
     const template2Path = new URL(template2Module, import.meta.url).href
 
     const resourceList = {
-      'file:///api{?page,limit}': template2Path,
+      'file:///api{?page,limit}': entry(template2Path),
     }
 
     const key = findResourcePattern({ uri, resourceList })
@@ -106,7 +112,7 @@ test.group('findResourcePattern - Template match', () => {
     const template1Path = new URL(template1Module, import.meta.url).href
 
     const resourceList = {
-      'file:///users/{id}': template1Path,
+      'file:///users/{id}': entry(template1Path),
     }
 
     const key = findResourcePattern({ uri, resourceList })
@@ -119,8 +125,8 @@ test.group('findResourcePattern - Template match', () => {
     const template1Path = new URL(template1Module, import.meta.url).href
 
     const resourceList = {
-      'file:///users/{id}': template1Path,
-      'file:///users/{userId}': template1Path, // Another matching template
+      'file:///users/{id}': entry(template1Path),
+      'file:///users/{userId}': entry(template1Path), // Another matching template
     }
 
     const key = findResourcePattern({ uri, resourceList })
@@ -137,7 +143,7 @@ test.group('findResourcePattern - Context args extraction', () => {
     const template1Path = new URL(template1Module, import.meta.url).href
 
     const resourceList = {
-      'file:///users/{id}': template1Path,
+      'file:///users/{id}': entry(template1Path),
     }
 
     const request = createResourcesReadRequest(uri)
@@ -155,7 +161,7 @@ test.group('findResourcePattern - Context args extraction', () => {
     const template3Path = new URL(template3Module, import.meta.url).href
 
     const resourceList = {
-      'file:///users/{userId}/posts/{postId}': template3Path,
+      'file:///users/{userId}/posts/{postId}': entry(template3Path),
     }
 
     const request = createResourcesReadRequest(uri)
@@ -173,7 +179,7 @@ test.group('findResourcePattern - Context args extraction', () => {
     const template2Path = new URL(template2Module, import.meta.url).href
 
     const resourceList = {
-      'file:///api{?page,limit}': template2Path,
+      'file:///api{?page,limit}': entry(template2Path),
     }
 
     const request = createResourcesReadRequest(uri)
@@ -191,7 +197,7 @@ test.group('findResourcePattern - Context args extraction', () => {
     const template1Path = new URL(template1Module, import.meta.url).href
 
     const resourceList = {
-      'file:///users/{id}': template1Path,
+      'file:///users/{id}': entry(template1Path),
     }
 
     // No context provided
@@ -206,7 +212,7 @@ test.group('findResourcePattern - Context args extraction', () => {
     const resource1Path = new URL(resource1Module, import.meta.url).href
 
     const resourceList = {
-      [uri]: resource1Path,
+      [uri]: entry(resource1Path),
     }
 
     const request = createResourcesReadRequest(uri)
@@ -225,7 +231,7 @@ test.group('findResource - Resource loading', () => {
     const resource1Path = new URL(resource1Module, import.meta.url).href
 
     const resourceList = {
-      [uri]: resource1Path,
+      [uri]: entry(resource1Path),
     }
 
     const request = createResourcesReadRequest(uri)
@@ -244,7 +250,7 @@ test.group('findResource - Resource loading', () => {
     const template1Path = new URL(template1Module, import.meta.url).href
 
     const resourceList = {
-      'file:///users/{id}': template1Path,
+      'file:///users/{id}': entry(template1Path),
     }
 
     const request = createResourcesReadRequest(uri)
@@ -263,7 +269,7 @@ test.group('findResource - Resource loading', () => {
     const template3Path = new URL(template3Module, import.meta.url).href
 
     const resourceList = {
-      'file:///users/{userId}/posts/{postId}': template3Path,
+      'file:///users/{userId}/posts/{postId}': entry(template3Path),
     }
 
     const request = createResourcesReadRequest(uri)
@@ -282,7 +288,7 @@ test.group('findResource - Resource loading', () => {
     const resource1Path = new URL(resource1Module, import.meta.url).href
 
     const resourceList = {
-      'file:///test-resource-1.txt': resource1Path,
+      'file:///test-resource-1.txt': entry(resource1Path),
     }
 
     const request = createResourcesReadRequest(uri)
@@ -322,7 +328,7 @@ test.group('findResource - Resource instantiation', () => {
     const template1Path = new URL(template1Module, import.meta.url).href
 
     const resourceList = {
-      'file:///users/{id}': template1Path,
+      'file:///users/{id}': entry(template1Path),
     }
 
     const request = createResourcesReadRequest(uri)
@@ -339,7 +345,7 @@ test.group('findResource - Resource instantiation', () => {
     const template1Path = new URL(template1Module, import.meta.url).href
 
     const resourceList = {
-      'file:///users/{id}': template1Path,
+      'file:///users/{id}': entry(template1Path),
     }
 
     const request = createResourcesReadRequest(uri)
@@ -360,8 +366,8 @@ test.group('findResource - Complex scenarios', () => {
     const template3Path = new URL(template3Module, import.meta.url).href
 
     const resourceList = {
-      'file:///users/{id}': template1Path,
-      'file:///users/{userId}/posts/{postId}': template3Path,
+      'file:///users/{id}': entry(template1Path),
+      'file:///users/{userId}/posts/{postId}': entry(template3Path),
     }
 
     // Test first pattern
@@ -398,7 +404,7 @@ test.group('findResource - Complex scenarios', () => {
     const template2Path = new URL(template2Module, import.meta.url).href
 
     const resourceList = {
-      'file:///api{?page,limit}': template2Path,
+      'file:///api{?page,limit}': entry(template2Path),
     }
 
     const request = createResourcesReadRequest(uri)

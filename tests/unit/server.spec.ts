@@ -46,26 +46,26 @@ test.group('Server', () => {
 
   test('should add tool to server', ({ assert }) => {
     const server = new Server({})
-    server.addTool({ 'test-tool': '/path/to/tool' })
+    server.addTool({ 'test-tool': { path: '/path/to/tool', json: {} } })
 
     assert.exists(server.tools['test-tool'])
-    assert.equal(server.tools['test-tool'], '/path/to/tool')
+    assert.deepEqual(server.tools['test-tool'], { path: '/path/to/tool', json: {} })
   })
 
   test('should add resource to server', ({ assert }) => {
     const server = new Server({})
-    server.addResource({ 'test-resource': '/path/to/resource' })
+    server.addResource({ 'test-resource': { path: '/path/to/resource', json: {} } })
 
     assert.exists(server.resources['test-resource'])
-    assert.equal(server.resources['test-resource'], '/path/to/resource')
+    assert.deepEqual(server.resources['test-resource'], { path: '/path/to/resource', json: {} })
   })
 
   test('should add prompt to server', ({ assert }) => {
     const server = new Server({})
-    server.addPrompt({ 'test-prompt': '/path/to/prompt' })
+    server.addPrompt({ 'test-prompt': { path: '/path/to/prompt', json: {} } })
 
     assert.exists(server.prompts['test-prompt'])
-    assert.equal(server.prompts['test-prompt'], '/path/to/prompt')
+    assert.deepEqual(server.prompts['test-prompt'], { path: '/path/to/prompt', json: {} })
   })
 
   test('should add capability to server', ({ assert }) => {

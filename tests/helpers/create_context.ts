@@ -30,6 +30,7 @@ export function createTestContext(
     defaultPaginationLength: 15,
     tools: {},
     resources: {},
+    resourceTemplates: {},
     prompts: {},
     jsonRpcRequest,
     ...overrides,

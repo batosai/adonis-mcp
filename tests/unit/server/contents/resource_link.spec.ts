@@ -50,7 +50,7 @@ test.group('ResourceLink Content - preProcess and toTool', () => {
     const resource1Path = new URL(resource1Module, import.meta.url).href
 
     const resourceList = {
-      [uri]: resource1Path,
+      [uri]: { path: resource1Path, json: {} },
     }
 
     const request = createResourcesReadRequest(uri)
@@ -76,7 +76,7 @@ test.group('ResourceLink Content - preProcess and toTool', () => {
     const resource1Path = new URL(resource1Module, import.meta.url).href
 
     const resourceList = {
-      [uri]: resource1Path,
+      [uri]: { path: resource1Path, json: {} },
     }
 
     const request = createResourcesReadRequest(uri)
@@ -101,12 +101,12 @@ test.group('ResourceLink Content - preProcess and toTool', () => {
     const uri = 'file:///users/123'
     const template1Path = new URL(template1Module, import.meta.url).href
 
-    const resourceList = {
-      'file:///users/{id}': template1Path,
+    const resourceTemplateList = {
+      'file:///users/{id}': { path: template1Path, json: {} },
     }
 
     const request = createResourcesReadRequest(uri)
-    const ctx = createTestContext(request, { resources: resourceList })
+    const ctx = createTestContext(request, { resourceTemplates: resourceTemplateList })
 
     const link = new ResourceLink(uri, fakeApp)
     link.withMeta({ dynamic: true, userId: 123 })
@@ -133,7 +133,7 @@ test.group('ResourceLink Content - preProcess and toTool', () => {
     const uri = 'file:///test-resource-1.txt'
     const resource1Path = new URL(resource1Module, import.meta.url).href
 
-    const resourceList = { [uri]: resource1Path }
+    const resourceList = { [uri]: { path: resource1Path, json: {} } }
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
@@ -152,7 +152,7 @@ test.group('ResourceLink Content - preProcess and toTool', () => {
     const uri = 'file:///test-resource-1.txt'
     const resource1Path = new URL(resource1Module, import.meta.url).href
 
-    const resourceList = { [uri]: resource1Path }
+    const resourceList = { [uri]: { path: resource1Path, json: {} } }
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
@@ -176,7 +176,7 @@ test.group('ResourceLink Content - withMeta edge cases', () => {
     const uri = 'file:///test-resource-1.txt'
     const resource1Path = new URL(resource1Module, import.meta.url).href
 
-    const resourceList = { [uri]: resource1Path }
+    const resourceList = { [uri]: { path: resource1Path, json: {} } }
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
@@ -193,7 +193,7 @@ test.group('ResourceLink Content - withMeta edge cases', () => {
     const uri = 'file:///test-resource-1.txt'
     const resource1Path = new URL(resource1Module, import.meta.url).href
 
-    const resourceList = { [uri]: resource1Path }
+    const resourceList = { [uri]: { path: resource1Path, json: {} } }
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
@@ -213,7 +213,7 @@ test.group('ResourceLink Content - withMeta edge cases', () => {
     const uri = 'file:///test-resource-1.txt'
     const resource1Path = new URL(resource1Module, import.meta.url).href
 
-    const resourceList = { [uri]: resource1Path }
+    const resourceList = { [uri]: { path: resource1Path, json: {} } }
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
@@ -229,7 +229,7 @@ test.group('ResourceLink Content - withMeta edge cases', () => {
     const uri = 'file:///test-resource-1.txt'
     const resource1Path = new URL(resource1Module, import.meta.url).href
 
-    const resourceList = { [uri]: resource1Path }
+    const resourceList = { [uri]: { path: resource1Path, json: {} } }
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
@@ -256,7 +256,7 @@ test.group('ResourceLink Content - withMeta edge cases', () => {
     const uri = 'file:///test-resource-1.txt'
     const resource1Path = new URL(resource1Module, import.meta.url).href
 
-    const resourceList = { [uri]: resource1Path }
+    const resourceList = { [uri]: { path: resource1Path, json: {} } }
     const request = createResourcesReadRequest(uri)
     const ctx = createTestContext(request, { resources: resourceList })
 
@@ -314,12 +314,12 @@ test.group('ResourceLink Content - Integration with templates', () => {
     const uri = 'file:///users/456'
     const template1Path = new URL(template1Module, import.meta.url).href
 
-    const resourceList = {
-      'file:///users/{id}': template1Path,
+    const resourceTemplateList = {
+      'file:///users/{id}': { path: template1Path, json: {} },
     }
 
     const request = createResourcesReadRequest(uri)
-    const ctx = createTestContext(request, { resources: resourceList })
+    const ctx = createTestContext(request, { resourceTemplates: resourceTemplateList })
 
     const link = new ResourceLink(uri, fakeApp)
     link.withMeta({

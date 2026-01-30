@@ -56,7 +56,7 @@ test.group('GetPrompt Method', () => {
     const request = createPromptsGetRequest(name, { text: 'Hello World' })
     const context = createTestContext(request, {
       prompts: {
-        [name]: prompt1Path,
+        [name]: { path: prompt1Path, json: {} },
       },
     }) as PromptContext
     const method = new GetPrompt()
@@ -88,7 +88,7 @@ test.group('GetPrompt Method', () => {
     const request = createPromptsGetRequest(name)
     const context = createTestContext(request, {
       prompts: {
-        [name]: prompt2Path,
+        [name]: { path: prompt2Path, json: {} },
       },
     }) as PromptContext
     const method = new GetPrompt()
@@ -120,7 +120,7 @@ test.group('GetPrompt Method', () => {
     const request = createPromptsGetRequest(name, { number: 42 })
     const context = createTestContext(request, {
       prompts: {
-        [name]: prompt2Path,
+        [name]: { path: prompt2Path, json: {} },
       },
     }) as PromptContext
     const method = new GetPrompt()
@@ -146,7 +146,7 @@ test.group('GetPrompt Method', () => {
     const request = createPromptsGetRequest(name)
     const context = createTestContext(request, {
       prompts: {
-        [name]: promptMultiplePath,
+        [name]: { path: promptMultiplePath, json: {} },
       },
     }) as PromptContext
     const method = new GetPrompt()

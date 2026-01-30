@@ -17,6 +17,29 @@ const template1Module = '../../../fixtures/resources/test_resource_template_1.ts
 const template2Module = '../../../fixtures/resources/test_resource_template_2.ts'
 const template3Module = '../../../fixtures/resources/test_resource_template_3.ts'
 
+// JSON payloads matching Resource.toJson() for templates (uriTemplate, not uri)
+const template1Json: Record<string, unknown> = {
+  name: 'test-resource-template-1',
+  title: 'Test Resource Template 1',
+  description: 'Resource template with simple variable',
+  uriTemplate: 'file:///users/{id}',
+  mimeType: 'text/plain',
+}
+const template2Json: Record<string, unknown> = {
+  name: 'test-resource-template-2',
+  title: 'Test Resource Template 2',
+  description: 'Resource template with query parameters',
+  uriTemplate: 'file:///api{?page,limit}',
+  mimeType: 'application/json',
+}
+const template3Json: Record<string, unknown> = {
+  name: 'test-resource-template-3',
+  title: 'Test Resource Template 3',
+  description: 'Resource template with multiple path variables',
+  uriTemplate: 'file:///users/{userId}/posts/{postId}',
+  mimeType: 'text/plain',
+}
+
 test.group('ListResourceTemplates Method', () => {
   test('should list resource templates successfully', async ({ assert }) => {
     const template1Path = new URL(template1Module, import.meta.url).href
@@ -24,9 +47,9 @@ test.group('ListResourceTemplates Method', () => {
 
     const request = createListResourceTemplatesRequest()
     const context = createTestContext(request, {
-      resources: {
-        'file:///users/{id}': template1Path,
-        'file:///api{?page,limit}': template2Path,
+      resourceTemplates: {
+        'file:///users/{id}': { path: template1Path, json: template1Json },
+        'file:///api{?page,limit}': { path: template2Path, json: template2Json },
       },
       defaultPaginationLength: 10,
     })
@@ -65,7 +88,7 @@ test.group('ListResourceTemplates Method', () => {
   test('should return empty array when no resource templates exist', async ({ assert }) => {
     const request = createListResourceTemplatesRequest()
     const context = createTestContext(request, {
-      resources: {},
+      resourceTemplates: {},
       defaultPaginationLength: 10,
     })
     const method = new ListResourceTemplates()
@@ -87,10 +110,12 @@ test.group('ListResourceTemplates Method', () => {
     const request = createListResourceTemplatesRequest()
     const context = createTestContext(request, {
       resources: {
-        'file:///test-resource-1.txt': resource1Path, // Regular resource (no template)
-        'file:///test-resource-2.bin': resource2Path, // Regular resource (no template)
-        'file:///users/{id}': template1Path, // Template
-        'file:///api{?page,limit}': template2Path, // Template
+        'file:///test-resource-1.txt': { path: resource1Path, json: { uri: 'file:///test-resource-1.txt', name: 'test-resource-1' } }, // Regular resource (no template)
+        'file:///test-resource-2.bin': { path: resource2Path, json: { uri: 'file:///test-resource-2.bin', name: 'test-resource-2' } }, // Regular resource (no template)
+      },
+      resourceTemplates: {
+        'file:///users/{id}': { path: template1Path, json: template1Json }, // Template
+        'file:///api{?page,limit}': { path: template2Path, json: template2Json }, // Template
       },
       defaultPaginationLength: 10,
     })
@@ -112,21 +137,30 @@ test.group('ListResourceTemplates Method', () => {
     const template2Path = new URL(template2Module, import.meta.url).href
     const template3Path = new URL(template3Module, import.meta.url).href
 
-    const resources: Record<string, string> = {}
+    const resourceTemplates: Record<string, { path: string; json: Record<string, unknown> }> = {}
     // Create multiple template entries
     for (let i = 0; i < 20; i++) {
       if (i % 3 === 0) {
-        resources[`file:///users/{id${i}}`] = template1Path
+        resourceTemplates[`file:///users/{id${i}}`] = {
+          path: template1Path,
+          json: { name: `test-resource-template-${i}`, uriTemplate: `file:///users/{id${i}}` },
+        }
       } else if (i % 3 === 1) {
-        resources[`file:///api{?page${i},limit${i}}`] = template2Path
+        resourceTemplates[`file:///api{?page${i},limit${i}}`] = {
+          path: template2Path,
+          json: { name: `test-resource-template-${i}`, uriTemplate: `file:///api{?page${i},limit${i}}` },
+        }
       } else {
-        resources[`file:///users/{userId${i}}/posts/{postId${i}}`] = template3Path
+        resourceTemplates[`file:///users/{userId${i}}/posts/{postId${i}}`] = {
+          path: template3Path,
+          json: { name: `test-resource-template-${i}`, uriTemplate: `file:///users/{userId${i}}/posts/{postId${i}}` },
+        }
       }
     }
 
     const request = createListResourceTemplatesRequest()
     const context = createTestContext(request, {
-      resources,
+      resourceTemplates,
       defaultPaginationLength: 5,
       maxPaginationLength: 10,
     })
@@ -142,7 +176,7 @@ test.group('ListResourceTemplates Method', () => {
     // Test second page
     const secondRequest = createListResourceTemplatesRequest(response.result?.nextCursor as string)
     const secondContext = createTestContext(secondRequest, {
-      resources,
+      resourceTemplates,
       defaultPaginationLength: 5,
       maxPaginationLength: 10,
     })
@@ -159,9 +193,9 @@ test.group('ListResourceTemplates Method', () => {
 
     const request = createListResourceTemplatesRequest()
     const context = createTestContext(request, {
-      resources: {
-        'file:///users/{id}': template1Path,
-        'file:///api{?page,limit}': template2Path,
+      resourceTemplates: {
+        'file:///users/{id}': { path: template1Path, json: template1Json },
+        'file:///api{?page,limit}': { path: template2Path, json: template2Json },
       },
       defaultPaginationLength: 10,
     })
@@ -178,15 +212,18 @@ test.group('ListResourceTemplates Method', () => {
     const template1Path = new URL(template1Module, import.meta.url).href
     const template2Path = new URL(template2Module, import.meta.url).href
 
-    const resources: Record<string, string> = {}
+    const resourceTemplates: Record<string, { path: string; json: Record<string, unknown> }> = {}
     // Create 30 template entries
     for (let i = 0; i < 30; i++) {
-      resources[`file:///template/{id${i}}`] = i % 2 === 0 ? template1Path : template2Path
+      resourceTemplates[`file:///template/{id${i}}`] = {
+        path: i % 2 === 0 ? template1Path : template2Path,
+        json: {},
+      }
     }
 
     const request = createListResourceTemplatesRequest()
     const context = createTestContext(request, {
-      resources,
+      resourceTemplates,
       defaultPaginationLength: 20, // Request more than max
       maxPaginationLength: 10, // But max is 10
     })
@@ -205,8 +242,8 @@ test.group('ListResourceTemplates Method', () => {
 
     const request = createListResourceTemplatesRequest()
     const context = createTestContext(request, {
-      resources: {
-        'file:///users/{id}': template1Path,
+      resourceTemplates: {
+        'file:///users/{id}': { path: template1Path, json: {} },
       },
       defaultPaginationLength: 10,
     })
@@ -226,21 +263,24 @@ test.group('ListResourceTemplates Method', () => {
     const template2Path = new URL(template2Module, import.meta.url).href
     const template3Path = new URL(template3Module, import.meta.url).href
 
-    const resources: Record<string, string> = {}
+    const resourceTemplates: Record<string, { path: string; json: Record<string, unknown> }> = {}
     // Create 15 template entries
     for (let i = 0; i < 5; i++) {
-      resources[`file:///users${i}/{id}`] = template1Path
+      resourceTemplates[`file:///users${i}/{id}`] = { path: template1Path, json: {} }
     }
     for (let i = 0; i < 5; i++) {
-      resources[`file:///api${i}{?page,limit}`] = template2Path
+      resourceTemplates[`file:///api${i}{?page,limit}`] = { path: template2Path, json: {} }
     }
     for (let i = 0; i < 5; i++) {
-      resources[`file:///users${i}/{userId}/posts/{postId}`] = template3Path
+      resourceTemplates[`file:///users${i}/{userId}/posts/{postId}`] = {
+        path: template3Path,
+        json: {},
+      }
     }
 
     const request = createListResourceTemplatesRequest()
     const context = createTestContext(request, {
-      resources,
+      resourceTemplates,
       defaultPaginationLength: 5,
     })
     const method = new ListResourceTemplates()
@@ -254,7 +294,7 @@ test.group('ListResourceTemplates Method', () => {
     // Get second page
     const request2 = createListResourceTemplatesRequest(page1.result?.nextCursor as string)
     const context2 = createTestContext(request2, {
-      resources,
+      resourceTemplates,
       defaultPaginationLength: 5,
     })
     const page2 = await method.handle(context2)
@@ -265,7 +305,7 @@ test.group('ListResourceTemplates Method', () => {
     // Get third page
     const request3 = createListResourceTemplatesRequest(page2.result?.nextCursor as string)
     const context3 = createTestContext(request3, {
-      resources,
+      resourceTemplates,
       defaultPaginationLength: 5,
     })
     const page3 = await method.handle(context3)
@@ -285,10 +325,10 @@ test.group('ListResourceTemplates Method', () => {
 
     const request = createListResourceTemplatesRequest()
     const context = createTestContext(request, {
-      resources: {
-        'file:///users/{id}': template1Path,
-        'file:///api{?page,limit}': template2Path,
-        'file:///users/{userId}/posts/{postId}': template3Path,
+      resourceTemplates: {
+        'file:///users/{id}': { path: template1Path, json: template1Json },
+        'file:///api{?page,limit}': { path: template2Path, json: template2Json },
+        'file:///users/{userId}/posts/{postId}': { path: template3Path, json: template3Json },
       },
       defaultPaginationLength: 10,
     })
@@ -313,8 +353,8 @@ test.group('ListResourceTemplates Method', () => {
 
     const request = createListResourceTemplatesRequest()
     const context = createTestContext(request, {
-      resources: {
-        'file:///users/{id}': template1Path,
+      resourceTemplates: {
+        'file:///users/{id}': { path: template1Path, json: template1Json },
       },
       defaultPaginationLength: 10,
     })

@@ -6,21 +6,42 @@
  */
 
 import { test } from '@japa/runner'
-import { fileURLToPath, pathToFileURL } from 'node:url'
-import { dirname, join } from 'node:path'
 import ListPrompts from '../../../../src/server/methods/list_prompts.js'
 import { createTestContext } from '../../../helpers/create_context.js'
 import { createListPromptsRequest } from '../../../helpers/create_request.js'
-import { ErrorCode } from '../../../../src/enums/error.js'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
-const fixturesDir = join(__dirname, '../../fixtures/prompts')
 
 // Import prompt fixtures using relative paths
 const prompt1Module = '../../../fixtures/prompts/test_prompt_1.ts'
 const prompt2Module = '../../../fixtures/prompts/test_prompt_2.ts'
 const promptNoSchemaModule = '../../../fixtures/prompts/test_prompt_no_schema.ts'
+
+// JSON payloads matching Prompt.toJson() output for each fixture
+const prompt1Json: Record<string, unknown> = {
+  name: 'test-prompt-1',
+  title: 'Test Prompt 1',
+  description: 'First test prompt',
+  inputSchema: {
+    type: 'object',
+    properties: { text: { type: 'string', description: 'Text input' } },
+    required: ['text'],
+  },
+}
+const prompt2Json: Record<string, unknown> = {
+  name: 'test-prompt-2',
+  title: 'Test Prompt 2',
+  description: 'Second test prompt',
+  inputSchema: {
+    type: 'object',
+    properties: { number: { type: 'number', description: 'Number input' } },
+    required: [],
+  },
+}
+const promptNoSchemaJson: Record<string, unknown> = {
+  name: 'test-prompt-no-schema',
+  title: 'Test Prompt No Schema',
+  description: 'Test prompt without schema',
+  inputSchema: { type: 'object', properties: {} },
+}
 
 test.group('ListPrompts Method', () => {
   test('should list prompts successfully', async ({ assert }) => {
@@ -30,8 +51,8 @@ test.group('ListPrompts Method', () => {
     const request = createListPromptsRequest()
     const context = createTestContext(request, {
       prompts: {
-        'test-prompt-1': prompt1Path,
-        'test-prompt-2': prompt2Path,
+        'test-prompt-1': { path: prompt1Path, json: prompt1Json },
+        'test-prompt-2': { path: prompt2Path, json: prompt2Json },
       },
       defaultPaginationLength: 10,
     })
@@ -73,7 +94,7 @@ test.group('ListPrompts Method', () => {
     const request = createListPromptsRequest()
     const context = createTestContext(request, {
       prompts: {
-        'test-prompt-no-schema': promptPath,
+        'test-prompt-no-schema': { path: promptPath, json: promptNoSchemaJson },
       },
       defaultPaginationLength: 10,
     })
@@ -114,10 +135,13 @@ test.group('ListPrompts Method', () => {
     const prompt1Path = new URL(prompt1Module, import.meta.url).href
     const prompt2Path = new URL(prompt2Module, import.meta.url).href
 
-    const prompts: Record<string, string> = {}
+    const prompts: Record<string, { path: string; json: Record<string, unknown> }> = {}
     // Create 20 prompt entries using the two available prompts
     for (let i = 0; i < 20; i++) {
-      prompts[`test-prompt-${i}`] = i % 2 === 0 ? prompt1Path : prompt2Path
+      prompts[`test-prompt-${i}`] = {
+        path: i % 2 === 0 ? prompt1Path : prompt2Path,
+        json: { name: `test-prompt-${i}` },
+      }
     }
 
     const request = createListPromptsRequest()
@@ -156,8 +180,8 @@ test.group('ListPrompts Method', () => {
     const request = createListPromptsRequest()
     const context = createTestContext(request, {
       prompts: {
-        'test-prompt-1': prompt1Path,
-        'test-prompt-2': prompt2Path,
+        'test-prompt-1': { path: prompt1Path, json: prompt1Json },
+        'test-prompt-2': { path: prompt2Path, json: prompt2Json },
       },
       defaultPaginationLength: 10,
     })
@@ -170,36 +194,17 @@ test.group('ListPrompts Method', () => {
     assert.notExists(response.result?.nextCursor)
   })
 
-  test('should throw error when prompt import fails', async ({ assert }) => {
-    const promptPath = pathToFileURL(join(fixturesDir, 'nonexistent-prompt.ts')).href
-
-    const request = createListPromptsRequest()
-    const context = createTestContext(request, {
-      prompts: {
-        'nonexistent-prompt': promptPath,
-      },
-      defaultPaginationLength: 10,
-    })
-    const method = new ListPrompts()
-
-    try {
-      await method.handle(context)
-      assert.fail('Should have thrown an error')
-    } catch (error: any) {
-      assert.equal(error.code, ErrorCode.InternalError)
-      assert.equal(error.requestId, request.id)
-      assert.exists(error.data)
-    }
-  })
-
   test('should respect max pagination length', async ({ assert }) => {
     const prompt1Path = new URL(prompt1Module, import.meta.url).href
     const prompt2Path = new URL(prompt2Module, import.meta.url).href
 
-    const prompts: Record<string, string> = {}
+    const prompts: Record<string, { path: string; json: Record<string, unknown> }> = {}
     // Create 30 prompt entries
     for (let i = 0; i < 30; i++) {
-      prompts[`test-prompt-${i}`] = i % 2 === 0 ? prompt1Path : prompt2Path
+      prompts[`test-prompt-${i}`] = {
+        path: i % 2 === 0 ? prompt1Path : prompt2Path,
+        json: { name: `test-prompt-${i}` },
+      }
     }
 
     const request = createListPromptsRequest()

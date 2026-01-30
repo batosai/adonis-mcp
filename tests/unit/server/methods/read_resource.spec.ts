@@ -61,7 +61,7 @@ test.group('ReadResource Method', () => {
     const request = createResourcesReadRequest(uri)
     const context = createTestContext(request, {
       resources: {
-        [uri]: resource1Path,
+        [uri]: { path: resource1Path, json: {} },
       },
     }) as ResourceContext
     const method = new ReadResource()
@@ -90,7 +90,7 @@ test.group('ReadResource Method', () => {
     const request = createResourcesReadRequest(uri)
     const context = createTestContext(request, {
       resources: {
-        [uri]: resource2Path,
+        [uri]: { path: resource2Path, json: {} },
       },
     }) as ResourceContext
     const method = new ReadResource()
@@ -120,7 +120,7 @@ test.group('ReadResource Method', () => {
     const request = createResourcesReadRequest(uri)
     const context = createTestContext(request, {
       resources: {
-        [uri]: resource1Path,
+        [uri]: { path: resource1Path, json: {} },
       },
     }) as ResourceContext
     const method = new ReadResource()
@@ -139,8 +139,8 @@ test.group('ReadResource Method - Templates', () => {
     const template1Path = new URL(template1Module, import.meta.url).href
     const request = createResourcesReadRequest(uri)
     const context = createTestContext(request, {
-      resources: {
-        'file:///users/{id}': template1Path,
+      resourceTemplates: {
+        'file:///users/{id}': { path: template1Path, json: {} },
       },
     }) as ResourceContext
     const method = new ReadResource()
@@ -168,8 +168,8 @@ test.group('ReadResource Method - Templates', () => {
     const template3Path = new URL(template3Module, import.meta.url).href
     const request = createResourcesReadRequest(uri)
     const context = createTestContext(request, {
-      resources: {
-        'file:///users/{userId}/posts/{postId}': template3Path,
+      resourceTemplates: {
+        'file:///users/{userId}/posts/{postId}': { path: template3Path, json: {} },
       },
     }) as ResourceContext
     const method = new ReadResource()
@@ -191,8 +191,8 @@ test.group('ReadResource Method - Templates', () => {
     const template2Path = new URL(template2Module, import.meta.url).href
     const request = createResourcesReadRequest(uri)
     const context = createTestContext(request, {
-      resources: {
-        'file:///api{?page,limit}': template2Path,
+      resourceTemplates: {
+        'file:///api{?page,limit}': { path: template2Path, json: {} },
       },
     }) as ResourceContext
     const method = new ReadResource()
@@ -214,8 +214,8 @@ test.group('ReadResource Method - Templates', () => {
     const template1Path = new URL(template1Module, import.meta.url).href
     const request = createResourcesReadRequest(uri)
     const context = createTestContext(request, {
-      resources: {
-        'file:///users/{id}': template1Path,
+      resourceTemplates: {
+        'file:///users/{id}': { path: template1Path, json: {} },
       },
     }) as ResourceContext
     const method = new ReadResource()
@@ -233,8 +233,8 @@ test.group('ReadResource Method - Templates', () => {
     const template1Path = new URL(template1Module, import.meta.url).href
     const request = createResourcesReadRequest(uri)
     const context = createTestContext(request, {
-      resources: {
-        'file:///users/{id}': template1Path,
+      resourceTemplates: {
+        'file:///users/{id}': { path: template1Path, json: {} },
       },
     }) as ResourceContext
     const method = new ReadResource()
@@ -255,8 +255,10 @@ test.group('ReadResource Method - Templates', () => {
     const request = createResourcesReadRequest(uri)
     const context = createTestContext(request, {
       resources: {
-        'file:///users/123': resource1Path, // Exact match
-        'file:///users/{id}': template1Path, // Template match
+        'file:///users/123': { path: resource1Path, json: {} }, // Exact match
+      },
+      resourceTemplates: {
+        'file:///users/{id}': { path: template1Path, json: {} }, // Template match
       },
     }) as ResourceContext
     const method = new ReadResource()
@@ -275,15 +277,15 @@ test.group('ReadResource Method - Templates', () => {
     const template1Path = new URL(template1Module, import.meta.url).href
     const template3Path = new URL(template3Module, import.meta.url).href
 
-    const resources = {
-      'file:///users/{id}': template1Path,
-      'file:///users/{userId}/posts/{postId}': template3Path,
+    const resourceTemplates = {
+      'file:///users/{id}': { path: template1Path, json: {} },
+      'file:///users/{userId}/posts/{postId}': { path: template3Path, json: {} },
     }
 
     // Test first pattern
     const uri1 = 'file:///users/123'
     const request1 = createResourcesReadRequest(uri1)
-    const context1 = createTestContext(request1, { resources }) as ResourceContext
+    const context1 = createTestContext(request1, { resourceTemplates }) as ResourceContext
     const method1 = new ReadResource()
     const response1 = await method1.handle(context1, fakeApp)
     const content1 = (response1.result?.contents as any[])[0]
@@ -292,7 +294,7 @@ test.group('ReadResource Method - Templates', () => {
     // Test second pattern
     const uri2 = 'file:///users/123/posts/456'
     const request2 = createResourcesReadRequest(uri2)
-    const context2 = createTestContext(request2, { resources }) as ResourceContext
+    const context2 = createTestContext(request2, { resourceTemplates }) as ResourceContext
     const method2 = new ReadResource()
     const response2 = await method2.handle(context2, fakeApp)
     const content2 = (response2.result?.contents as any[])[0]
@@ -304,8 +306,8 @@ test.group('ReadResource Method - Templates', () => {
     const template1Path = new URL(template1Module, import.meta.url).href
     const request = createResourcesReadRequest(uri)
     const context = createTestContext(request, {
-      resources: {
-        'file:///users/{id}': template1Path,
+      resourceTemplates: {
+        'file:///users/{id}': { path: template1Path, json: {} },
       },
     }) as ResourceContext
     const method = new ReadResource()
@@ -322,8 +324,8 @@ test.group('ReadResource Method - Templates', () => {
     const template1Path = new URL(template1Module, import.meta.url).href
     const request = createResourcesReadRequest(uri)
     const context = createTestContext(request, {
-      resources: {
-        'file:///users/{id}': template1Path,
+      resourceTemplates: {
+        'file:///users/{id}': { path: template1Path, json: {} },
       },
     }) as ResourceContext
     const method = new ReadResource()
@@ -340,8 +342,8 @@ test.group('ReadResource Method - Templates', () => {
     const template2Path = new URL(template2Module, import.meta.url).href
     const request = createResourcesReadRequest(uri)
     const context = createTestContext(request, {
-      resources: {
-        'file:///api{?page,limit}': template2Path,
+      resourceTemplates: {
+        'file:///api{?page,limit}': { path: template2Path, json: {} },
       },
     }) as ResourceContext
     const method = new ReadResource()
