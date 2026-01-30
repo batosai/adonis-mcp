@@ -59,7 +59,7 @@ export async function findResource({
     )
   }
 
-  const { default: Resource } = await import(resourceList[key])
+  const { default: Resource } = await import(resourceList[key].path)
 
   const resource = await app.container.make(Resource)
   resource.uri = uri

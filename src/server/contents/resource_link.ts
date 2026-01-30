@@ -34,7 +34,7 @@ export default class ResourceLink implements Content {
     this.#resource = await findResource({
       app: this.app,
       uri: this.#uri,
-      resourceList: ctx.resources,
+      resourceList: { ...ctx.resources, ...ctx.resourceTemplates },
       ctx,
     })
 

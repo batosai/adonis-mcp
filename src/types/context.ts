@@ -59,7 +59,7 @@ export type CompleteContext<T = {}> = Omit<McpContext, 'response' | 'requestMeth
 
 export type ServerContextOptions = Omit<
   McpContext,
-  'requestMethod' | 'response' | 'request' | 'getPerPage' | 'getResources' | 'getResourceTemplates'
+  'requestMethod' | 'response' | 'request' | 'getPerPage'
 > & {
   jsonRpcRequest: JsonRpcRequest
 }

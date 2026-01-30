@@ -33,9 +33,9 @@ export default class GetPrompt implements Method {
       )
     }
 
-    const pathToPrompt = ctx.prompts[params.name]
+    const entry = ctx.prompts[params.name]
 
-    if (!pathToPrompt) {
+    if (!entry) {
       throw new JsonRpcException(
         `The prompt ${params.name} was not found.`,
         ErrorCode.InvalidParams,
@@ -43,7 +43,7 @@ export default class GetPrompt implements Method {
       )
     }
 
-    const { default: Prompt } = await import(pathToPrompt)
+    const { default: Prompt } = await import(entry.path)
 
     ;(ctx as any).args = params.arguments ?? {}
 

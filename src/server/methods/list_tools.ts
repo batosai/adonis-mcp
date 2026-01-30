@@ -8,9 +8,8 @@
 import type { ListToolsResult } from '../../types/jsonrpc.js'
 import type { McpContext } from '../../types/context.js'
 import type { Method } from '../../types/method.js'
+import type { McpRegistryEntry } from '../../types/method.js'
 
-import { ErrorCode } from '../../enums/error.js'
-import JsonRpcException from '../exceptions/jsonrpc_exception.js'
 import { CursorPaginator } from '../pagination/cursor_paginator.js'
 import Response from '../../response.js'
 
@@ -25,22 +24,7 @@ export default class ListTools implements Method {
     )
     const paginatedTools = paginator.paginate('tools')
 
-    const tools = await Promise.all(
-      (paginatedTools['tools'] as string[]).map(async (filepath: string) => {
-        try {
-          const { default: Tool } = await import(filepath)
-          const tool = new Tool()
-          return tool.toJson()
-        } catch (error) {
-          throw new JsonRpcException(
-            `Error listing tool`,
-            ErrorCode.InternalError,
-            ctx.request.id,
-            { error }
-          )
-        }
-      })
-    )
+    const tools = (paginatedTools['tools'] as McpRegistryEntry[]).map((entry) => entry.json)
 
     if (paginatedTools.nextCursor) {
       nextCursor = paginatedTools.nextCursor

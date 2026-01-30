@@ -11,6 +11,7 @@ import type { McpConfig } from '../src/types/config.js'
 
 import { fsReadAll } from '@adonisjs/core/helpers'
 import string from '@adonisjs/core/helpers/string'
+import { UriTemplate } from '../src/utils/uri_template.js'
 import McpServer from '../src/server.js'
 
 export default class McpProvider {
@@ -68,21 +69,28 @@ export default class McpProvider {
         const path = this.app.makePath(mcpPath, file)
         const { default: Method } = await import(path)
         const instance = new Method()
+        const entry = { path, json: instance.toJson() }
 
         switch (type) {
           case 'tool':
             server.addTool({
-              [instance.name]: path,
+              [instance.name]: entry,
             })
             break
           case 'resource':
-            server.addResource({
-              [instance.uri]: path,
-            })
+            if (UriTemplate.isTemplate(instance.uri)) {
+              server.addResourceTemplate({
+                [instance.uri]: entry,
+              })
+            } else {
+              server.addResource({
+                [instance.uri]: entry,
+              })
+            }
             break
           case 'prompt':
             server.addPrompt({
-              [instance.name]: path,
+              [instance.name]: entry,
             })
             break
         }

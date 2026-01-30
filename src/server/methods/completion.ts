@@ -31,21 +31,21 @@ export default class Completion implements Method {
     const context = params.context
     const ref = params.ref
 
-    let path = null
+    let entry = null
     let key = null
     if (ref && ref.type === 'ref/prompt') {
       key = ref.name
-      path = ctx.prompts[key]
+      entry = ctx.prompts[key]
     } else if (ref && ref.type === 'ref/resource') {
       key = ref.uri
-      path = ctx.resources[key]
+      entry = ctx.resources[key] ?? ctx.resourceTemplates[key]
     }
 
-    if (!path) {
+    if (!entry) {
       throw new JsonRpcException(`${key} was not found.`, ErrorCode.InvalidParams, ctx.request.id)
     }
 
-    const { default: Model } = await import(path)
+    const { default: Model } = await import(entry.path)
     const entity = await app.container.make(Model)
 
     let args = {}

@@ -10,6 +10,8 @@ import type { McpRequest, McpRequestType } from '../../types/request.js'
 import type { McpResponse } from '../../types/response.js'
 
 export interface Context {
+  args?: Record<string, unknown>
+
   requestMethod: McpRequestType
 
   supportedProtocolVersions: string[]
@@ -21,12 +23,10 @@ export interface Context {
   defaultPaginationLength: number
   tools: ToolList
   resources: ResourceList
-  resourceTemplates?: string[]
+  resourceTemplates: ResourceList
   prompts: PromptList
   request: McpRequest<this['requestMethod']>
   response: McpResponse<this['requestMethod']>
 
   getPerPage(requestedPerPage?: number): number
-  getResources(): Promise<ResourceList>
-  getResourceTemplates(): Promise<ResourceList>
 }

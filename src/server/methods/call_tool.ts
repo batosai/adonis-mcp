@@ -32,9 +32,9 @@ export default class CallTool implements Method {
       )
     }
 
-    const pathToTool = ctx.tools[params.name]
+    const entry = ctx.tools[params.name]
 
-    if (!pathToTool) {
+    if (!entry) {
       throw new JsonRpcException(
         `The tool ${params.name} was not found.`,
         ErrorCode.InvalidParams,
@@ -44,7 +44,7 @@ export default class CallTool implements Method {
 
     let Tool
     try {
-      const module = await import(pathToTool)
+      const module = await import(entry.path)
       Tool = module.default
     } catch (error: any) {
       throw new JsonRpcException(

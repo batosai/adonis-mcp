@@ -13,7 +13,6 @@ import type { McpRequest, McpRequestType } from '../types/request.js'
 
 import Request from '../request.js'
 import Response from '../response.js'
-import { UriTemplate } from '../utils/uri_template.js'
 
 export default class ServerContext implements Context {
   readonly requestMethod: McpRequestType
@@ -27,6 +26,7 @@ export default class ServerContext implements Context {
   defaultPaginationLength: number
   tools: ToolList
   resources: ResourceList
+  resourceTemplates: ResourceList
   prompts: PromptList
   request: McpRequest<this['requestMethod']>
   response: McpResponse<this['requestMethod']>
@@ -43,6 +43,7 @@ export default class ServerContext implements Context {
     this.defaultPaginationLength = options.defaultPaginationLength
     this.tools = options.tools
     this.resources = options.resources
+    this.resourceTemplates = options.resourceTemplates
     this.prompts = options.prompts
 
     this.request = new Request(options.jsonRpcRequest) as McpRequest<this['requestMethod']>
@@ -53,37 +54,5 @@ export default class ServerContext implements Context {
 
   getPerPage(requestedPerPage?: number): number {
     return Math.min(requestedPerPage ?? this.defaultPaginationLength, this.maxPaginationLength)
-  }
-
-  async getResources(): Promise<ResourceList> {
-    return this.#filterResources({ includeTemplates: false })
-  }
-
-  async getResourceTemplates(): Promise<ResourceList> {
-    return this.#filterResources({ includeTemplates: true })
-  }
-
-  async #filterResources({
-    includeTemplates,
-  }: {
-    includeTemplates: boolean
-  }): Promise<ResourceList> {
-    const resourceEntries = Object.entries(this.resources)
-    const filteredEntries = await Promise.all(
-      resourceEntries.map(async ([key, resource]: [string, string]) => {
-        const { default: Resource } = await import(resource)
-        const resourceInstance = new Resource()
-        const isTemplate = this.#isResourceTemplate(resourceInstance)
-        return (includeTemplates ? isTemplate : !isTemplate) ? [key, resource] : null
-      })
-    )
-
-    return Object.fromEntries(
-      filteredEntries.filter((entry): entry is [string, string] => entry !== null)
-    ) as ResourceList
-  }
-
-  #isResourceTemplate(resource: any): boolean {
-    return UriTemplate.isTemplate(resource.uri)
   }
 }

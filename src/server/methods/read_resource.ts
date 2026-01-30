@@ -32,7 +32,7 @@ export default class ReadResource implements Method {
     const resource = await findResource({
       app,
       uri: params.uri,
-      resourceList: ctx.resources,
+      resourceList: { ...ctx.resources, ...ctx.resourceTemplates },
       ctx,
     })
 

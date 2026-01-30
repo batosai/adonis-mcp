@@ -44,6 +44,7 @@ export default class Server {
 
   tools: ToolList = {}
   resources: ResourceList = {}
+  resourceTemplates: ResourceList = {}
   prompts: PromptList = {}
 
   maxPaginationLength: number = 50
@@ -110,6 +111,9 @@ export default class Server {
   addResource(item: ResourceList) {
     this.resources = { ...this.resources, ...item }
   }
+  addResourceTemplate(item: ResourceList) {
+    this.resourceTemplates = { ...this.resourceTemplates, ...item }
+  }
   addPrompt(item: PromptList) {
     this.prompts = { ...this.prompts, ...item }
   }
@@ -174,6 +178,7 @@ export default class Server {
       defaultPaginationLength: this.defaultPaginationLength,
       tools: this.tools,
       resources: this.resources,
+      resourceTemplates: this.resourceTemplates,
       prompts: this.prompts,
       jsonRpcRequest,
     })
