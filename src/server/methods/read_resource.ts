@@ -41,9 +41,9 @@ export default class ReadResource implements Method {
     const data: Content[] = [content]
 
     const result: ReadResourceResult = { contents: [] }
-    data.forEach(async (content) => {
+    for (const content of data) {
       result.contents.push(await content.toResource(resource))
-    })
+    }
 
     return Response.toJsonRpc({ id: ctx.request.id, result })
   }
