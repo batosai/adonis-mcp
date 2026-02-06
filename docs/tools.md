@@ -119,7 +119,7 @@ const vineSchema = vine.object({
 
 schema() {
   return vine.create(
-    zodSchema
+    vineSchema
   ).toJSONSchema() as Schema
 }
 ```
