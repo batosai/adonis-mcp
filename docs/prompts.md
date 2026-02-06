@@ -81,6 +81,29 @@ schema() {
 }
 ```
 
+### Using VineJS
+
+You can also use VineJS(>= [v4](https://vinejs.dev/docs/json-schema-generation)) to define your schema:
+
+```typescript
+import vine from '@vinejs/vine'
+
+const vineSchema = vine.object({
+  code: vine.string().meta({
+    description: 'The code to review',
+  }),
+  language: vine.string().meta({
+    description: 'Programming language',
+  })
+})
+
+schema() {
+  return vine.create(
+    zodSchema
+  ).toJSONSchema() as Schema
+}
+```
+
 ### Using Zod
 
 You can also use Zod to define your schema:
@@ -89,8 +112,12 @@ You can also use Zod to define your schema:
 import * as z from 'zod'
 
 const zodSchema = z.object({
-  code: z.string(),
-  language: z.string().optional()
+  code: z.string().meta({
+    description: 'The code to review',
+  }),
+  language: z.string().meta({
+    description: 'Programming language',
+  })
 })
 
 schema() {

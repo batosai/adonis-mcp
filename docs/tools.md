@@ -87,17 +87,40 @@ schema() {
   return {
     type: "object",
     properties: {
-      title: {
-        type: "string",
-        description: "Bookmark title"
+      page: {
+        type: "number",
+        description: "page number for pagination"
       },
       url: {
-        type: "string",
-        description: "Bookmark URL"
+        type: "number",
+        description: "per page limit for pagination"
       }
     },
-    required: ["title", "url"]
+    required: ["page"]
   } as Schema
+}
+```
+
+### Using VineJS
+
+You can also use VineJS(>= [v4](https://vinejs.dev/docs/json-schema-generation)) to define your schema:
+
+```typescript
+import vine from '@vinejs/vine'
+
+const vineSchema = vine.object({
+  page: vine.number().meta({
+    description: 'page number for pagination',
+  }),
+  perPage: vine.number().optional().meta({
+    description: 'per page limit for pagination',
+  })
+})
+
+schema() {
+  return vine.create(
+    zodSchema
+  ).toJSONSchema() as Schema
 }
 ```
 
@@ -109,8 +132,12 @@ You can also use Zod to define your schema:
 import * as z from 'zod'
 
 const zodSchema = z.object({
-  page: z.number().optional(),
-  perPage: z.number().optional()
+  page: z.number().optional().meta({
+    description: 'page number for pagination',
+  }),
+  perPage: z.number().optional().meta({
+    description: 'per page limit for pagination',
+  })
 })
 
 schema() {
