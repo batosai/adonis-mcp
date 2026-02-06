@@ -151,6 +151,27 @@ schema() {
 }
 ```
 
+You can also use VineJS(>= [v4](https://vinejs.dev/docs/json-schema-generation)) to define your schema:
+
+```typescript
+import vine from '@vinejs/vine'
+
+const vineSchema = vine.object({
+  page: vine.number().meta({
+    description: 'page number for pagination',
+  }),
+  perPage: vine.number().optional().meta({
+    description: 'per page limit for pagination',
+  })
+})
+
+schema() {
+  return vine.create(
+    vineSchema
+  ).toJSONSchema() as Schema
+}
+```
+
 ### Handler Implementation
 
 The `handle` method contains your tool's logic. It receives a typed context with validated arguments:
