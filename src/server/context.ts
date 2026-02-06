@@ -46,7 +46,9 @@ export default class ServerContext implements Context {
     this.resourceTemplates = options.resourceTemplates
     this.prompts = options.prompts
 
-    this.request = new Request(options.jsonRpcRequest) as McpRequest<this['requestMethod']>
+    this.request = new Request(this, options.jsonRpcRequest) as unknown as McpRequest<
+      this['requestMethod']
+    >
     this.response = new Response<this['requestMethod']>(
       options.jsonRpcRequest
     ) as unknown as McpResponse<this['requestMethod']>

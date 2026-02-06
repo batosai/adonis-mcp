@@ -42,7 +42,13 @@ export default class ReadResource implements Method {
 
     const result: ReadResourceResult = { contents: [] }
     for (const content of data) {
-      result.contents.push(await content.toResource(resource))
+      try {
+        result.contents.push(await content.toResource(resource))
+      } catch (error) {
+        throw new JsonRpcException(error.message, ErrorCode.InvalidParams, ctx.request.id, {
+          uri: resource.uri,
+        })
+      }
     }
 
     return Response.toJsonRpc({ id: ctx.request.id, result })

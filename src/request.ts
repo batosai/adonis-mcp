@@ -5,8 +5,13 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 import type { JsonRpcRequest } from './types/jsonrpc.js'
+import type { Request } from './server/contracts/request.js'
+import type { Context } from './server/contracts/context.js'
 
-export default class Request implements JsonRpcRequest {
+import Macroable from '@poppinss/macroable'
+
+export default class McpRequest extends Macroable implements Request {
+  ctx: Context
   jsonrpc: '2.0'
   id: string | number
   method: string
@@ -15,7 +20,9 @@ export default class Request implements JsonRpcRequest {
     [key: string]: unknown
   }
 
-  constructor(request: JsonRpcRequest) {
+  constructor(ctx: Context, request: JsonRpcRequest) {
+    super()
+    this.ctx = ctx
     this.jsonrpc = request.jsonrpc
     this.id = request.id
     this.method = request.method

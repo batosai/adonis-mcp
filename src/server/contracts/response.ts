@@ -34,6 +34,6 @@ export interface Response<T extends McpRequestType = McpRequestType> {
   structured(object: Record<string, unknown>): Structured
   resourceLink(uri: string): ResourceLinkContent
   embeddedResource(uri: string): EmbeddedResourceContent
-  error(message: string): Error
+  error(message?: string): Error
   complete(completion: Completion): Completion
 }

@@ -46,7 +46,9 @@
     "./transports/*": "./build/src/server/transports/*.js",
     "./enums/*": "./build/src/enums/*.js",
     "./mcp_provider": "./build/providers/mcp_provider.js",
-    "./server": "./build/src/server.js"
+    "./vinejs_provider": "./build/providers/vinejs_provider.js",
+    "./server": "./build/src/server.js",
+    "./exceptions": "./build/src/server/exceptions/jsonrpc_exception.js"
   },
   "devDependencies": {
     "@adonisjs/assembler": "^7.8.2",
@@ -56,8 +58,10 @@
     "@japa/assert": "^4.1.1",
     "@japa/expect-type": "^2.0.3",
     "@japa/runner": "^4.4.0",
+    "@poppinss/macroable": "^1.1.0",
     "@swc/core": "^1.15.2",
     "@types/node": "^24.0.11",
+    "@vinejs/vine": "^4.2.0",
     "copyfiles": "^2.4.1",
     "del-cli": "^7.0.0",
     "prettier": "^3.6.2",

@@ -57,7 +57,16 @@ export default class CallTool implements Method {
     ;(ctx as any).args = params.arguments ?? {}
 
     const tool = await app.container.make(Tool)
-    const contents = await app.container.call(tool, 'handle', [ctx])
+
+    let contents: Content[] | Content
+    try {
+      contents = await app.container.call(tool, 'handle', [ctx])
+    } catch (error) {
+      if (error instanceof JsonRpcException) {
+        throw error
+      }
+      contents = error
+    }
 
     let data: Content[]
     if (!Array.isArray(contents)) {

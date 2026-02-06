@@ -5,13 +5,13 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
+import type { JsonRpcRequest } from './jsonrpc.js'
 import type {
-  JsonRpcRequest,
-  CallToolRequest,
-  ReadResourceRequest,
-  GetPromptRequest,
-  CompleteRequest,
-} from './jsonrpc.js'
+  McpResourceRequest,
+  McpToolRequest,
+  McpPromptRequest,
+  McpCompleteRequest,
+} from './request.js'
 import type {
   McpResourceResponse,
   McpToolResponse,
@@ -28,14 +28,14 @@ export type ToolContext<T extends JSONSchema = JSONSchema> = Omit<
   'response' | 'requestMethod'
 > & {
   requestMethod: 'tools/call'
-  request: CallToolRequest
+  request: McpToolRequest
   response: McpToolResponse
   args?: InferJSONSchema<T>
 }
 
 export type ResourceContext<T = {}> = Omit<McpContext, 'response' | 'requestMethod'> & {
   requestMethod: 'resources/read'
-  request: ReadResourceRequest
+  request: McpResourceRequest
   response: McpResourceResponse
   args?: T
 }
@@ -45,14 +45,14 @@ export type PromptContext<T extends JSONSchema = JSONSchema> = Omit<
   'response' | 'requestMethod'
 > & {
   requestMethod: 'prompts/get'
-  request: GetPromptRequest
+  request: McpPromptRequest
   response: McpPromptResponse
   args?: InferJSONSchema<T>
 }
 
 export type CompleteContext<T = {}> = Omit<McpContext, 'response' | 'requestMethod'> & {
   requestMethod: 'completion/complete'
-  request: CompleteRequest
+  request: McpCompleteRequest
   response: McpCompleteResponse
   args?: T
 }

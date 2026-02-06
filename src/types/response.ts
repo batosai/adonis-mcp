@@ -40,10 +40,10 @@ export type McpToolResponse = Pick<
   Response<'tools/call'>,
   'text' | 'image' | 'audio' | 'structured' | 'resourceLink' | 'embeddedResource' | 'error'
 >
-export type McpResourceResponse = Pick<Response<'resources/read'>, 'text' | 'blob'>
+export type McpResourceResponse = Pick<Response<'resources/read'>, 'text' | 'blob' | 'error'>
 export type McpPromptResponse = Pick<
   Response<'prompts/get'>,
-  'text' | 'image' | 'audio' | 'embeddedResource' | 'error'
+  'text' | 'image' | 'audio' | 'embeddedResource'
 >
 export type McpCompleteResponse = Pick<Response<'completion/complete'>, 'complete'>
 

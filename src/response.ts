@@ -64,7 +64,7 @@ export default class<T extends McpRequestType = McpRequestType> implements Respo
     return new EmbeddedResource(uri)
   }
 
-  error(message: string) {
+  error(message?: string) {
     return new Error(message)
   }
 

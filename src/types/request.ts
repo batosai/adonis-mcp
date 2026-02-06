@@ -20,20 +20,6 @@ import type {
   UnsubscribeRequest,
 } from './jsonrpc.js'
 
-export type McpRequestType =
-  | 'tools/call'
-  | 'resources/read'
-  | 'prompts/get'
-  | 'initialize'
-  | 'ping'
-  | 'tools/list'
-  | 'resources/list'
-  | 'resources/templates/list'
-  | 'prompts/list'
-  | 'completion/complete'
-  | 'resources/subscribe'
-  | 'resources/unsubscribe'
-
 type RequestMap = {
   'tools/call': CallToolRequest
   'resources/read': ReadResourceRequest
@@ -49,4 +35,13 @@ type RequestMap = {
   'resources/unsubscribe': UnsubscribeRequest
 }
 
-export type McpRequest<T extends McpRequestType> = T extends keyof RequestMap ? RequestMap[T] : never
+export type McpRequestType = keyof RequestMap
+
+export type McpRequest<T extends McpRequestType> = T extends keyof RequestMap
+  ? RequestMap[T]
+  : never
+
+export interface McpResourceRequest extends McpRequest<'resources/read'> {}
+export interface McpToolRequest extends McpRequest<'tools/call'> {}
+export interface McpPromptRequest extends McpRequest<'prompts/get'> {}
+export interface McpCompleteRequest extends McpRequest<'completion/complete'> {}
