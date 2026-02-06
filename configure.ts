@@ -24,11 +24,16 @@ export async function configure(command: Configure) {
     { path: '#middleware/mcp_middleware', position: 'after' },
   ])
 
+  const useVine = await command.prompt.toggle('Is Vinejs used for validation?', ['Yes', 'No'])
+
   /**
    * Register provider
    */
   await codemods.updateRcFile((rcFile) => {
-    rcFile.addProvider('@jrmc/adonis-mcp/mcp_provider')
     rcFile.addCommand('@jrmc/adonis-mcp/commands')
+    rcFile.addProvider('@jrmc/adonis-mcp/mcp_provider')
+    if (useVine) {
+      rcFile.addProvider('@jrmc/adonis-mcp/vinejs_provider')
+    }
   })
 }
