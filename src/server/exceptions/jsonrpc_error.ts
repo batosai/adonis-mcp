@@ -8,7 +8,6 @@ export default class JsonRpcError {
   }
 
   toJsonRpcResponse(): Error[] {
-    console.log(this.#messages)
     return this.#messages.map((m) => new Error(m.message))
   }
 }

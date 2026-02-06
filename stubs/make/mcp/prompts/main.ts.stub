@@ -22,9 +22,9 @@ export default class {{ className }} extends Prompt<Schema> {
   description = 'Prompt description'
 
   async handle({ args, response }: PromptContext<Schema>) {
-    console.log(args?.text)
     return [
-      response.text('Hello, world!')
+      response.text('Hello, world!'),
+      response.text(args?.text)
     ]
   }
 

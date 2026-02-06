@@ -92,7 +92,6 @@ export default class MyToolTool extends Tool<Schema> {
   description = 'Tool description'
 
   async handle({ args, response }: ToolContext<Schema>) {
-    console.log(args.text)
     return response.text('Hello, world!')
   }
 
