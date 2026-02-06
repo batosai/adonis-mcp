@@ -180,7 +180,7 @@ schema() {
 
 ## Prompt Handler
 
-The `handle` method for prompts returns an array of content objects. This allows you to return multiple pieces of content, including embedded resources.
+The `handle` method for prompts returns an array of content objects. This allows you to return multiple pieces of content, including embedded resources. The context includes **args**, **request** (see [Validation](/validation) for VineJS validation with `validateUsing()`), **response**, **auth**, and **bouncer**. To signal an error, return `response.error('message')` or throw `JsonRpcException` from `@jrmc/adonis-mcp/exceptions` (see [Tools - Error Response](/tools#error-response)).
 
 ### Basic Handler
 

@@ -190,9 +190,12 @@ async handle({ args, response, auth, bouncer }: ToolContext<Schema>) {
 The `ToolContext` provides:
 
 - **args**: The validated input arguments (typed based on your schema)
+- **request**: The MCP request instance (see [Validation](/validation) for VineJS validation with `validateUsing()`)
 - **response**: Response builder with various formatting methods
 - **auth**: AdonisJS auth instance (if authentication middleware is applied)
 - **bouncer**: AdonisJS bouncer instance (if available)
+
+For validating arguments with VineJS, see [Validation](/validation).
 
 ### Using Authentication
 
@@ -271,11 +274,36 @@ return response.resourceLink('file:///path/to/resource.txt')
 
 ### Error Response
 
-Return an error message:
+You can signal an error in two ways.
+
+**Using the response helper** (simple message):
 
 ```typescript
 return response.error('Something went wrong')
 ```
+
+**Throwing a JSON-RPC exception** (custom error code and optional data). Use this when you need a specific [JSON-RPC error code](https://www.jsonrpc.org/specification#error_object) or extra `data` for the client:
+
+```typescript
+import JsonRpcException from '@jrmc/adonis-mcp/exceptions'
+import { ErrorCode } from '@jrmc/adonis-mcp/enums/error'
+
+async handle({ request, response }: ToolContext) {
+  if (someCondition) {
+    throw new JsonRpcException('Invalid request', ErrorCode.InvalidRequest, request.id)
+  }
+
+  // Optional: pass additional data to the client
+  throw new JsonRpcException('Not found', ErrorCode.InvalidParams, request.id, {
+    resource: 'user',
+    id: userId,
+  })
+}
+```
+
+Available `ErrorCode` values: `InvalidRequest` (-32600), `MethodNotFound` (-32601), `InvalidParams` (-32602), `InternalError` (-32603), `ConnectionClosed` (-32000), `RequestTimeout` (-32001).
+
+The same exception can be thrown from **Resources** and **Prompts** handlers (use `request.id` from the context).
 
 ### Multiple Contents
 

@@ -43,6 +43,10 @@ export default defineConfig({
         link: '/prompts'
       },
       {
+        text: 'Validation',
+        link: '/validation'
+      },
+      {
         text: 'Dependency Injection',
         link: '/dependency-injection'
       },

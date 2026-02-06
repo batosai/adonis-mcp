@@ -6,6 +6,8 @@ To get started, install Adonis MCP into your project using the ace command:
 node ace add @jrmc/adonis-mcp
 ```
 
+The installer will ask **"Is Vinejs used for validation?"** (Yes / No). If you choose Yes, the VineJS provider is registered and you can use `request.validateUsing()` in your MCP handlers. See [Validation](/validation) for details.
+
 This will create a configuration file `config/mcp.ts` and set up the necessary directories for your MCP implementation.
 
 ## Configuration

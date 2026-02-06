@@ -160,6 +160,7 @@ export default class JsonDataResource extends Resource {
 The `handle` method processes resource requests and returns the content. It receives a `ResourceContext` with:
 
 - **args**: Extracted variables from URI templates (if applicable)
+- **request**: The MCP request instance (see [Validation](/validation) for VineJS validation with `validateUsing()`)
 - **response**: Response builder with formatting methods
 - **auth**: AdonisJS auth instance (if authentication middleware is applied)
 - **bouncer**: AdonisJS bouncer instance (if available)
@@ -222,7 +223,7 @@ async handle({ bouncer, response }: ResourceContext) {
 
 ## Resource Responses
 
-Resources can return two types of content:
+Resources can return the following content types:
 
 ### Text Content
 
@@ -245,6 +246,31 @@ async handle({ response }: ResourceContext) {
   return response.blob(content)
 }
 ```
+
+### Error Response
+
+Return an error to signal that the resource could not be read (e.g. not found, access denied). The client receives a JSON-RPC error response.
+
+**Using the response helper:**
+
+```typescript
+async handle({ args, response }: ResourceContext<Args>) {
+  const file = await File.findBy('name', args?.name)
+
+  if (!file) {
+    return response.error('File not found')
+  }
+
+  if (!file.isAccessible) {
+    return response.error('Access denied')
+  }
+
+  this.size = file.size
+  return response.text(file.content)
+}
+```
+
+**Throwing a JSON-RPC exception** (for a specific error code or extra `data`): use `JsonRpcException` from `@jrmc/adonis-mcp/exceptions` and `ErrorCode` from `@jrmc/adonis-mcp/enums/error`, e.g. `throw new JsonRpcException('error', ErrorCode.InvalidParams, request.id)`. See [Tools - Error Response](/tools#error-response) for the full signature and available codes.
 
 ### Response Metadata
 
