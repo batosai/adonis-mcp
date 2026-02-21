@@ -63,6 +63,10 @@ export default defineConfig({
         link: '/unit-tests'
       },
       {
+        text: 'Demos',
+        link: '/demos',
+      },
+      {
         text: 'ChangeLog',
         link: '/changelog',
       },
