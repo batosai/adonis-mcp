@@ -64,17 +64,18 @@ export default class McpMiddleware {
 }
 ```
 
-### Registering the MCP Middleware
+### Registering manually the MCP Middleware
 
 The middleware must be registered in your `start/kernel.ts` file to be active on all MCP routes:
 
 ```typescript
 import router from '@adonisjs/core/services/router'
 
-router.use([
-  () => import('@adonisjs/core/bodyparser_middleware'),
-  () => import('#middleware/mcp_middleware'),
-])
+export const middleware = router.named({
+  guest: () => import('#middleware/guest_middleware'),
+  auth: () => import('#middleware/auth_middleware'),
+  mcp: () => import('#middleware/mcp_middleware'), // <== Add this line to register the MCP middleware
+})
 ```
 
 ## Customizing the MCP Middleware

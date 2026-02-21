@@ -20,8 +20,8 @@ export async function configure(command: Configure) {
    * Create and configuredefault middleware file
    */
   await codemods.makeUsingStub(stubsRoot, 'make/middleware/mcp_middleware.ts.stub', {})
-  await codemods.registerMiddleware('router', [
-    { path: '#middleware/mcp_middleware', position: 'after' },
+  await codemods.registerMiddleware('named', [
+    { name: 'mcp', path: '#middleware/mcp_middleware', position: 'after' },
   ])
 
   const useVine = await command.prompt.toggle('Is Vinejs used for validation?', ['Yes', 'No'])
