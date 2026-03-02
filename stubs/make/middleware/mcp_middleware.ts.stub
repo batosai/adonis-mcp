@@ -8,7 +8,7 @@ import crypto from 'node:crypto'
 
 // import { policies } from '#policies/main'
 // import * as abilities from '#abilities/main'
-// import { Bouncer } from '@adonisjs/bouncer'
+// import { McpBouncer } from '@jrmc/adonis-mcp'
 
 export default class McpMiddleware {
   async handle(ctx: HttpContext, next: NextFn) {
@@ -41,7 +41,7 @@ export default class McpMiddleware {
 //     auth?: {
 //       user?: HttpContext['auth']['user']
 //     }
-//     bouncer?: Bouncer<
+//     bouncer?: McpBouncer<
 //       Exclude<HttpContext['auth']['user'], undefined>,
 //       typeof abilities,
 //       typeof policies
