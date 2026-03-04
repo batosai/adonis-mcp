@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.0.0-beta.8
+
+> Released at *2026-03-04*
+
+### Added
+
+- `McpBouncer` wrapper class — wraps AdonisJS Bouncer and converts `E_AUTHORIZATION_FAILURE` into `JsonRpcException` for proper JSON-RPC error responses
+- Full type-safe Bouncer integration with generic support (`McpBouncer<User, Abilities, Policies>`)
+- Wrapped `PolicyAuthorizer` — calls to `.authorize()`, `.allows()`, `.denies()`, `.execute()` on policies are also converted
+- `@adonisjs/bouncer` as optional `peerDependency`
+- Authentication & Authorization documentation page
+- Module augmentation support — users can declare their concrete Bouncer types on `McpContext` via `declare module` in the MCP middleware
+
+### Changed
+
+- `McpContext` interface no longer declares `bouncer` directly — it is extended by the user's app via declaration merging for full type-safety
+- Updated MCP middleware stub to include `McpBouncer` type augmentation example
+- Updated tools documentation with correct `bouncer?.` usage and links to the new auth page
+
 ## 1.0.0-beta.6
 
 > Released at *2026-02-06*
