@@ -219,8 +219,8 @@ The `ToolContext` provides:
 - **args**: The validated input arguments (typed based on your schema)
 - **request**: The MCP request instance (see [Validation](/validation) for VineJS validation with `validateUsing()`)
 - **response**: Response builder with various formatting methods
-- **auth**: AdonisJS auth instance (if authentication middleware is applied)
-- **bouncer**: AdonisJS bouncer instance (if available)
+- **auth**: AdonisJS auth instance (if authentication middleware is applied) — see [Authentication & Authorization](/authentication)
+- **bouncer**: AdonisJS McpBouncer instance (if available) — see [Authentication & Authorization](/authentication)
 
 For validating arguments with VineJS, see [Validation](/validation).
 
@@ -239,7 +239,7 @@ async handle({ args, auth, response }: ToolContext<Schema>) {
 ```typescript
 async handle({ args, bouncer, response }: ToolContext<Schema>) {
   // Check a permission
-  await bouncer.authorize('viewUsers')
+  await bouncer.authorize(viewUsers)
   
   // Or use a policy
   const user = await User.findOrFail(args?.userId)
@@ -248,6 +248,8 @@ async handle({ args, bouncer, response }: ToolContext<Schema>) {
   return response.text(JSON.stringify({ user }))
 }
 ```
+
+For full setup instructions (middleware configuration, type augmentation, and more examples), see [Authentication & Authorization](/authentication).
 
 ## Tool Responses
 

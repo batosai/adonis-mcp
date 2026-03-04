@@ -47,6 +47,10 @@ export default defineConfig({
         link: '/validation'
       },
       {
+        text: 'Authentication & Authorization',
+        link: '/authentication'
+      },
+      {
         text: 'Dependency Injection',
         link: '/dependency-injection'
       },

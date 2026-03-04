@@ -107,9 +107,9 @@ Built-in support for AdonisJS authentication and Bouncer authorization in your M
 - [x] Documentation
 - [x] Inject support
 - [x] VineJs integration
-- [ ] JSON Schema with VineJs
-- [ ] Bounce integration (WIP)
-- [ ] Auth helpers (WIP)
+- [x] JSON Schema with VineJs
+- [x] Bouncer integration
+- [x] Auth helpers
 - [ ] Events
 - [ ] Logger
 - [ ] Alternative transports (SSE)
