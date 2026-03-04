@@ -28,9 +28,9 @@ AdonisJS MCP - Server MCP for your AdonisJS applications.
 - [x] Documentation
 - [x] Inject support
 - [x] VineJs integration
-- [ ] JSON Schema with VineJs
-- [ ] Bounce integration (WIP)
-- [ ] Auth helpers (WIP)
+- [x] JSON Schema with VineJs
+- [x] Bounce integration
+- [x] Auth helpers
 - [ ] Events
 - [ ] Logger
 - [ ] Alternative transports (SSE)
@@ -192,10 +192,10 @@ To use `auth` and `bouncer` in your MCP tools, prompts, and resources, add the f
 ```typescript
 declare module '@jrmc/adonis-mcp/types/context' {
   export interface McpContext {
-    auth?: {
+    auth: {
       user?: HttpContext['auth']['user']
     }
-    bouncer?: Bouncer<
+    bouncer: McpBouncer<
       Exclude<HttpContext['auth']['user'], undefined>,
       typeof abilities,
       typeof policies

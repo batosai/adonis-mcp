@@ -194,7 +194,7 @@ async handle({ args, response }: ResourceContext<Args>) {
 
 ```typescript
 async handle({ auth, response }: ResourceContext) {
-  const user = auth?.user
+  const user = auth.user
   
   if (!user) {
     throw new Error('Authentication required')
@@ -212,7 +212,7 @@ async handle({ auth, response }: ResourceContext) {
 
 ```typescript
 async handle({ bouncer, response }: ResourceContext) {
-  await bouncer?.authorize('viewSecretDocuments')
+  await bouncer.authorize('viewSecretDocuments')
   
   const content = await getSecretContent()
   this.size = content.length

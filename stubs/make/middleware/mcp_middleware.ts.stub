@@ -38,10 +38,10 @@ export default class McpMiddleware {
 
 // declare module '@jrmc/adonis-mcp/types/context' {
 //   export interface McpContext {
-//     auth?: {
+//     auth: {
 //       user?: HttpContext['auth']['user']
 //     }
-//     bouncer?: McpBouncer<
+//     bouncer: McpBouncer<
 //       Exclude<HttpContext['auth']['user'], undefined>,
 //       typeof abilities,
 //       typeof policies

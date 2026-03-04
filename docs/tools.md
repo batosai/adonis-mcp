@@ -202,10 +202,10 @@ async handle({ args, response, auth, bouncer }: ToolContext<Schema>) {
   const result = await SomeModel.query().where('id', args?.id)
   
   // Use authentication if available
-  const user = auth?.user
+  const user = auth.user
   
   // Check permissions with Bouncer
-  await bouncer?.authorize('viewData')
+  await bouncer.authorize('viewData')
   
   // Return a response
   return response.text(JSON.stringify({ result }))
@@ -228,7 +228,7 @@ For validating arguments with VineJS, see [Validation](/validation).
 
 ```typescript
 async handle({ args, auth, response }: ToolContext<Schema>) {
-  const user = auth?.user
+  const user = auth.user
   
   return response.text(`Hello, ${user?.name}`)
 }
@@ -239,11 +239,11 @@ async handle({ args, auth, response }: ToolContext<Schema>) {
 ```typescript
 async handle({ args, bouncer, response }: ToolContext<Schema>) {
   // Check a permission
-  await bouncer?.authorize('viewUsers')
+  await bouncer.authorize('viewUsers')
   
   // Or use a policy
   const user = await User.findOrFail(args?.userId)
-  await bouncer?.with(UserPolicy).authorize('view', user)
+  await bouncer.with(UserPolicy).authorize('view', user)
   
   return response.text(JSON.stringify({ user }))
 }
