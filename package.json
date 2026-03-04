@@ -71,7 +71,7 @@
     "vitepress": "^1.6.4"
   },
   "peerDependencies": {
-    "@adonisjs/bouncer": "^3.0.0"
+    "@adonisjs/bouncer": "^3.0.0 || ^4.0.0"
   },
   "peerDependenciesMeta": {
     "@adonisjs/bouncer": {
