@@ -1,0 +1,40 @@
+{{#var className = `${name}Prompt`}}
+{{#var promptName = string(name).snakeCase()}}
+{{#var resourceFileName = string(className).snakeCase().ext('.ts').toString()}}
+{{{
+  exports({
+    to: app.makePath(app.rcFile.directories['mcp'] || 'app/mcp/', `prompts/`, resourceFileName)
+  })
+}}}
+import type { PromptContext } from '@jrmc/adonis-mcp/types/context'
+import type { BaseSchema } from '@jrmc/adonis-mcp/types/method'
+
+import { Prompt } from '@jrmc/adonis-mcp'
+import vine from '@vinejs/vine'
+
+type Schema = BaseSchema<{
+  text: { type: "string" }
+}>
+
+const vineSchema = vine.object({
+  text: vine.string().meta({
+    description: 'Description text argument',
+  }),
+})
+
+export default class {{ className }} extends Prompt<Schema> {
+  name = '{{ promptName }}'
+  title = 'Prompt title'
+  description = 'Prompt description'
+
+  async handle({ args, response }: PromptContext<Schema>) {
+    return [
+      response.text('Hello, world!'),
+      response.text(args?.text!)
+    ]
+  }
+
+  schema() {
+    return vine.create(vineSchema).toJSONSchema() as Schema
+  }
+}

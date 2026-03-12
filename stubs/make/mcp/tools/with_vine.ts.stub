@@ -1,0 +1,37 @@
+{{#var className = `${name}Tool`}}
+{{#var toolName = string(name).snakeCase()}}
+{{#var resourceFileName = string(className).snakeCase().ext('.ts').toString()}}
+{{{
+  exports({
+    to: app.makePath(app.rcFile.directories['mcp'] || 'app/mcp/', `tools/`, resourceFileName)
+  })
+}}}
+import type { ToolContext } from '@jrmc/adonis-mcp/types/context'
+import type { BaseSchema } from '@jrmc/adonis-mcp/types/method'
+
+import { Tool } from '@jrmc/adonis-mcp'
+import vine from '@vinejs/vine'
+
+type Schema = BaseSchema<{
+  name: { type: "string" }
+}>
+
+const vineSchema = vine.object({
+  name: vine.string().meta({
+    description: 'Description text argument',
+  }),
+})
+
+export default class {{ className }} extends Tool<Schema> {
+  name = '{{ toolName }}'
+  title = 'Tool title'
+  description = 'Tool description'
+
+  async handle({ args, response }: ToolContext<Schema>) {
+    return response.text({{ "`Hello, ${args?.name}`" }})
+  }
+
+  schema() {
+    return vine.create(vineSchema).toJSONSchema() as Schema
+  }
+}

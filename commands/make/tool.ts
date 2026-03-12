@@ -24,7 +24,11 @@ export default class MakeTool extends BaseCommand {
 
   async run() {
     const codemods = await this.createCodemods()
-    const stubPath = `make/mcp/tools/main.ts.stub`
+    let stubPath = `make/mcp/tools/main.ts.stub`
+
+    if (this.app.usingVineJS) {
+      stubPath = `make/mcp/tools/with_vine.ts.stub`
+    }
 
     await codemods.makeUsingStub(stubsRoot, stubPath, {
       name: string.pascalCase(this.name),

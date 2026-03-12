@@ -24,7 +24,11 @@ export default class MakePrompt extends BaseCommand {
 
   async run() {
     const codemods = await this.createCodemods()
-    const stubPath = `make/mcp/prompts/main.ts.stub`
+    let stubPath = `make/mcp/prompts/main.ts.stub`
+
+    if (this.app.usingVineJS) {
+      stubPath = `make/mcp/prompts/with_vine.ts.stub`
+    }
 
     await codemods.makeUsingStub(stubsRoot, stubPath, {
       name: string.pascalCase(this.name),
