@@ -13,6 +13,7 @@ import { args, BaseCommand } from '@adonisjs/core/ace'
 export default class Inspector extends BaseCommand {
   static commandName = 'mcp:inspector'
   static description = 'Open the MCP Inspector tool to debug and test MCP Servers.'
+  static aliases = ['mcp:inspect']
 
   static options: CommandOptions = {
     startApp: true,
