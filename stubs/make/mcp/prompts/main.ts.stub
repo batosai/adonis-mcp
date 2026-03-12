@@ -24,7 +24,7 @@ export default class {{ className }} extends Prompt<Schema> {
   async handle({ args, response }: PromptContext<Schema>) {
     return [
       response.text('Hello, world!'),
-      response.text(args?.text)
+      response.text(args?.text!)
     ]
   }
 
