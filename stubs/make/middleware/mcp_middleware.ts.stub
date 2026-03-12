@@ -3,12 +3,11 @@
 }}}
 import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
+// import type * as abilities from '#abilities/main'
+// import type { policies } from '#generated/policies'
+// import type { McpBouncer } from '@jrmc/adonis-mcp'
 
 import crypto from 'node:crypto'
-
-// import { policies } from '#policies/main'
-// import * as abilities from '#abilities/main'
-// import { McpBouncer } from '@jrmc/adonis-mcp'
 
 export default class McpMiddleware {
   async handle(ctx: HttpContext, next: NextFn) {
@@ -39,7 +38,7 @@ export default class McpMiddleware {
 // declare module '@jrmc/adonis-mcp/types/context' {
 //   export interface McpContext {
 //     auth: {
-//       user?: HttpContext['auth']['user']
+//       user: HttpContext['auth']['user']
 //     }
 //     bouncer: McpBouncer<
 //       Exclude<HttpContext['auth']['user'], undefined>,
