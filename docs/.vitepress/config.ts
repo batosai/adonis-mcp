@@ -71,6 +71,10 @@ export default defineConfig({
         link: '/demos',
       },
       {
+        text: 'Starter Kit',
+        link: '/starter'
+      },
+      {
         text: 'ChangeLog',
         link: '/changelog',
       },

@@ -110,13 +110,12 @@ Built-in support for AdonisJS authentication and Bouncer authorization in your M
 - [x] JSON Schema with VineJs
 - [x] Bouncer integration
 - [x] Auth helpers
+- [x] Starter kit
+- [x] Demo applications
 - [ ] Events
 - [ ] Logger
 - [ ] Alternative transports (SSE)
 - [ ] Output tool
-- [ ] Login flow
-- [ ] Starter kit
-- [ ] Demo applications
 
 ## Inspiration
 

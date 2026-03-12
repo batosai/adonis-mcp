@@ -1,5 +1,19 @@
 # Installation
 
+## Starter Kit
+
+If you want to create a **dedicated MCP server** with the minimum required setup, you can use the [AdonisJS MCP Starter Kit](/starter). It provides a lightweight AdonisJS application pre-configured with MCP support — ideal when your application's sole purpose is to expose an MCP server.
+
+```bash
+npm init adonisjs@latest -- -K="batosai/adonisjs-mcp-starter-kit" my-mcp-server
+```
+
+::: tip
+If your goal is to add MCP capabilities to a larger application (with a database, authentication, views, etc.), skip the starter kit and follow the instructions below to install the package into an existing AdonisJS project.
+:::
+
+## Adding to an Existing Project
+
 To get started, install Adonis MCP into your project using the ace command:
 
 ```bash

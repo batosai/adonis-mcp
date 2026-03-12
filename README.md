@@ -31,13 +31,12 @@ AdonisJS MCP - Server MCP for your AdonisJS applications.
 - [x] JSON Schema with VineJs
 - [x] Bounce integration
 - [x] Auth helpers
+- [x] Starter kit
+- [x] Demo applications
 - [ ] Events
 - [ ] Logger
 - [ ] Alternative transports (SSE)
 - [ ] Output tool
-- [ ] Login flow
-- [ ] Starter kit
-- [ ] Demo applications
 
 ## Installation & Configuration
 

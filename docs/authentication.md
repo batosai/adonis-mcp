@@ -25,13 +25,11 @@ Open the MCP middleware generated at `app/middleware/mcp_middleware.ts` and unco
 ```typescript
 import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
+import type * as abilities from '#abilities/main'
+import type { policies } from '#generated/policies'
+import type { McpBouncer } from '@jrmc/adonis-mcp'
 
 import crypto from 'node:crypto'
-
-import { policies } from '#policies/main'
-import * as abilities from '#abilities/main'
-import { Bouncer } from '@adonisjs/bouncer'
-import { McpBouncer } from '@jrmc/adonis-mcp'
 
 export default class McpMiddleware {
   async handle(ctx: HttpContext, next: NextFn) {
@@ -55,16 +53,6 @@ export default class McpMiddleware {
       ctx.response.safeHeader('MCP-Session-Id', sessionId)
     }
 
-    /**
-     * Initialize Bouncer for the MCP request.
-     * The transport will automatically wrap it in an McpBouncer.
-     */
-    ctx.bouncer = new Bouncer(
-      () => ctx.auth?.user || null,
-      abilities,
-      policies
-    ).setContainerResolver(ctx.containerResolver)
-
     return next()
   }
 }
@@ -72,7 +60,7 @@ export default class McpMiddleware {
 declare module '@jrmc/adonis-mcp/types/context' {
   export interface McpContext {
     auth: {
-      user?: HttpContext['auth']['user']
+      user: HttpContext['auth']['user']
     }
     bouncer: McpBouncer<
       Exclude<HttpContext['auth']['user'], undefined>,
@@ -84,26 +72,40 @@ declare module '@jrmc/adonis-mcp/types/context' {
 ```
 
 ::: tip Key points
-- The `Bouncer` instance is created on `ctx.bouncer` exactly like in the standard AdonisJS `initialize_bouncer_middleware`.
 - The `declare module` block at the bottom augments `McpContext` with your app's concrete types — this gives you **full autocompletion** on ability names, policy methods, and their arguments inside your handlers.
 - `McpBouncer` automatically converts Bouncer's `E_AUTHORIZATION_FAILURE` exceptions into JSON-RPC error responses.
 :::
 
-### 3. Apply Auth Middleware to the MCP Route
+### 3. Apply the MCP Middleware to the Route
 
-In `start/routes.ts`, apply your authentication middleware to the MCP route so that `ctx.auth` is available:
+In `start/routes.ts`, you must apply the MCP middleware to the MCP route. This middleware handles session management (`MCP-Session-Id` header) and content-type validation:
 
 ```typescript
 import { middleware } from '#start/kernel'
 import router from '@adonisjs/core/services/router'
 
-router.mcp().use(middleware.auth())
+router.mcp().use(middleware.mcp())
+```
+
+::: tip
+The MCP middleware is automatically registered as a named middleware during installation. If it's missing, see the [Sessions documentation](./sessions.md) for manual registration instructions.
+:::
+
+### 4. Apply Auth Middleware to the MCP Route
+
+To use authentication, also apply your auth middleware to the MCP route so that `ctx.auth` is available:
+
+```typescript
+import { middleware } from '#start/kernel'
+import router from '@adonisjs/core/services/router'
+
+router.mcp().use([middleware.mcp(), middleware.auth()])
 ```
 
 If you want to allow unauthenticated access (guest), you can use a guard that allows optional auth:
 
 ```typescript
-router.mcp().use(middleware.auth({ guards: ['api'] }))
+router.mcp().use([middleware.mcp(), middleware.auth({ guards: ['api'] })])
 ```
 
 ## Using Auth in Handlers
