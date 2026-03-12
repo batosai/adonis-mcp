@@ -6,10 +6,21 @@
  */
 
 import type Configure from '@adonisjs/core/commands/configure'
+import { mkdir } from 'node:fs/promises'
 import { stubsRoot } from './stubs/main.js'
 
 export async function configure(command: Configure) {
   const codemods = await command.createCodemods()
+
+  /**
+   * Create mcp directory if it doesn't exist
+   */
+  const mcpDirectory = command.app.rcFile.directories['mcp'] || 'app/mcp/'
+  await Promise.all([
+    mkdir(command.app.makePath(mcpDirectory, 'tools'), { recursive: true }),
+    mkdir(command.app.makePath(mcpDirectory, 'resources'), { recursive: true }),
+    mkdir(command.app.makePath(mcpDirectory, 'prompts'), { recursive: true }),
+  ])
 
   /**
    * Create default config file
