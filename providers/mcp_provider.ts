@@ -8,6 +8,7 @@
 import type { ApplicationService } from '@adonisjs/core/types'
 import type { RouteGroup } from '@adonisjs/core/http'
 import type { McpConfig } from '../src/types/config.js'
+import type { JsonRpcRequest, JsonRpcResponse } from '../src/types/jsonrpc.js'
 
 import { fsReadAll } from '@adonisjs/core/helpers'
 import string from '@adonisjs/core/helpers/string'
@@ -20,8 +21,10 @@ export default class McpProvider {
   register() {
     this.app.container.singleton('jrmc.mcp', async () => {
       const config = this.app.config.get<McpConfig>('mcp', {})
+      const logger = await this.app.container.make('logger')
+      const emitter = await this.app.container.make('emitter')
 
-      return new McpServer(config)
+      return new McpServer(config, { logger, emitter })
     })
   }
 
@@ -108,5 +111,10 @@ declare module '@adonisjs/core/http' {
 declare module '@adonisjs/core/types' {
   interface ContainerBindings {
     'jrmc.mcp': McpServer
+  }
+
+  interface EventsList {
+    'mcp:request': JsonRpcRequest
+    'mcp:response': JsonRpcResponse
   }
 }

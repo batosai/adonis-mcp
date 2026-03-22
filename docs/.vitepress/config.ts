@@ -59,6 +59,10 @@ export default defineConfig({
         link: '/sessions'
       },
       {
+        text: 'Events',
+        link: '/events'
+      },
+      {
         text: 'Inspector',
         link: '/inspector'
       },

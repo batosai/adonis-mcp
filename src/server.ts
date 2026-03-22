@@ -14,13 +14,21 @@ import type {
   Method as MethodInterface,
 } from './types/method.js'
 import type { Transport } from './server/contracts/transport.js'
+import type { LoggerService, EmitterService } from '@adonisjs/core/types'
 
 import { createError } from '@adonisjs/core/exceptions'
 import { ErrorCode } from './enums/error.js'
 import ServerContext from './server/context.js'
 import JsonRpcException from './server/exceptions/jsonrpc_exception.js'
 
+type Services = {
+  logger: LoggerService
+  emitter: EmitterService
+}
+
 export default class Server {
+  #logger?: LoggerService
+  #emitter?: EmitterService
   #transport?: Transport
 
   config: McpConfig
@@ -63,7 +71,7 @@ export default class Server {
     'ping': () => import('./server/methods/ping.js'),
   }
 
-  constructor(config: McpConfig) {
+  constructor(config: McpConfig, services?: Services) {
     this.config = config
 
     if (config.name) {
@@ -89,6 +97,9 @@ export default class Server {
     if (config.completions) {
       this.addCapability('completions')
     }
+
+    this.#logger = services?.logger
+    this.#emitter = services?.emitter
   }
 
   addCapability(key: string, value: boolean = true) {
@@ -123,6 +134,8 @@ export default class Server {
   }
 
   async handle(jsonRequest: JsonRpcRequest) {
+    this.#emitter?.emit('mcp:request', jsonRequest)
+
     // INGORE NOTIFICATIONS FOR NOW
     if (jsonRequest.method.startsWith('notifications/')) {
       return null
@@ -147,23 +160,33 @@ export default class Server {
         // Ensure the instance is treated as MethodInterface when calling handle to satisfy TS
         const response = await (instance as unknown as MethodInterface).handle(mcpContext)
 
+        this.#emitter?.emit('mcp:response', response)
         this.#transport.send(response)
       } else {
-        throw new JsonRpcException(
+        const jsonRpcException = new JsonRpcException(
           `The method ${jsonRequest.method} was not found.`,
           ErrorCode.MethodNotFound,
           jsonRequest.id
         )
+        throw jsonRpcException
       }
     } catch (error: unknown) {
+      let response
       if (error instanceof JsonRpcException) {
-        return this.#transport.send(error.toJsonRpcResponse())
-      }
-      return this.#transport.send(
-        new JsonRpcException('Internal error', ErrorCode.InternalError, jsonRequest.id, {
-          error,
+        response = error.toJsonRpcResponse()
+        this.#logger?.error(response, error.message)
+      } else {
+        response = new JsonRpcException('Internal error', ErrorCode.InternalError, jsonRequest.id, {
+          error: {
+            name: (error as Error).name,
+            message: (error as Error).message,
+          },
         }).toJsonRpcResponse()
-      )
+        this.#logger?.error(error)
+      }
+
+      this.#emitter?.emit('mcp:response', response)
+      return this.#transport.send(response)
     }
   }
 
