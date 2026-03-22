@@ -33,8 +33,8 @@ AdonisJS MCP - Server MCP for your AdonisJS applications.
 - [x] Auth helpers
 - [x] Starter kit
 - [x] Demo applications
-- [ ] Events
-- [ ] Logger
+- [x] Events
+- [x] Logger
 - [ ] Alternative transports (SSE)
 - [ ] Output tool
 
