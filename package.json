@@ -47,6 +47,7 @@
     "./enums/*": "./build/src/enums/*.js",
     "./mcp_provider": "./build/providers/mcp_provider.js",
     "./vinejs_provider": "./build/providers/vinejs_provider.js",
+    "./bouncer": "./build/src/server/mcp_bouncer.js",
     "./server": "./build/src/server.js",
     "./exceptions": "./build/src/server/exceptions/jsonrpc_exception.js"
   },

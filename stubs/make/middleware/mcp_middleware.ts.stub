@@ -5,7 +5,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
 // import type * as abilities from '#abilities/main'
 // import type { policies } from '#generated/policies'
-// import type { McpBouncer } from '@jrmc/adonis-mcp'
+// import type McpBouncer from '@jrmc/adonis-mcp/bouncer'
 
 import crypto from 'node:crypto'
 
