@@ -10,6 +10,8 @@ import type { RouteGroup } from '@adonisjs/core/http'
 import type { McpConfig } from '../src/types/config.js'
 import type { JsonRpcRequest, JsonRpcResponse } from '../src/types/jsonrpc.js'
 
+import { join } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import { fsReadAll } from '@adonisjs/core/helpers'
 import string from '@adonisjs/core/helpers/string'
 import { UriTemplate } from '../src/utils/uri_template.js'
@@ -69,7 +71,7 @@ export default class McpProvider {
 
     await Promise.all(
       files.map(async (file) => {
-        const path = this.app.makePath(mcpPath, file)
+        const path = pathToFileURL(join(mcpPath, file)).href
         const { default: Method } = await import(path)
         const instance = new Method()
         const entry = { path, json: instance.toJson() }
