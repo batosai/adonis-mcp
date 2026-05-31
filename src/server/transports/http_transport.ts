@@ -6,12 +6,9 @@
  */
 
 import type { HttpContext } from '@adonisjs/core/http'
-import type { Bouncer } from '@adonisjs/bouncer'
 import type { Transport } from '../contracts/transport.js'
 import type { McpContext } from '../../types/context.js'
 import type { JsonRpcResponse } from '../../types/jsonrpc.js'
-
-import McpBouncer from '../mcp_bouncer.js'
 
 export default class HttpTransport implements Transport {
   #ctx: HttpContext
@@ -26,9 +23,10 @@ export default class HttpTransport implements Transport {
     return this.#sessionId
   }
 
-  bindBouncer(mcpContext: McpContext) {
+  async bindBouncer(mcpContext: McpContext) {
     if ('bouncer' in this.#ctx) {
-      const bouncer = this.#ctx.bouncer as Bouncer<Record<any, any>>
+      const { default: McpBouncer } = await import('../mcp_bouncer.js')
+      const bouncer = this.#ctx.bouncer as any
       ;(mcpContext as any).bouncer = new McpBouncer(bouncer, mcpContext.request.id)
     }
   }

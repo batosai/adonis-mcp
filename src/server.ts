@@ -146,7 +146,7 @@ export default class Server {
     if (!this.#transport) {
       throw createError('No transport connected.', 'E_NO_TRANSPORT_CONNECTED', 500)
     } else {
-      this.#transport.bindBouncer?.(mcpContext)
+      await this.#transport.bindBouncer?.(mcpContext)
       this.#transport.bindAuth?.(mcpContext)
     }
 

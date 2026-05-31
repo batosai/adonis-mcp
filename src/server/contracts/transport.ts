@@ -9,7 +9,7 @@ import type { McpContext } from '../../types/context.js'
 import type { JsonRpcResponse } from '../../types/jsonrpc.js'
 
 export interface Transport {
-  bindBouncer?(mcpContext: McpContext): void
+  bindBouncer?(mcpContext: McpContext): Promise<void>
   bindAuth?(mcpContext: McpContext): void
   send(message: JsonRpcResponse): void
 }

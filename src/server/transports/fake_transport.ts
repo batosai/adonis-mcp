@@ -18,7 +18,7 @@ export default class FakeTransport implements Transport {
     this.sentMessages.push(message)
   }
 
-  bindBouncer?(ctx: McpContext): void {
+  async bindBouncer?(ctx: McpContext): Promise<void> {
     this.bindBouncerCallbacks.forEach((callback) => callback(ctx))
   }
 
