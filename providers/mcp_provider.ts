@@ -12,6 +12,7 @@ import type { JsonRpcRequest, JsonRpcResponse } from '../src/types/jsonrpc.js'
 
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
+import { stat } from 'node:fs/promises'
 import { fsReadAll } from '@adonisjs/core/helpers'
 import string from '@adonisjs/core/helpers/string'
 import { UriTemplate } from '../src/utils/uri_template.js'
@@ -46,15 +47,15 @@ export default class McpProvider {
   }
 
   async registerTools() {
-    this.registerMethods('tool')
+    await this.registerMethods('tool')
   }
 
   async registerResources() {
-    this.registerMethods('resource')
+    await this.registerMethods('resource')
   }
 
   async registerPrompts() {
-    this.registerMethods('prompt')
+    await this.registerMethods('prompt')
   }
 
   async registerMethods(type: 'tool' | 'resource' | 'prompt') {
@@ -63,6 +64,12 @@ export default class McpProvider {
       this.app.rcFile.directories['mcp'] || 'app/mcp/',
       `${string.plural(type)}/`
     )
+    try {
+      await stat(mcpPath)
+    } catch {
+      return
+    }
+
     const files = await fsReadAll(mcpPath, {
       filter: (filePath) =>
         !filePath.endsWith('.map') &&
