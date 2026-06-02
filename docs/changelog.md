@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.0.3
+
+> Released at *2026-05-31*
+
+### Fix
+
+- Make `@adonisjs/bouncer` truly optional by lazy-loading the MCP bouncer integration and awaiting transport binding before handling requests
+
+## 1.0.2
+
+> Released at *2026-05-31*
+
+### Fix
+
+- Prevent app startup and production builds from failing when an MCP `tools`, `resources`, or `prompts` directory is missing [#3](https://github.com/batosai/adonis-mcp/issues/3)
+
 ## 1.0.1
 
 > Released at *2026-04-14*
