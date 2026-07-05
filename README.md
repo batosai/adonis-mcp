@@ -22,6 +22,14 @@ Coming soon: SSE transport, Output tool.
 
 [View documentation](https://adonis-mcp.jrmc.dev/)
 
+## Agent Skills
+
+If you use an AI coding agent (Claude Code, Cursor, Codex, etc.), install the [adonis-mcp skill](skills/README.md) to teach it the package conventions:
+
+```bash
+npx skills add batosai/adonis-mcp
+```
+
 ## Installation & Configuration
 
 ```bash

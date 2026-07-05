@@ -71,6 +71,10 @@ export default defineConfig({
         link: '/unit-tests'
       },
       {
+        text: 'Agent Skills',
+        link: '/skills'
+      },
+      {
         text: 'Demos',
         link: '/demos',
       },

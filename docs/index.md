@@ -27,5 +27,7 @@ features:
     details: Annotate your tools and resources with metadata to help AI clients understand their behavior and characteristics
   - title: Inspector & Testing
     details: Debug and test your MCP implementation with the built-in inspector and testing utilities
+  - title: Agent Skills
+    details: Install the adonis-mcp skill to teach AI coding agents like Claude Code or Cursor the package conventions
 ---
 
