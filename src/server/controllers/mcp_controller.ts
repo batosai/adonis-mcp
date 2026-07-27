@@ -13,7 +13,9 @@ export default class McpController {
     const body = ctx.request.body()
 
     const mcp = await ctx.containerResolver.make('jrmc.mcp')
-    await mcp.connect(new HttpTransport(ctx))
-    await mcp.handle(body)
+    // Passed directly, not via connect() -- `mcp` is a container
+    // singleton shared across every concurrent request, so connect()'s
+    // shared field isn't safe here (see Server#handle's own comment).
+    await mcp.handle(body, new HttpTransport(ctx))
   }
 }
