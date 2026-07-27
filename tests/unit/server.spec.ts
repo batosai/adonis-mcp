@@ -135,4 +135,45 @@ test.group('Server', () => {
     assert.equal(context.serverVersion, server.version)
     assert.equal(context.request.id, request.id)
   })
+
+  test('should not cross-wire responses when two requests overlap', async ({ assert }) => {
+    const server = new Server({})
+    const transportA = new FakeTransport()
+    const transportB = new FakeTransport()
+
+    await server.connect(transportA)
+    const requestA = createInitializeRequest('2025-06-18', 'request-a')
+    const handleA = server.handle(requestA)
+
+    // Simulates two concurrent requests on one Server instance: B
+    // connects while A's handle() is still in flight. Server stores the
+    // transport in one shared field, so this overwrites what A sees too.
+    await server.connect(transportB)
+    const requestB = createInitializeRequest('2025-06-18', 'request-b')
+    await server.handle(requestB)
+
+    await handleA
+
+    // The current implementation re-reads the shared `#transport` field
+    // at send() time, rather than capturing the transport that was
+    // current when the request started.
+    //
+    // As a result, request B's connect() call steals request A's
+    // response as well: transportA ends up empty (the first assertion
+    // below fails), and transportB receives both responses -- its own,
+    // then A's -- appended in that order.
+    //
+    // getLastMessage() on transportB would therefore return 'request-a',
+    // not 'request-b', if this test got past the first assertion.
+    assert.equal(
+      transportA.getLastMessage()?.id,
+      'request-a',
+      "request A's response should go out on transport A, the one connected when A was handled"
+    )
+    assert.equal(
+      transportB.getLastMessage()?.id,
+      'request-b',
+      "request B's response should go out on transport B"
+    )
+  })
 })
