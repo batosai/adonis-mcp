@@ -164,4 +164,34 @@ test.group('Server', () => {
       "request B's response should go out on transport B"
     )
   })
+
+  test('should keep the transport connected when a request started', async ({ assert }) => {
+    const server = new Server({})
+    const transportA = new FakeTransport()
+    const transportB = new FakeTransport()
+
+    // handle() must capture the transport when it starts, not re-read the
+    // shared field at send() time: a later connect() should never redirect
+    // an already in-flight request's response.
+    await server.connect(transportA)
+    const requestA = createInitializeRequest('2025-06-18', 'request-a')
+    const handleA = server.handle(requestA)
+
+    await server.connect(transportB)
+    const requestB = createInitializeRequest('2025-06-18', 'request-b')
+    await server.handle(requestB)
+
+    await handleA
+
+    assert.equal(
+      transportA.getLastMessage()?.id,
+      'request-a',
+      "request A's response should go out on the transport connected when A started"
+    )
+    assert.equal(
+      transportB.getLastMessage()?.id,
+      'request-b',
+      "request B's response should go out on transport B"
+    )
+  })
 })
