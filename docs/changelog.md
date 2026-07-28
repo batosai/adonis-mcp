@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.0.5
+
+> Released at *2026-07-28*
+
+### Fix
+
+- Prevent concurrent HTTP requests from cross-wiring their JSON-RPC responses. `Server#handle()` now accepts the transport to answer through as an optional second argument, and captures it when the request starts instead of reading the shared field set by `connect()` at send time [#5](https://github.com/batosai/adonis-mcp/pull/5) by lexuzieel — fixes [#4](https://github.com/batosai/adonis-mcp/issues/4)
+
+### Changed
+
+- Add a `prepare` script so installing the package directly from git builds it
+
+## 1.0.4
+
+> Released at *2026-07-05*
+
+### Added
+
+- Agent skills for `@jrmc/adonis-mcp`, to help coding agents scaffold tools, resources and prompts
+
+### Changed
+
+- Add `AGENTS.md`
+- Update dependency versions
+
 ## 1.0.3
 
 > Released at *2026-05-31*
