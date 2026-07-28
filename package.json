@@ -25,6 +25,7 @@
     "copyfiles": "copyfiles \"stubs/**/**/*.stub\" build",
     "postbuild": "adonis-kit index build/commands",
     "prepublishOnly": "npm run build",
+    "prepare": "npm run build",
     "clean": "del-cli build",
     "format": "prettier --write .",
     "test": "node --loader ts-node/esm --enable-source-maps bin/test.ts",

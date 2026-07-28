@@ -135,4 +135,33 @@ test.group('Server', () => {
     assert.equal(context.serverVersion, server.version)
     assert.equal(context.request.id, request.id)
   })
+
+  test('should not cross-wire responses when two requests overlap', async ({ assert }) => {
+    const server = new Server({})
+    const transportA = new FakeTransport()
+    const transportB = new FakeTransport()
+
+    // Each request passes its own transport directly to handle(), the
+    // way an HTTP controller does -- not via connect(), which is only
+    // safe for stdio's one-transport-for-the-whole-process case. B
+    // starts while A's handle() is still in flight.
+    const requestA = createInitializeRequest('2025-06-18', 'request-a')
+    const handleA = server.handle(requestA, transportA)
+
+    const requestB = createInitializeRequest('2025-06-18', 'request-b')
+    await server.handle(requestB, transportB)
+
+    await handleA
+
+    assert.equal(
+      transportA.getLastMessage()?.id,
+      'request-a',
+      "request A's response should go out on transport A"
+    )
+    assert.equal(
+      transportB.getLastMessage()?.id,
+      'request-b',
+      "request B's response should go out on transport B"
+    )
+  })
 })

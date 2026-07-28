@@ -129,11 +129,27 @@ export default class Server {
     this.prompts = { ...this.prompts, ...item }
   }
 
+  /**
+   * Sets the transport handle() falls back to when none is passed
+   * per call.
+   * @param transport - Transport to use as the default
+   */
   async connect(transport: Transport) {
     this.#transport = transport
   }
 
-  async handle(jsonRequest: JsonRpcRequest) {
+  /**
+   * Handles one JSON-RPC request and sends the response through a transport.
+   * @param jsonRequest - The JSON-RPC request to handle
+   * @param transport - Transport to send the response through. Omit it to use
+   * whatever connect() last set (eg for stdio with one-client-per-process-lifetime
+   * format). You MUST pass it when one Server instance might handle several requests at once
+   * (e.g. shared behind an HTTP server), otherwise a second request's connect()
+   * can redirect where an earlier request's response goes.
+   */
+  async handle(jsonRequest: JsonRpcRequest, transport?: Transport) {
+    const activeTransport = transport ?? this.#transport
+
     this.#emitter?.emit('mcp:request', jsonRequest)
 
     // INGORE NOTIFICATIONS FOR NOW
@@ -143,11 +159,11 @@ export default class Server {
 
     const mcpContext = this.createContext(jsonRequest)
 
-    if (!this.#transport) {
+    if (!activeTransport) {
       throw createError('No transport connected.', 'E_NO_TRANSPORT_CONNECTED', 500)
     } else {
-      await this.#transport.bindBouncer?.(mcpContext)
-      this.#transport.bindAuth?.(mcpContext)
+      await activeTransport.bindBouncer?.(mcpContext)
+      activeTransport.bindAuth?.(mcpContext)
     }
 
     try {
@@ -161,7 +177,7 @@ export default class Server {
         const response = await (instance as unknown as MethodInterface).handle(mcpContext)
 
         this.#emitter?.emit('mcp:response', response)
-        this.#transport.send(response)
+        activeTransport.send(response)
       } else {
         const jsonRpcException = new JsonRpcException(
           `The method ${jsonRequest.method} was not found.`,
@@ -186,7 +202,7 @@ export default class Server {
       }
 
       this.#emitter?.emit('mcp:response', response)
-      return this.#transport.send(response)
+      return activeTransport.send(response)
     }
   }
 
