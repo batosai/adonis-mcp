@@ -16,7 +16,7 @@ The starter kit ships with the strict minimum:
 - **@jrmc/adonis-mcp** — MCP provider, commands, and middleware
 - **Japa** — test runner pre-configured with unit, functional, and browser suites
 - **MCP directory** — a `mcp/` folder at the project root with `tools/`, `resources/`, and `prompts/` subdirectories ready to use
-- **MCP middleware** — session management and content-type validation already wired up
+- **MCP middleware** — stateless modern requests, legacy sessions, and content-type validation already wired up
 - **Stdio transport** — a `bin/mcp.ts` entry point for running the server as a stdio process
 
 No database, no authentication, no views — just the essentials to get an MCP server running.

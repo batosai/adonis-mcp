@@ -24,38 +24,11 @@ Open the MCP middleware generated at `app/middleware/mcp_middleware.ts` and unco
 
 ```typescript
 import type { HttpContext } from '@adonisjs/core/http'
-import type { NextFn } from '@adonisjs/core/types/http'
 import type * as abilities from '#abilities/main'
 import type { policies } from '#generated/policies'
 import type McpBouncer from '@jrmc/adonis-mcp/bouncer'
 
-import crypto from 'node:crypto'
-
-export default class McpMiddleware {
-  async handle(ctx: HttpContext, next: NextFn) {
-    const body = ctx.request.body()
-    const method = body.method
-
-    const contentType = ctx.request.header('Content-Type')
-    if (!contentType || !['application/json', 'text/event-stream'].includes(contentType)) {
-      return ctx.response.badRequest('Content-Type header must be application/json')
-    }
-
-    if (method === 'initialize') {
-      ctx.response.safeHeader('MCP-Session-Id', crypto.randomUUID())
-    } else {
-      const sessionId = ctx.request.header('MCP-Session-Id')
-
-      if (!sessionId) {
-        return ctx.response.badRequest('MCP-Session-Id header is required')
-      }
-
-      ctx.response.safeHeader('MCP-Session-Id', sessionId)
-    }
-
-    return next()
-  }
-}
+// Keep the generated dual-generation middleware implementation unchanged.
 
 declare module '@jrmc/adonis-mcp/types/context' {
   export interface McpContext {
@@ -78,7 +51,8 @@ declare module '@jrmc/adonis-mcp/types/context' {
 
 ### 3. Apply the MCP Middleware to the Route
 
-In `start/routes.ts`, you must apply the MCP middleware to the MCP route. This middleware handles session management (`MCP-Session-Id` header) and content-type validation:
+In `start/routes.ts`, apply the MCP middleware to the MCP route. It accepts stateless modern
+requests, preserves legacy session compatibility, and validates the content type:
 
 ```typescript
 import { middleware } from '#start/kernel'

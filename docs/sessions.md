@@ -1,61 +1,56 @@
-# Sessions
+# Protocol lifecycle and sessions
 
-Sessions in MCP provide a way to maintain state and track interactions between AI clients and your AdonisJS application. The MCP protocol uses a session identifier system to ensure continuity across multiple requests.
+`@jrmc/adonis-mcp` supports both MCP protocol generations:
 
-## Overview
+| Protocol version | Lifecycle | HTTP session |
+| --- | --- | --- |
+| `2026-07-28` | Stateless requests and `server/discover` | None |
+| `2025-11-25`, `2025-06-18` | `initialize` handshake | `MCP-Session-Id` |
 
-MCP sessions are managed through the **MCP Middleware**, which automatically handles session identification using HTTP headers. This allows you to:
+Modern requests carry their protocol version, client capabilities, and optional client identity in
+`params._meta`. They can be routed to any application instance without sticky sessions or shared
+MCP session storage.
 
-- Maintain context across multiple tool calls
-- Track conversation history
-- Implement multi-step workflows
-- Associate requests with specific client sessions
+Legacy clients continue to use `initialize`. The generated middleware creates and echoes an
+`MCP-Session-Id` for those clients only.
 
-> **⚠️ Important: HTTP Transport Only**
->
-> The MCP session system described in this document is **only available when using HTTP transport**. It relies on HTTP headers (`MCP-Session-Id`) to track sessions between the client and server.
->
+## The MCP middleware
 
-## How MCP Sessions Work
-
-### Session Lifecycle
-
-The MCP middleware manages sessions through the `MCP-Session-Id` header:
-
-1. **Initialization**: When a client sends an `initialize` request, the middleware generates a unique session ID
-2. **Subsequent Requests**: The client must include this session ID in all subsequent requests
-3. **Session Tracking**: The middleware validates and echoes back the session ID in responses
-
-### The MCP Middleware
-
-When you install `@jrmc/adonis-mcp`, a middleware file is automatically created at `#middleware/mcp_middleware.ts`:
+Installation creates `app/middleware/mcp_middleware.ts` with dual-generation support:
 
 ```typescript
 import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
+import { isModernProtocolRequest } from '@jrmc/adonis-mcp/protocols/version'
+
+import crypto from 'node:crypto'
 
 export default class McpMiddleware {
   async handle(ctx: HttpContext, next: NextFn) {
     const body = ctx.request.body()
     const method = body.method
 
-    const contentType = ctx.request.header('Content-Type')
-    if (!contentType || !['application/json', 'text/event-stream'].includes(contentType)) {
+    const contentType = ctx.request.header('Content-Type')?.split(';', 1)[0]
+    if (contentType !== 'application/json') {
       return ctx.response.badRequest('Content-Type header must be application/json')
     }
 
+    const headerVersion = ctx.request.header('MCP-Protocol-Version')
+    const metadataVersion = body.params?._meta?.['io.modelcontextprotocol/protocolVersion']
+
+    if (isModernProtocolRequest(headerVersion, metadataVersion)) {
+      return next()
+    }
+
     if (method === 'initialize') {
-      // Generate a new session ID for initialize requests
       ctx.response.safeHeader('MCP-Session-Id', crypto.randomUUID())
     } else {
-      // Require session ID for all other requests
       const sessionId = ctx.request.header('MCP-Session-Id')
 
       if (!sessionId) {
         return ctx.response.badRequest('MCP-Session-Id header is required')
       }
 
-      // Echo back the session ID
       ctx.response.safeHeader('MCP-Session-Id', sessionId)
     }
 
@@ -64,147 +59,28 @@ export default class McpMiddleware {
 }
 ```
 
-### Registering manually the MCP Middleware
+The middleware deliberately does not validate modern routing headers. `HttpTransport` performs
+that validation so mismatches use the MCP `HeaderMismatch` JSON-RPC error and HTTP status 400.
 
-The middleware must be registered in your `start/kernel.ts` file to be active on all MCP routes:
+## Registering the middleware
+
+Register it in `start/kernel.ts` and apply it to the MCP route:
 
 ```typescript
-import router from '@adonisjs/core/services/router'
-
 export const middleware = router.named({
-  guest: () => import('#middleware/guest_middleware'),
-  auth: () => import('#middleware/auth_middleware'),
-  mcp: () => import('#middleware/mcp_middleware'), // <== Add this line to register the MCP middleware
+  mcp: () => import('#middleware/mcp_middleware'),
 })
 ```
 
-## Customizing the MCP Middleware
-
-You can customize the middleware to add additional session management logic:
-
-### Adding Session Cleanup
-
 ```typescript
-import type { HttpContext } from '@adonisjs/core/http'
-import type { NextFn } from '@adonisjs/core/types/http'
-import redis from '@adonisjs/redis/services/main'
-
-export default class McpMiddleware {
-  async handle(ctx: HttpContext, next: NextFn) {
-    const body = ctx.request.body()
-    const method = body.method
-
-    const contentType = ctx.request.header('Content-Type')
-    if (!contentType || !['application/json', 'text/event-stream'].includes(contentType)) {
-      return ctx.response.badRequest('Content-Type header must be application/json')
-    }
-
-    if (method === 'initialize') {
-      const sessionId = crypto.randomUUID()
-      ctx.response.safeHeader('MCP-Session-Id', sessionId)
-      
-      // Initialize session data in Redis
-      await redis.setex(`mcp:session:${sessionId}:active`, 3600, '1')
-    } else {
-      const sessionId = ctx.request.header('MCP-Session-Id')
-
-      if (!sessionId) {
-        return ctx.response.badRequest('MCP-Session-Id header is required')
-      }
-      
-      // Validate session is still active
-      const isActive = await redis.get(`mcp:session:${sessionId}:active`)
-      if (!isActive) {
-        return ctx.response.badRequest('Session expired')
-      }
-      
-      // Extend session expiration
-      await redis.expire(`mcp:session:${sessionId}:active`, 3600)
-
-      ctx.response.safeHeader('MCP-Session-Id', sessionId)
-    }
-
-    return next()
-  }
-}
+router.mcp().use(middleware.mcp())
 ```
 
-### Logging Session Activity
+## Application state
 
-```typescript
-import type { HttpContext } from '@adonisjs/core/http'
-import type { NextFn } from '@adonisjs/core/types/http'
-import logger from '@adonisjs/core/services/logger'
+Removing the protocol session does not prevent a modern tool from maintaining application state.
+Return an explicit identifier such as `cartId` or `workflowId`, then accept it as an argument on
+later tool calls. This keeps state visible and allows every request to reach any server instance.
 
-export default class McpMiddleware {
-  async handle(ctx: HttpContext, next: NextFn) {
-    const body = ctx.request.body()
-    const method = body.method
-
-    const contentType = ctx.request.header('Content-Type')
-    if (!contentType || !['application/json', 'text/event-stream'].includes(contentType)) {
-      return ctx.response.badRequest('Content-Type header must be application/json')
-    }
-
-    if (method === 'initialize') {
-      const sessionId = crypto.randomUUID()
-      ctx.response.safeHeader('MCP-Session-Id', sessionId)
-      
-      logger.info({ sessionId, method }, 'New MCP session initialized')
-    } else {
-      const sessionId = ctx.request.header('MCP-Session-Id')
-
-      if (!sessionId) {
-        return ctx.response.badRequest('MCP-Session-Id header is required')
-      }
-
-      ctx.response.safeHeader('MCP-Session-Id', sessionId)
-      
-      logger.info({ sessionId, method }, 'MCP request')
-    }
-
-    return next()
-  }
-}
-```
-
-
-## Limitations and Considerations
-
-### Session ID Format
-
-The default implementation uses UUIDs for session IDs. If you need a different format, customize the middleware:
-
-```typescript
-// Example: Using shorter, alphanumeric IDs
-import { nanoid } from 'nanoid'
-
-if (method === 'initialize') {
-  const sessionId = nanoid(21) // Generates URL-safe ID
-  ctx.response.safeHeader('MCP-Session-Id', sessionId)
-}
-```
-
-### Cross-Origin Requests
-
-If your MCP server accepts requests from different origins, ensure proper CORS configuration and be aware of session security implications.
-
-### Scalability
-
-When running multiple server instances:
-
-- Use Redis or another shared storage for session data (not in-memory)
-- Ensure all instances can access the same session store
-
-## Transport Compatibility
-
-### HTTP Transport
-
-The MCP session system is **designed for HTTP transport only**. When using HTTP transport:
-
-- Sessions are tracked via the `MCP-Session-Id` HTTP header
-- The middleware automatically generates and validates session IDs
-- Session data can be stored in any backend (database, Redis, memory)
-- Sessions persist across multiple HTTP requests
-
-
+If you add Redis-backed session validation for legacy clients, keep the modern early return before
+that logic. Modern requests must never require or emit `MCP-Session-Id`.

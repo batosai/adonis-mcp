@@ -7,7 +7,7 @@ description: Build MCP servers in AdonisJS applications with the @jrmc/adonis-mc
 
 Build Model Context Protocol servers inside AdonisJS applications. Tools, resources, and prompts are classes auto-discovered from `app/mcp/{tools,resources,prompts}/`.
 
-**Not installed yet?** See [references/setup.md](references/setup.md) — installation, `config/mcp.ts`, route registration, CSRF exclusion, middleware, sessions, stdio transport.
+**Not installed yet?** See [references/setup.md](references/setup.md) — installation, `config/mcp.ts`, route registration, CSRF exclusion, stateless middleware, legacy sessions, stdio transport.
 **Auth & permissions?** See [references/authentication.md](references/authentication.md) — auth middleware, Bouncer abilities/policies, type augmentation.
 **Tests & debugging?** See [references/testing.md](references/testing.md) — Japa integration tests with `FakeTransport`, MCP Inspector.
 

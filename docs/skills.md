@@ -19,7 +19,7 @@ The CLI detects your agent (Claude Code, Cursor, Codex, etc.) and installs the s
 The `adonis-mcp` skill contains:
 
 - **Core guide** — Creating tools, resources, and prompts: mandatory file naming (`_tool.ts`, `_resource.ts`, `_prompt.ts`), ace generators, JSON Schema / Zod / VineJS schemas, response content types, annotations, errors (`JsonRpcException`), completions, dependency injection, and events.
-- **Setup reference** — Installation, `config/mcp.ts`, route registration, CSRF exclusion, MCP middleware and sessions, HTTP/stdio transports.
+- **Setup reference** — Installation, `config/mcp.ts`, route registration, CSRF exclusion, stateless middleware, legacy sessions, and HTTP/stdio transports.
 - **Authentication reference** — Auth middleware, Bouncer abilities and policies, `McpContext` type augmentation.
 - **Testing reference** — Integration tests with `FakeTransport` and Japa, MCP Inspector.
 

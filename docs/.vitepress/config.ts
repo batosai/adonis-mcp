@@ -59,6 +59,10 @@ export default defineConfig({
         link: '/sessions'
       },
       {
+        text: 'MCP 2026-07-28',
+        link: '/protocol'
+      },
+      {
         text: 'Events',
         link: '/events'
       },

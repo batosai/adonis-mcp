@@ -11,6 +11,7 @@ Adonis MCP provides a simple and elegant way for AI clients to interact with you
 - **Resources** — Expose application data through URI templates with support for text and binary content
 - **Prompts** — Reusable, argument-validated prompt templates to guide AI interactions
 - **Multiple transports** — HTTP, stdio, and fake (testing) transports out of the box
+- **Stateless MCP** — MCP `2026-07-28` discovery, routing headers, and cache hints with legacy protocol compatibility
 - **Annotations** — Decorate tools and resources with metadata (`@isReadOnly`, `@isDestructive`, `@priority`…) so AI clients understand their behaviour
 - **Authentication & Authorization** — First-class integration with AdonisJS Auth and Bouncer
 - **Inspector** — Built-in debugging tool to test your MCP implementation during development
@@ -44,8 +45,15 @@ import { defineConfig } from '@jrmc/adonis-mcp'
 export default defineConfig({
   name: 'adonis-mcp-server',
   version: '1.0.0',
+  cache: {
+    tools: { ttlMs: 60_000, scope: 'private' },
+  },
 })
 ```
+
+Cache hints default to `ttlMs: 0` and `private`. Version 2 serves stateless `2026-07-28`
+requests and retains the `initialize` lifecycle for `2025-11-25` and `2025-06-18` clients.
+See the [protocol guide](docs/protocol.md) and [middleware lifecycle guide](docs/sessions.md).
 
 By default, your MCP tools, resources, and prompts will be stored in `app/mcp`. If you want to use a different path, you need to configure it in your `adonisrc.ts` file:
 

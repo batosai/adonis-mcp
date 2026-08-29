@@ -34,6 +34,9 @@ export default defineConfig({
   name: 'adonis-mcp-server',
   version: '1.0.0',
   completions: true, // enable argument completions (default: false)
+  cache: {
+    tools: { ttlMs: 60_000, scope: 'private' },
+  },
 })
 ```
 
@@ -66,12 +69,14 @@ csrf: {
 }
 ```
 
-## MCP middleware & sessions (HTTP transport only)
+## MCP middleware and protocol generations
 
-Installation generates `app/middleware/mcp_middleware.ts`. It validates `Content-Type` (`application/json` or `text/event-stream`) and manages the `MCP-Session-Id` header:
+Installation generates `app/middleware/mcp_middleware.ts`. It validates the JSON content type and
+selects the lifecycle from the request:
 
-- `initialize` request → generates a session ID (`crypto.randomUUID()`) and returns it in the `MCP-Session-Id` response header
-- every other request → requires and echoes back the `MCP-Session-Id` header
+- `2026-07-28` → stateless; never requires or emits `MCP-Session-Id`
+- legacy `initialize` → creates an `MCP-Session-Id`
+- other legacy requests → require and echo `MCP-Session-Id`
 
 Register it as a named middleware in `start/kernel.ts` if missing:
 
@@ -81,11 +86,13 @@ export const middleware = router.named({
 })
 ```
 
-Customize the middleware for session storage (Redis expiry/validation), logging, or a different ID format. When running multiple instances, store session state in shared storage (Redis), not memory.
+Keep the modern early return when customizing legacy session storage or logging. Modern requests
+carry their version and client capabilities in `params._meta`, and HTTP requests also provide
+`MCP-Protocol-Version` and `Mcp-Method` routing headers.
 
 ## Transports
 
-- **HTTP** (default) — via `router.mcp()`; the only transport with session support.
+- **HTTP** (default) — stateless for `2026-07-28`, with legacy session compatibility.
 - **stdio** — for AI clients like Claude Desktop/Cursor: run `node ace mcp:start`, or use the starter kit's `bin/mcp.ts` (Ignitor booting ace with `['mcp:start']`).
 - **Fake** — testing only (see references/testing.md).
 

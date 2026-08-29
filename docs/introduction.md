@@ -67,6 +67,11 @@ Support for HTTP, stdio, and fake transports to fit your deployment needs:
 - **Stdio**: Ideal for command-line tools and local integrations
 - **Fake**: Useful for testing and development
 
+### 🌐 Stateless MCP
+
+Support for MCP `2026-07-28` with per-request metadata, `server/discover`, HTTP routing headers,
+cache hints, and no protocol session. Legacy `2025-11-25` and `2025-06-18` clients remain supported.
+
 ### 🏷️ Annotations
 
 Annotate your tools and resources with metadata to help AI clients understand their behavior:
@@ -103,7 +108,8 @@ Built-in support for AdonisJS authentication and Bouncer authorization in your M
 - [x] Annotations
 - [x] Completion
 - [x] Inspector
-- [x] Session
+- [x] Stateless MCP 2026-07-28
+- [x] Legacy sessions
 - [x] Documentation
 - [x] Inject support
 - [x] VineJs integration
