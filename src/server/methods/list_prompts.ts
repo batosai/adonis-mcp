@@ -11,13 +11,14 @@ import type { Method, McpRegistryEntry } from '../../types/method.js'
 
 import { CursorPaginator } from '../pagination/cursor_paginator.js'
 import Response from '../../response.js'
+import { sortRegistryEntries } from '../../utils/sort_registry.js'
 
 export default class ListPrompts implements Method {
   async handle(ctx: McpContext) {
     let nextCursor
 
     const paginator = new CursorPaginator(
-      Object.values(ctx.prompts),
+      sortRegistryEntries(ctx.prompts),
       ctx.getPerPage(),
       ctx.request.params?.cursor
     )

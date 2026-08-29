@@ -34,6 +34,9 @@ test.group('Server', () => {
       instructions: 'Custom instructions',
       maxPaginationLength: 100,
       defaultPaginationLength: 20,
+      cache: {
+        tools: { ttlMs: 60_000, scope: 'public' },
+      },
     }
     const server = new Server(config)
 
@@ -42,6 +45,7 @@ test.group('Server', () => {
     assert.equal(server.instructions, 'Custom instructions')
     assert.equal(server.maxPaginationLength, 100)
     assert.equal(server.defaultPaginationLength, 20)
+    assert.deepEqual(server.cache.tools, { ttlMs: 60_000, cacheScope: 'public' })
   })
 
   test('should add tool to server', ({ assert }) => {
@@ -165,8 +169,31 @@ test.group('Server', () => {
         version: '2.0.0',
       },
     })
+    assert.equal(modernTransport.getLastMessage()?.result?.ttlMs, 0)
+    assert.equal(modernTransport.getLastMessage()?.result?.cacheScope, 'private')
     assert.notProperty(legacyTransport.getLastMessage()?.result ?? {}, 'resultType')
     assert.notProperty(legacyTransport.getLastMessage()?.result ?? {}, '_meta')
+    assert.notProperty(legacyTransport.getLastMessage()?.result ?? {}, 'ttlMs')
+  })
+
+  test('should apply configured cache hints to modern results', async ({ assert }) => {
+    const server = new Server({
+      cache: {
+        tools: { ttlMs: 60_000, scope: 'public' },
+      },
+    })
+    const transport = new FakeTransport()
+    const request = createJsonRpcRequest('tools/list', {
+      _meta: {
+        'io.modelcontextprotocol/protocolVersion': '2026-07-28',
+        'io.modelcontextprotocol/clientCapabilities': {},
+      },
+    })
+
+    await server.handle(request, transport)
+
+    assert.equal(transport.getLastMessage()?.result?.ttlMs, 60_000)
+    assert.equal(transport.getLastMessage()?.result?.cacheScope, 'public')
   })
 
   test('should reject an unsupported modern protocol version', async ({ assert }) => {

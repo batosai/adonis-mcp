@@ -6,6 +6,7 @@
  */
 
 import type { McpConfig } from './types/config.js'
+import type { CacheScope } from './types/jsonrpc.js'
 import type { JsonRpcRequest } from './types/jsonrpc.js'
 import type {
   ToolList,
@@ -30,6 +31,13 @@ type Services = {
   logger: LoggerService
   emitter: EmitterService
 }
+
+type CacheHint = {
+  ttlMs: number
+  cacheScope: CacheScope
+}
+
+type CacheOperation = keyof NonNullable<McpConfig['cache']>
 
 export default class Server {
   #logger?: LoggerService
@@ -64,6 +72,8 @@ export default class Server {
   maxPaginationLength: number = 50
   defaultPaginationLength: number = 15
 
+  cache: Record<CacheOperation, CacheHint>
+
   methods = {
     'server/discover': () => import('./server/methods/discover.js'),
     'initialize': () => import('./server/methods/initialize.js'),
@@ -80,6 +90,13 @@ export default class Server {
 
   constructor(config: McpConfig, services?: Services) {
     this.config = config
+    this.cache = {
+      discover: this.resolveCacheHint(config.cache?.discover),
+      tools: this.resolveCacheHint(config.cache?.tools),
+      resources: this.resolveCacheHint(config.cache?.resources),
+      resourceTemplates: this.resolveCacheHint(config.cache?.resourceTemplates),
+      prompts: this.resolveCacheHint(config.cache?.prompts),
+    }
 
     if (config.name) {
       this.name = config.name
@@ -224,6 +241,7 @@ export default class Server {
           era: mcpContext.protocolEra,
           serverName: mcpContext.serverName,
           serverVersion: mcpContext.serverVersion,
+          cacheHint: this.getCacheHint(jsonRequest.method),
         })
 
         this.#emitter?.emit('mcp:response', response)
@@ -281,5 +299,26 @@ export default class Server {
       prompts: this.prompts,
       jsonRpcRequest,
     })
+  }
+
+  private resolveCacheHint(config?: { ttlMs?: number; scope?: CacheScope }): CacheHint {
+    return {
+      ttlMs: config?.ttlMs ?? 0,
+      cacheScope: config?.scope ?? 'private',
+    }
+  }
+
+  private getCacheHint(method: string): CacheHint | undefined {
+    const operations: Partial<Record<string, CacheOperation>> = {
+      'server/discover': 'discover',
+      'tools/list': 'tools',
+      'resources/list': 'resources',
+      'resources/read': 'resources',
+      'resources/templates/list': 'resourceTemplates',
+      'prompts/list': 'prompts',
+    }
+    const operation = operations[method]
+
+    return operation ? this.cache[operation] : undefined
   }
 }

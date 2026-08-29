@@ -222,4 +222,22 @@ test.group('ListTools Method', () => {
     assert.equal(toolsList.length, 10) // Should be limited to max
     assert.exists(response.result?.nextCursor)
   })
+
+  test('should return tools in deterministic name order', async ({ assert }) => {
+    const request = createListToolsRequest()
+    const context = createTestContext(request, {
+      tools: {
+        zebra: { path: '/zebra.js', json: { name: 'zebra' } },
+        alpha: { path: '/alpha.js', json: { name: 'alpha' } },
+      },
+    })
+
+    const response = await new ListTools().handle(context)
+    const tools = response.result?.tools as { name: string }[]
+
+    assert.deepEqual(
+      tools.map((tool) => tool.name),
+      ['alpha', 'zebra']
+    )
+  })
 })

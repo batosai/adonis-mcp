@@ -5,7 +5,7 @@
  * @copyright Jeremy Chaufourier <jeremy@chaufourier.fr>
  */
 
-import type { JsonRpcResponse, Completion } from './types/jsonrpc.js'
+import type { JsonRpcResponse, Completion, CacheScope } from './types/jsonrpc.js'
 import type { Response } from './server/contracts/response.js'
 import type { McpRequestType } from './types/request.js'
 import type { JsonRpcRequest } from './types/jsonrpc.js'
@@ -84,7 +84,12 @@ export default class<T extends McpRequestType = McpRequestType> implements Respo
 
   static forProtocol(
     response: JsonRpcResponse,
-    options: { era: ProtocolEra; serverName: string; serverVersion: string }
+    options: {
+      era: ProtocolEra
+      serverName: string
+      serverVersion: string
+      cacheHint?: { ttlMs: number; cacheScope: CacheScope }
+    }
   ): JsonRpcResponse {
     if (options.era !== 'modern' || !response.result) {
       return response
@@ -95,6 +100,7 @@ export default class<T extends McpRequestType = McpRequestType> implements Respo
       result: {
         ...response.result,
         resultType: response.result.resultType ?? 'complete',
+        ...options.cacheHint,
         _meta: {
           'io.modelcontextprotocol/serverInfo': {
             name: options.serverName,
