@@ -21,6 +21,7 @@ export type PromptList = Record<string, McpRegistryEntry>
 export type JSONSchema =
   | { type: 'string' }
   | { type: 'number' }
+  | { type: 'integer' }
   | { type: 'boolean' }
   | { type: 'object'; properties: Record<string, JSONSchema>; required?: readonly string[] }
 
@@ -28,19 +29,21 @@ export type InferJSONSchema<S extends JSONSchema> = S['type'] extends 'string'
   ? string
   : S['type'] extends 'number'
     ? number
-    : S['type'] extends 'boolean'
-      ? boolean
-      : S extends {
-            type: 'object'
-            properties: infer P extends Record<string, JSONSchema>
-            required?: infer R
-          }
-        ? R extends readonly string[]
-          ? { [K in keyof P as K extends R[number] ? K : never]: InferJSONSchema<P[K]> } & {
-              [K in keyof P as K extends R[number] ? never : K]?: InferJSONSchema<P[K]>
+    : S['type'] extends 'integer'
+      ? number
+      : S['type'] extends 'boolean'
+        ? boolean
+        : S extends {
+              type: 'object'
+              properties: infer P extends Record<string, JSONSchema>
+              required?: infer R
             }
-          : { [K in keyof P]?: InferJSONSchema<P[K]> }
-        : never
+          ? R extends readonly string[]
+            ? { [K in keyof P as K extends R[number] ? K : never]: InferJSONSchema<P[K]> } & {
+                [K in keyof P as K extends R[number] ? never : K]?: InferJSONSchema<P[K]>
+              }
+            : { [K in keyof P]?: InferJSONSchema<P[K]> }
+          : never
 
 export type BaseSchema<
   P extends Record<string, any> = {},

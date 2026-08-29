@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.0.0
+
+> Unreleased
+
+### Added
+
+- Support the stateless MCP `2026-07-28` protocol alongside `2025-11-25` and `2025-06-18`
+- Add `server/discover`, per-request client metadata, and modern response envelopes
+- Validate `MCP-Protocol-Version`, `Mcp-Method`, `Mcp-Name`, and `Mcp-Param-*` HTTP headers
+- Add configurable cache hints and deterministic ordering for cacheable results
+- Expose protocol version, generation, client capabilities, client identity, and log level on `McpContext`
+
+### Changed
+
+- Modern HTTP requests no longer require or emit `MCP-Session-Id`
+- `initialize` and `ping` are now limited to legacy protocol clients
+- Modern protocol errors for unsupported versions and header mismatches return HTTP 400
+- The generated middleware now accepts stateless and legacy clients side by side
+
+### Upgrade
+
+- Republish the MCP middleware or update the existing middleware with the generated dual-generation implementation
+- Keep cache scopes `private` whenever tools, prompts, or resources vary by authenticated user or Bouncer permissions
+
 ## 1.0.5
 
 > Released at *2026-07-28*

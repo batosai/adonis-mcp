@@ -333,6 +333,7 @@ export type Completion = { hasMore?: boolean; total?: number; values: string[] }
 export type ClientCapabilities = {
   elicitation?: object
   experimental?: { [key: string]: object }
+  extensions?: { [key: string]: Record<string, unknown> }
   roots?: { listChanged?: boolean }
   sampling?: object
 }
@@ -340,6 +341,7 @@ export type ClientCapabilities = {
 export type ServerCapabilities = {
   completions?: object
   experimental?: { [key: string]: object }
+  extensions?: { [key: string]: Record<string, unknown> }
   logging?: object
   prompts?: { listChanged?: boolean }
   resources?: { listChanged?: boolean; subscribe?: boolean }
@@ -347,9 +349,17 @@ export type ServerCapabilities = {
 }
 
 export type Implementation = {
+  description?: string
+  icons?: {
+    src: string
+    mimeType?: string
+    sizes?: string[]
+    theme?: 'light' | 'dark'
+  }[]
   name: string
   title?: string
   version: string
+  websiteUrl?: string
 }
 
 export type PromptMessage = {
