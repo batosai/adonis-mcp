@@ -174,6 +174,8 @@ export default class Server {
     }
 
     try {
+      activeTransport.validateRequest?.(jsonRequest, mcpContext)
+
       if (mcpContext.protocolEra === 'modern') {
         if (!this.supportedProtocolVersion.includes(mcpContext.protocolVersion!)) {
           throw new JsonRpcException(
@@ -250,7 +252,17 @@ export default class Server {
       }
 
       this.#emitter?.emit('mcp:response', response)
-      return activeTransport.send(response)
+      const status =
+        error instanceof JsonRpcException &&
+        [
+          ErrorCode.HeaderMismatch,
+          ErrorCode.MissingRequiredClientCapability,
+          ErrorCode.UnsupportedProtocolVersion,
+        ].includes(error.code)
+          ? 400
+          : undefined
+
+      return activeTransport.send(response, { status })
     }
   }
 

@@ -182,6 +182,7 @@ test.group('Server', () => {
     await server.handle(request, transport)
 
     assert.equal(transport.getLastMessage()?.error?.code, ErrorCode.UnsupportedProtocolVersion)
+    assert.equal(transport.getLastOptions()?.status, 400)
   })
 
   test('should keep server discovery unavailable to legacy requests', async ({ assert }) => {

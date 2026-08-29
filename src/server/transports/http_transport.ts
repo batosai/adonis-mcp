@@ -9,6 +9,10 @@ import type { HttpContext } from '@adonisjs/core/http'
 import type { Transport } from '../contracts/transport.js'
 import type { McpContext } from '../../types/context.js'
 import type { JsonRpcResponse } from '../../types/jsonrpc.js'
+import type { JsonRpcRequest } from '../../types/jsonrpc.js'
+import type { TransportSendOptions } from '../contracts/transport.js'
+
+import { validateModernHttpHeaders } from '../protocols/http_headers.js'
 
 export default class HttpTransport implements Transport {
   #ctx: HttpContext
@@ -37,7 +41,14 @@ export default class HttpTransport implements Transport {
     }
   }
 
-  send(message: JsonRpcResponse) {
+  validateRequest(request: JsonRpcRequest, mcpContext: McpContext) {
+    validateModernHttpHeaders(request, mcpContext, (name) => this.#ctx.request.header(name))
+  }
+
+  send(message: JsonRpcResponse, options?: TransportSendOptions) {
+    if (options?.status) {
+      this.#ctx.response.status(options.status)
+    }
     this.#ctx.response.json(message)
   }
 }
