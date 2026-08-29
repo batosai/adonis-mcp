@@ -8,6 +8,9 @@
 export enum ErrorCode {
   ConnectionClosed = -32000,
   RequestTimeout = -32001,
+  HeaderMismatch = -32020,
+  MissingRequiredClientCapability = -32021,
+  UnsupportedProtocolVersion = -32022,
 
   // Standard JSON-RPC error codes
   ParseError = -32700,

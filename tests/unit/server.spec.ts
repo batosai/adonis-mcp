@@ -125,6 +125,49 @@ test.group('Server', () => {
     assert.equal(lastMessage?.error?.code, ErrorCode.MethodNotFound)
   })
 
+  test('should handle modern server discovery', async ({ assert }) => {
+    const server = new Server({})
+    const transport = new FakeTransport()
+    const request = createJsonRpcRequest('server/discover', {
+      _meta: {
+        'io.modelcontextprotocol/protocolVersion': '2026-07-28',
+        'io.modelcontextprotocol/clientCapabilities': {},
+      },
+    })
+
+    await server.handle(request, transport)
+
+    assert.deepEqual(transport.getLastMessage()?.result?.supportedVersions, [
+      '2026-07-28',
+      '2025-11-25',
+      '2025-06-18',
+    ])
+  })
+
+  test('should reject an unsupported modern protocol version', async ({ assert }) => {
+    const server = new Server({})
+    const transport = new FakeTransport()
+    const request = createJsonRpcRequest('tools/list', {
+      _meta: {
+        'io.modelcontextprotocol/protocolVersion': '2027-01-01',
+        'io.modelcontextprotocol/clientCapabilities': {},
+      },
+    })
+
+    await server.handle(request, transport)
+
+    assert.equal(transport.getLastMessage()?.error?.code, ErrorCode.UnsupportedProtocolVersion)
+  })
+
+  test('should keep server discovery unavailable to legacy requests', async ({ assert }) => {
+    const server = new Server({})
+    const transport = new FakeTransport()
+
+    await server.handle(createJsonRpcRequest('server/discover', {}), transport)
+
+    assert.equal(transport.getLastMessage()?.error?.code, ErrorCode.MethodNotFound)
+  })
+
   test('should create context from request', ({ assert }) => {
     const server = new Server({})
     const request = createJsonRpcRequest('test')

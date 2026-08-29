@@ -40,6 +40,14 @@ export type JsonRpcResult = {
   [key: string]: unknown
 }
 
+export type CacheScope = 'public' | 'private'
+
+export type CacheableResult = JsonRpcResult & {
+  cacheScope: CacheScope
+  resultType: 'complete'
+  ttlMs: number
+}
+
 export type JsonRpcError = {
   code: number
   message: string
@@ -166,6 +174,13 @@ export type InitializeRequest = JsonRpcRequest & {
   }
 }
 
+export type DiscoverRequest = JsonRpcRequest & {
+  method: 'server/discover'
+  params: {
+    _meta: RequestMetaObject
+  }
+}
+
 export type PingRequest = JsonRpcRequest & {
   method: 'ping'
   params?: {
@@ -248,6 +263,12 @@ export type InitializeResult = {
   protocolVersion: string
   serverInfo: Implementation
   [key: string]: unknown
+}
+
+export type DiscoverResult = CacheableResult & {
+  capabilities: ServerCapabilities
+  instructions?: string
+  supportedVersions: string[]
 }
 
 export type GetPromptResult = {

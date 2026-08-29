@@ -64,6 +64,7 @@ export default class Server {
   defaultPaginationLength: number = 15
 
   methods = {
+    'server/discover': () => import('./server/methods/discover.js'),
     'initialize': () => import('./server/methods/initialize.js'),
     'tools/list': () => import('./server/methods/list_tools.js'),
     'tools/call': () => import('./server/methods/call_tool.js'),
@@ -172,6 +173,42 @@ export default class Server {
     }
 
     try {
+      if (mcpContext.protocolEra === 'modern') {
+        if (!this.supportedProtocolVersion.includes(mcpContext.protocolVersion!)) {
+          throw new JsonRpcException(
+            'Unsupported protocol version',
+            ErrorCode.UnsupportedProtocolVersion,
+            jsonRequest.id,
+            {
+              supported: this.supportedProtocolVersion,
+              requested: mcpContext.protocolVersion,
+            }
+          )
+        }
+
+        if (!mcpContext.clientCapabilities) {
+          throw new JsonRpcException(
+            'Client capabilities are required',
+            ErrorCode.InvalidParams,
+            jsonRequest.id
+          )
+        }
+
+        if (jsonRequest.method === 'initialize' || jsonRequest.method === 'ping') {
+          throw new JsonRpcException(
+            `The method ${jsonRequest.method} was not found.`,
+            ErrorCode.MethodNotFound,
+            jsonRequest.id
+          )
+        }
+      } else if (jsonRequest.method === 'server/discover') {
+        throw new JsonRpcException(
+          `The method ${jsonRequest.method} was not found.`,
+          ErrorCode.MethodNotFound,
+          jsonRequest.id
+        )
+      }
+
       if (Object.keys(this.methods).includes(jsonRequest.method)) {
         const lazyMethod = this.methods[jsonRequest.method as keyof typeof this.methods]
         const { default: MethodClass } = await lazyMethod()

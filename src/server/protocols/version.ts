@@ -59,8 +59,7 @@ export function getProtocolEnvelope(request: JsonRpcRequest): ProtocolEnvelope {
 }
 
 export function getProtocolEra(request: JsonRpcRequest): ProtocolEra {
-  return getRequestMeta(request)?.['io.modelcontextprotocol/protocolVersion'] ===
-    MODERN_PROTOCOL_VERSION
+  return typeof getRequestMeta(request)?.['io.modelcontextprotocol/protocolVersion'] === 'string'
     ? 'modern'
     : 'legacy'
 }

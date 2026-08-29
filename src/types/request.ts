@@ -18,9 +18,11 @@ import type {
   CompleteRequest,
   SubscribeRequest,
   UnsubscribeRequest,
+  DiscoverRequest,
 } from './jsonrpc.js'
 
 type RequestMap = {
+  'server/discover': DiscoverRequest
   'tools/call': CallToolRequest
   'resources/read': ReadResourceRequest
   'prompts/get': GetPromptRequest
