@@ -63,3 +63,10 @@ export function getProtocolEra(request: JsonRpcRequest): ProtocolEra {
     ? 'modern'
     : 'legacy'
 }
+
+export function isModernProtocolRequest(
+  headerVersion?: string,
+  metadataVersion?: unknown
+): boolean {
+  return headerVersion === MODERN_PROTOCOL_VERSION || metadataVersion === MODERN_PROTOCOL_VERSION
+}

@@ -50,6 +50,7 @@
     "./vinejs_provider": "./build/providers/vinejs_provider.js",
     "./bouncer": "./build/src/server/mcp_bouncer.js",
     "./server": "./build/src/server.js",
+    "./protocols/*": "./build/src/server/protocols/*.js",
     "./exceptions": "./build/src/server/exceptions/jsonrpc_exception.js"
   },
   "devDependencies": {

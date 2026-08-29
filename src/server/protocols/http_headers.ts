@@ -134,12 +134,12 @@ export function validateModernHttpHeaders(
   ctx: McpContext,
   readHeader: HeaderReader
 ) {
-  if (ctx.protocolEra !== 'modern') {
+  const actualVersion = readHeader('MCP-Protocol-Version')
+  if (ctx.protocolEra !== 'modern' && actualVersion !== '2026-07-28') {
     return
   }
 
   const expectedVersion = ctx.protocolVersion
-  const actualVersion = readHeader('MCP-Protocol-Version')
   if (!actualVersion || actualVersion !== expectedVersion) {
     throw headerMismatch(request.id, 'MCP-Protocol-Version does not match the request body', {
       header: 'MCP-Protocol-Version',

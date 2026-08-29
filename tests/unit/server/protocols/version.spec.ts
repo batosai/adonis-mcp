@@ -12,6 +12,7 @@ import {
   getProtocolEra,
   MODERN_PROTOCOL_VERSION,
   SUPPORTED_PROTOCOL_VERSIONS,
+  isModernProtocolRequest,
 } from '../../../../src/server/protocols/version.js'
 
 test.group('Protocol version', () => {
@@ -43,5 +44,21 @@ test.group('Protocol version', () => {
 
     assert.equal(getProtocolEra(request), 'legacy')
     assert.equal(getProtocolEnvelope(request).protocolVersion, '2025-11-25')
+  })
+
+  test('should detect a modern request from its header', ({ assert }) => {
+    assert.isTrue(isModernProtocolRequest('2026-07-28', undefined))
+  })
+
+  test('should detect a modern request from its metadata', ({ assert }) => {
+    assert.isTrue(isModernProtocolRequest(undefined, '2026-07-28'))
+  })
+
+  test('should detect a modern request when both versions match', ({ assert }) => {
+    assert.isTrue(isModernProtocolRequest('2026-07-28', '2026-07-28'))
+  })
+
+  test('should keep legacy requests on the session path', ({ assert }) => {
+    assert.isFalse(isModernProtocolRequest('2025-11-25', undefined))
   })
 })
