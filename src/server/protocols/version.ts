@@ -68,5 +68,5 @@ export function isModernProtocolRequest(
   headerVersion?: string,
   metadataVersion?: unknown
 ): boolean {
-  return headerVersion === MODERN_PROTOCOL_VERSION || metadataVersion === MODERN_PROTOCOL_VERSION
+  return headerVersion === MODERN_PROTOCOL_VERSION || typeof metadataVersion === 'string'
 }

@@ -58,6 +58,10 @@ test.group('Protocol version', () => {
     assert.isTrue(isModernProtocolRequest('2026-07-28', '2026-07-28'))
   })
 
+  test('should let an unsupported stateless version reach protocol validation', ({ assert }) => {
+    assert.isTrue(isModernProtocolRequest('2027-01-01', '2027-01-01'))
+  })
+
   test('should keep legacy requests on the session path', ({ assert }) => {
     assert.isFalse(isModernProtocolRequest('2025-11-25', undefined))
   })
