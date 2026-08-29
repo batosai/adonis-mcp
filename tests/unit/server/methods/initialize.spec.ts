@@ -74,6 +74,22 @@ test.group('Initialize Method', () => {
     }
   })
 
+  test('should not negotiate the modern protocol through initialize', async ({ assert }) => {
+    const request = createInitializeRequest('2026-07-28')
+    const context = createTestContext(request, {
+      supportedProtocolVersions: ['2026-07-28', '2025-11-25', '2025-06-18'],
+    })
+    const method = new Initialize()
+
+    try {
+      await method.handle(context)
+      assert.fail('Should have thrown an error')
+    } catch (error: any) {
+      assert.equal(error.code, ErrorCode.InvalidParams)
+      assert.deepEqual(error.data.supported, ['2025-11-25', '2025-06-18'])
+    }
+  })
+
   test('should throw error for invalid request method', async ({ assert }) => {
     const request = createJsonRpcRequest('invalid-method')
     const context = createTestContext(request)

@@ -8,16 +8,22 @@
 export type RequestId = string | number
 export type ProgressToken = string | number
 
+export type RequestMetaObject = {
+  'progressToken'?: ProgressToken
+  'io.modelcontextprotocol/protocolVersion'?: string
+  'io.modelcontextprotocol/clientCapabilities'?: ClientCapabilities
+  'io.modelcontextprotocol/clientInfo'?: Implementation
+  'io.modelcontextprotocol/logLevel'?: string
+  [key: string]: unknown
+}
+
 export type JsonRpcRequest = {
   jsonrpc: '2.0'
   id: RequestId
   method: string
   params?: {
     cursor?: string
-    _meta?: {
-      progressToken?: ProgressToken
-      [key: string]: unknown
-    }
+    _meta?: RequestMetaObject
     [key: string]: unknown
   }
 }
@@ -303,14 +309,14 @@ export type CompleteResult = {
 
 export type Completion = { hasMore?: boolean; total?: number; values: string[] }
 
-type ClientCapabilities = {
+export type ClientCapabilities = {
   elicitation?: object
   experimental?: { [key: string]: object }
   roots?: { listChanged?: boolean }
   sampling?: object
 }
 
-type ServerCapabilities = {
+export type ServerCapabilities = {
   completions?: object
   experimental?: { [key: string]: object }
   logging?: object
@@ -319,7 +325,7 @@ type ServerCapabilities = {
   tools?: { listChanged?: boolean }
 }
 
-type Implementation = {
+export type Implementation = {
   name: string
   title?: string
   version: string

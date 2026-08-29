@@ -8,11 +8,19 @@
 import type { ToolList, ResourceList, PromptList } from '../../types/method.js'
 import type { McpRequest, McpRequestType } from '../../types/request.js'
 import type { McpResponse } from '../../types/response.js'
+import type { ClientCapabilities, Implementation } from '../../types/jsonrpc.js'
+import type { ProtocolEra } from '../protocols/version.js'
 
 export interface Context {
   args?: Record<string, unknown>
 
   requestMethod: McpRequestType
+
+  protocolEra: ProtocolEra
+  protocolVersion?: string
+  clientCapabilities?: ClientCapabilities
+  clientInfo?: Implementation
+  logLevel?: string
 
   supportedProtocolVersions: string[]
   serverCapabilities: Record<string, any>

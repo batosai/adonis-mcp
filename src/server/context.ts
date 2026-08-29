@@ -13,9 +13,18 @@ import type { McpRequest, McpRequestType } from '../types/request.js'
 
 import Request from '../request.js'
 import Response from '../response.js'
+import { getProtocolEnvelope, getProtocolEra } from './protocols/version.js'
+import type { ClientCapabilities, Implementation } from '../types/jsonrpc.js'
+import type { ProtocolEra } from './protocols/version.js'
 
 export default class ServerContext implements Context {
   readonly requestMethod: McpRequestType
+
+  protocolEra: ProtocolEra
+  protocolVersion?: string
+  clientCapabilities?: ClientCapabilities
+  clientInfo?: Implementation
+  logLevel?: string
 
   supportedProtocolVersions: string[]
   serverCapabilities: Record<string, any>
@@ -33,6 +42,13 @@ export default class ServerContext implements Context {
 
   constructor(options: ServerContextOptions) {
     this.requestMethod = options.jsonRpcRequest.method as McpRequestType
+
+    const envelope = getProtocolEnvelope(options.jsonRpcRequest)
+    this.protocolEra = getProtocolEra(options.jsonRpcRequest)
+    this.protocolVersion = envelope.protocolVersion
+    this.clientCapabilities = envelope.clientCapabilities
+    this.clientInfo = envelope.clientInfo
+    this.logLevel = envelope.logLevel
 
     this.supportedProtocolVersions = options.supportedProtocolVersions
     this.serverCapabilities = options.serverCapabilities

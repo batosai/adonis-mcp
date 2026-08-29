@@ -20,6 +20,10 @@ import { createError } from '@adonisjs/core/exceptions'
 import { ErrorCode } from './enums/error.js'
 import ServerContext from './server/context.js'
 import JsonRpcException from './server/exceptions/jsonrpc_exception.js'
+import {
+  LEGACY_PROTOCOL_VERSIONS,
+  SUPPORTED_PROTOCOL_VERSIONS,
+} from './server/protocols/version.js'
 
 type Services = {
   logger: LoggerService
@@ -36,7 +40,8 @@ export default class Server {
   version: string = '1.0.0'
   instructions: string = 'This MCP server lets AI agents interact with our AdonisJS application.'
 
-  supportedProtocolVersion: string[] = ['2025-11-25', '2025-06-18']
+  supportedProtocolVersion: string[] = [...SUPPORTED_PROTOCOL_VERSIONS]
+  supportedLegacyProtocolVersions: string[] = [...LEGACY_PROTOCOL_VERSIONS]
 
   capabilities: Record<string, any> = {
     tools: {
