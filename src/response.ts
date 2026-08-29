@@ -9,6 +9,7 @@ import type { JsonRpcResponse, Completion } from './types/jsonrpc.js'
 import type { Response } from './server/contracts/response.js'
 import type { McpRequestType } from './types/request.js'
 import type { JsonRpcRequest } from './types/jsonrpc.js'
+import type { ProtocolEra } from './server/protocols/version.js'
 
 import Text from './server/contents/text.js'
 import Blob from './server/contents/blob.js'
@@ -79,5 +80,29 @@ export default class<T extends McpRequestType = McpRequestType> implements Respo
       result,
       error,
     } as const
+  }
+
+  static forProtocol(
+    response: JsonRpcResponse,
+    options: { era: ProtocolEra; serverName: string; serverVersion: string }
+  ): JsonRpcResponse {
+    if (options.era !== 'modern' || !response.result) {
+      return response
+    }
+
+    return {
+      ...response,
+      result: {
+        ...response.result,
+        resultType: response.result.resultType ?? 'complete',
+        _meta: {
+          'io.modelcontextprotocol/serverInfo': {
+            name: options.serverName,
+            version: options.serverVersion,
+          },
+          ...response.result._meta,
+        },
+      },
+    }
   }
 }

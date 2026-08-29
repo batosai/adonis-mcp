@@ -144,6 +144,31 @@ test.group('Server', () => {
     ])
   })
 
+  test('should decorate modern results without changing legacy results', async ({ assert }) => {
+    const server = new Server({ name: 'Test Server', version: '2.0.0' })
+    const modernTransport = new FakeTransport()
+    const legacyTransport = new FakeTransport()
+    const modernRequest = createJsonRpcRequest('tools/list', {
+      _meta: {
+        'io.modelcontextprotocol/protocolVersion': '2026-07-28',
+        'io.modelcontextprotocol/clientCapabilities': {},
+      },
+    })
+
+    await server.handle(modernRequest, modernTransport)
+    await server.handle(createJsonRpcRequest('tools/list'), legacyTransport)
+
+    assert.equal(modernTransport.getLastMessage()?.result?.resultType, 'complete')
+    assert.deepEqual(modernTransport.getLastMessage()?.result?._meta, {
+      'io.modelcontextprotocol/serverInfo': {
+        name: 'Test Server',
+        version: '2.0.0',
+      },
+    })
+    assert.notProperty(legacyTransport.getLastMessage()?.result ?? {}, 'resultType')
+    assert.notProperty(legacyTransport.getLastMessage()?.result ?? {}, '_meta')
+  })
+
   test('should reject an unsupported modern protocol version', async ({ assert }) => {
     const server = new Server({})
     const transport = new FakeTransport()

@@ -20,6 +20,7 @@ import { createError } from '@adonisjs/core/exceptions'
 import { ErrorCode } from './enums/error.js'
 import ServerContext from './server/context.js'
 import JsonRpcException from './server/exceptions/jsonrpc_exception.js'
+import Response from './response.js'
 import {
   LEGACY_PROTOCOL_VERSIONS,
   SUPPORTED_PROTOCOL_VERSIONS,
@@ -216,7 +217,12 @@ export default class Server {
         const instance = new (MethodClass as unknown as { new (...args: any[]): MethodInterface })()
 
         // Ensure the instance is treated as MethodInterface when calling handle to satisfy TS
-        const response = await (instance as unknown as MethodInterface).handle(mcpContext)
+        const methodResponse = await (instance as unknown as MethodInterface).handle(mcpContext)
+        const response = Response.forProtocol(methodResponse, {
+          era: mcpContext.protocolEra,
+          serverName: mcpContext.serverName,
+          serverVersion: mcpContext.serverVersion,
+        })
 
         this.#emitter?.emit('mcp:response', response)
         activeTransport.send(response)
