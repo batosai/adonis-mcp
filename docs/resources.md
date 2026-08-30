@@ -238,11 +238,11 @@ async handle({ response }: ResourceContext) {
 
 ### Binary Content (Blob)
 
-For binary resources (images, PDFs, etc.), encode as base64:
+For binary resources (images, PDFs, etc.), pass a `Buffer`; the package encodes it as base64:
 
 ```typescript
 async handle({ response }: ResourceContext) {
-  const content = await fs.readFile('path/to/image.png', 'base64')
+  const content = await fs.readFile('path/to/image.png')
   return response.blob(content)
 }
 ```
@@ -361,19 +361,6 @@ export default class DocumentResource extends Resource {
   
   async handle({ response }: ResourceContext) {
     return response.text('Document content')
-  }
-}
-```
-
-You can also set this dynamically:
-
-```typescript
-export default class DynamicDocResource extends Resource {
-  async handle({ response }: ResourceContext) {
-    const doc = await Document.first()
-    this.setAnnotation('lastModified', doc.updatedAt.toISOString())
-    
-    return response.text(doc.content)
   }
 }
 ```

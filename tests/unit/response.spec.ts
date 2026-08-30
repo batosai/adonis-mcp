@@ -9,6 +9,22 @@ import { test } from '@japa/runner'
 import Response from '../../src/response.js'
 
 test.group('Response', () => {
+  test('should accept a Buffer for blob responses', async ({ assert }) => {
+    const response = new Response({
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'resources/read',
+      params: { uri: 'file:///test.bin' },
+    })
+
+    const content = await response.blob(Buffer.from('Binary data')).toResource({
+      uri: 'file:///test.bin',
+      mimeType: 'application/octet-stream',
+    } as any)
+
+    assert.equal(content.blob, 'QmluYXJ5IGRhdGE=')
+  })
+
   test('should preserve result metadata authored by a handler', ({ assert }) => {
     const response = Response.forProtocol(
       Response.toJsonRpc({

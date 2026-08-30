@@ -330,7 +330,7 @@ async handle({ request, response }: ToolContext) {
 }
 ```
 
-Available `ErrorCode` values: `InvalidRequest` (-32600), `MethodNotFound` (-32601), `InvalidParams` (-32602), `InternalError` (-32603), `ConnectionClosed` (-32000), `RequestTimeout` (-32001).
+Available `ErrorCode` values: `ConnectionClosed` (-32000), `RequestTimeout` (-32001), `HeaderMismatch` (-32020), `MissingRequiredClientCapability` (-32021), `UnsupportedProtocolVersion` (-32022), `ParseError` (-32700), `InvalidRequest` (-32600), `MethodNotFound` (-32601), `InvalidParams` (-32602), and `InternalError` (-32603).
 
 The same exception can be thrown from **Resources** and **Prompts** handlers (use `request.id` from the context).
 
@@ -339,11 +339,11 @@ The same exception can be thrown from **Resources** and **Prompts** handlers (us
 You can return multiple content items:
 
 ```typescript
-return response.send([
+return [
   response.text('Here is some information:'),
   response.structured({ data: 'value' }),
   response.resourceLink('file:///docs/help.txt')
-])
+]
 ```
 
 ### Response Metadata

@@ -2,7 +2,9 @@
 
 ## Integration tests with FakeTransport (recommended)
 
-Test the full JSON-RPC flow with Japa: create a `Server`, register components by path, connect a `FakeTransport`, send `initialize`, then the method under test, and inspect `transport.getLastMessage()`.
+Test the full JSON-RPC flow with Japa: create a `Server`, register components by path, connect a
+`FakeTransport`, send the method under test with modern request metadata, and inspect
+`transport.getLastMessage()`. Use `initialize` only when testing legacy compatibility.
 
 ```typescript
 import type { CallToolResult, TextContent } from '@jrmc/adonis-mcp/types/jsonrpc'
@@ -22,12 +24,22 @@ test.group('MCP Tool Integration', () => {
     const transport = new FakeTransport()
     await server.connect(transport)
 
-    await server.handle({ jsonrpc: '2.0', id: 1, method: 'initialize', params: {} })
     await server.handle({
       jsonrpc: '2.0',
-      id: 2,
+      id: 1,
       method: 'tools/call',
-      params: { name: 'my_tool', arguments: { name: 'World' } },
+      params: {
+        name: 'my_tool',
+        arguments: { name: 'World' },
+        _meta: {
+          'io.modelcontextprotocol/protocolVersion': '2026-07-28',
+          'io.modelcontextprotocol/clientCapabilities': {},
+          'io.modelcontextprotocol/clientInfo': {
+            name: 'test-client',
+            version: '1.0.0',
+          },
+        },
+      },
     })
 
     const result = transport.getLastMessage()?.result as CallToolResult
@@ -64,11 +76,23 @@ const result = transport.getLastMessage()?.result as CompleteResult
 // result.completion.values is the suggestions array
 ```
 
-### Testing initialization/capabilities
+### Testing protocol generations
 
-Send `initialize` with `protocolVersion`, `capabilities`, `clientInfo`; the `InitializeResult` exposes `serverInfo.name/version` and `capabilities.tools/resources/prompts` (present when at least one component of that kind is registered).
+For modern discovery, send `server/discover` with the same `_meta` envelope. Assert
+`supportedVersions`, `resultType`, `_meta['io.modelcontextprotocol/serverInfo']`, `ttlMs`, and
+`cacheScope`. Modern tool/resource/prompt results should receive the same response envelope.
 
-Useful result types from `@jrmc/adonis-mcp/types/jsonrpc`: `InitializeResult`, `CallToolResult`, `ReadResourceResult`, `GetPromptResult`, `ListPromptsResult`, `CompleteResult`, `TextContent`, `TextResourceContents`.
+`FakeTransport` tests server dispatch and response decoration but has no HTTP headers. Add an HTTP
+integration test when validating `MCP-Protocol-Version`, `Mcp-Method`, `Mcp-Name`, or
+`Mcp-Param-*`; mismatches must return HTTP 400 with `ErrorCode.HeaderMismatch` (-32020).
+
+For legacy compatibility, send `initialize` with `protocolVersion`, `capabilities`, and
+`clientInfo`; the `InitializeResult` exposes `serverInfo.name/version` and server capabilities.
+Legacy results must not receive modern `resultType`, cache hints, or server `_meta` decoration.
+
+Useful result types from `@jrmc/adonis-mcp/types/jsonrpc`: `DiscoverResult`, `InitializeResult`,
+`CallToolResult`, `ReadResourceResult`, `GetPromptResult`, `ListPromptsResult`, `CompleteResult`,
+`TextContent`, `TextResourceContents`.
 
 ## MCP Inspector (interactive debugging)
 
@@ -77,4 +101,8 @@ node ace mcp:inspector        # HTTP transport (default)
 node ace mcp:inspector stdio  # stdio transport
 ```
 
-Development environment only — it refuses to run in production.
+Development environment only — it refuses to run in production. The command creates a writable
+`.mcp-inspector.json` catalog at the application root when needed and preserves existing settings.
+The `adonis-mcp-http` entry uses `protocolEra: 'modern'`; the `adonis-mcp-stdio` entry uses
+`protocolEra: 'legacy'`. Do not commit credentials if the Inspector persists headers in the
+catalog.

@@ -21,7 +21,7 @@ Build Model Context Protocol servers inside AdonisJS applications. Tools, resour
    node ace make:mcp-prompt my_prompt
    ```
 3. **Schemas are JSON Schema** and must be returned `as Schema` from `schema()`. Zod (`z.toJSONSchema(zodSchema, { io: "input" })`) or VineJS ≥ v4 (`vine.create(vineSchema).toJSONSchema()`) can generate them.
-4. **Prompts return an array** of content items; tools return a single content or an array via `response.send([...])`.
+4. **Return multiple contents as an array**. There is no `response.send()` method: `return [response.text('First'), response.text('Second')]`.
 5. **Always `await` bouncer calls** — forgetting `await` turns an authorization error into an unhandled rejection instead of a JSON-RPC error.
 
 ## Tool
@@ -82,13 +82,13 @@ export default class UserDocumentResource extends Resource<Args> {
   async handle({ args, response }: ResourceContext<Args>) {
     const content = await loadDocument(args?.id)
     this.size = content.length      // set size when known
-    return response.text(content)   // or response.blob(base64) for binary
+    return response.text(content)   // or response.blob(buffer) for binary
   }
 }
 ```
 
 - URI template operators: `{name}`, `{/name}`, `{?name}`, `{&name}`, `{#name}`, `{+name}`, `{.name}`. Template variables arrive typed in `args`.
-- Resource annotations (from `@jrmc/adonis-mcp/annotations`): `@priority(0.0–1.0)`, `@audience(Role.USER | Role.ASSISTANT | [both])` (Role from `@jrmc/adonis-mcp/enums/role`), `@lastModified('ISO-8601')`. Dynamic: `this.setAnnotation('lastModified', iso)` inside `handle()`.
+- Resource annotations (from `@jrmc/adonis-mcp/annotations`): `@priority(0.0–1.0)`, `@audience(Role.USER | Role.ASSISTANT | [both])` (Role from `@jrmc/adonis-mcp/enums/role`), `@lastModified('ISO-8601')`.
 
 ## Prompt
 
@@ -119,20 +119,20 @@ export default class CodeReviewPrompt extends Prompt<Schema> {
 }
 ```
 
-## Responses (available on `response` in all handlers)
+## Responses
 
-| Method | Use |
-|---|---|
-| `response.text(string)` | Plain text |
-| `response.structured(object)` | Structured JSON (tools) |
-| `response.image(base64, mime)` / `response.audio(base64, mime)` | Media |
-| `response.blob(base64)` | Binary resource content |
-| `response.resourceLink(uri)` | Link to a resource (tools) |
-| `response.embeddedResource(uri)` | Embed a resource (prompts) |
-| `response.error(message)` | Simple error |
-| `response.send([...])` | Multiple contents (tools) |
+| Method | Handlers | Use |
+|---|---|---|
+| `response.text(string)` | Tool, resource, prompt | Plain text |
+| `response.image(base64, mime)` / `response.audio(base64, mime)` | Tool, prompt | Media |
+| `response.structured(object)` | Tool | Structured JSON |
+| `response.blob(stringOrBuffer)` | Resource | Text or a `Buffer`, encoded to base64 by the package |
+| `response.resourceLink(uri)` | Tool | Link to a registered resource |
+| `response.embeddedResource(uri)` | Tool, prompt | Embed a registered resource |
+| `response.error(message)` | Tool, resource | Tool error or JSON-RPC resource error |
 
-All content objects support `.withMeta({ ... })`.
+Return an array directly for multiple tool or prompt contents. Text, image, audio, blob, resource
+link, embedded resource, and error content support `.withMeta({ ... })`; structured content does not.
 
 ## Errors
 
@@ -145,7 +145,27 @@ import { ErrorCode } from '@jrmc/adonis-mcp/enums/error'
 throw new JsonRpcException('Not found', ErrorCode.InvalidParams, request.id, { resource: 'user' })
 ```
 
-`ErrorCode`: `InvalidRequest` (-32600), `MethodNotFound` (-32601), `InvalidParams` (-32602), `InternalError` (-32603), `ConnectionClosed` (-32000), `RequestTimeout` (-32001). Works in tools, resources, and prompts (`request.id` comes from the context).
+Available `ErrorCode` values include `ConnectionClosed` (-32000), `RequestTimeout` (-32001),
+`HeaderMismatch` (-32020), `MissingRequiredClientCapability` (-32021),
+`UnsupportedProtocolVersion` (-32022), `ParseError` (-32700), `InvalidRequest` (-32600),
+`MethodNotFound` (-32601), `InvalidParams` (-32602), and `InternalError` (-32603). Exceptions work
+in tools, resources, and prompts (`request.id` comes from the context).
+
+## Protocol-aware handlers
+
+Handlers can inspect `protocolEra`, `protocolVersion`, `clientCapabilities`, `clientInfo`, and
+`logLevel` from their context. Modern `2026-07-28` requests are stateless; legacy clients use
+`initialize` and `MCP-Session-Id`. Read [references/setup.md](references/setup.md) before changing
+the generated middleware or cache policy.
+
+A primitive tool argument can require a mirrored HTTP header:
+
+```typescript
+region: { 'type': 'string', 'x-mcp-header': 'Region' }
+```
+
+For modern `tools/call`, the body value must match `Mcp-Param-Region`. Restrict this annotation to
+primitive `string`, `integer`, or `boolean` properties.
 
 ## VineJS validation in handlers
 

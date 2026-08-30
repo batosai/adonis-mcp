@@ -28,7 +28,7 @@ type AudioResponseType<T extends McpRequestType> = T extends 'prompts/get' ? Aud
 export interface Response<T extends McpRequestType = McpRequestType> {
   readonly type: T
   text(text: string): TextResponseType<T>
-  blob(text: string): Blob
+  blob(text: string | Buffer): Blob
   image(data: string, mimeType: string, _meta?: Record<string, unknown>): ImageResponseType<T>
   audio(data: string, mimeType: string, _meta?: Record<string, unknown>): AudioResponseType<T>
   structured(object: Record<string, unknown>): Structured

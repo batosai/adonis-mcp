@@ -41,7 +41,7 @@ export default class<T extends McpRequestType = McpRequestType> implements Respo
     return new Text(text)
   }
 
-  blob(text: string) {
+  blob(text: string | Buffer) {
     return new Blob(text)
   }
 
