@@ -1075,11 +1075,18 @@ node ace mcp:inspector http
 node ace mcp:inspector stdio
 ```
 
+The command creates a writable `.mcp-inspector.json` catalog at the application root when needed.
+HTTP servers default to the modern protocol era, while stdio servers use the legacy era. Existing
+catalog entries and settings are preserved between launches.
+
+The Inspector may persist headers or other local connection settings in the catalog. Add
+`.mcp-inspector.json` to `.gitignore` when it contains credentials.
+
 **Important notes:**
 
 - The inspector can only be used in development environment (not in production)
 - For HTTP transport, make sure your server is running and the MCP route is configured
-- The inspector will automatically connect to your MCP server and allow you to:
+- The inspector catalog includes your MCP server and allows you to:
   - List and test all available tools
   - Browse and read resources
   - Execute prompts with different arguments

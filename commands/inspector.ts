@@ -9,6 +9,7 @@ import type { CommandOptions } from '@adonisjs/core/types/ace'
 
 import { $ } from 'execa'
 import { args, BaseCommand } from '@adonisjs/core/ace'
+import { ensureInspectorServer } from '../src/utils/inspector_catalog.js'
 
 export default class Inspector extends BaseCommand {
   static commandName = 'mcp:inspector'
@@ -33,6 +34,8 @@ export default class Inspector extends BaseCommand {
       return
     }
 
+    const catalogPath = this.app.makePath('.mcp-inspector.json')
+
     if (this.transport === 'http') {
       const router = await this.app.container.make('router')
 
@@ -42,18 +45,31 @@ export default class Inspector extends BaseCommand {
         .disableRouteLookup()
         .make('/mcp')
 
+      await ensureInspectorServer(catalogPath, 'adonis-mcp-http', {
+        type: 'http',
+        url: serverUrl,
+        protocolEra: 'modern',
+      })
+
       const inspectorProcess = $({
         stdio: 'inherit',
-      })`npx @modelcontextprotocol/inspector --transport http --server-url ${serverUrl}`
+      })`npx @modelcontextprotocol/inspector --catalog ${catalogPath}`
 
       await inspectorProcess
     } else {
       const nodeBinary = process.execPath
       const acePath = this.app.makePath('ace.js')
 
+      await ensureInspectorServer(catalogPath, 'adonis-mcp-stdio', {
+        type: 'stdio',
+        command: nodeBinary,
+        args: [acePath, 'mcp:start'],
+        protocolEra: 'legacy',
+      })
+
       const inspectorProcess = $({
         stdio: 'inherit',
-      })`npx @modelcontextprotocol/inspector --transport stdio ${nodeBinary} ${acePath} mcp:start`
+      })`npx @modelcontextprotocol/inspector --catalog ${catalogPath}`
 
       await inspectorProcess
     }
