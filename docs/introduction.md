@@ -122,6 +122,19 @@ Built-in support for AdonisJS authentication and Bouncer authorization in your M
 - [x] Logger
 - [ ] Output tool
 
+### Planned for 2.1
+
+- [ ] Multi-round tool results (MRTR)
+- [ ] `response.inputRequired()` API
+- [ ] Elicitation responses
+- [ ] `inputResponses` in the handler context
+
+### Future versions
+
+- [ ] Tasks extension (`io.modelcontextprotocol/tasks`)
+- [ ] `subscriptions/listen` when change notifications are supported
+- [ ] OpenTelemetry tracing for MCP requests
+
 ## Inspiration
 
 This package is inspired by [Laravel MCP](https://github.com/laravel/mcp) and follows similar patterns adapted for the AdonisJS ecosystem.
