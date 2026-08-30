@@ -5,6 +5,8 @@
 
 Adonis MCP provides a simple and elegant way for AI clients to interact with your AdonisJS application through the [Model Context Protocol](https://modelcontextprotocol.io/). It offers an expressive, fluent interface for defining **tools**, **resources**, and **prompts** that enable AI-powered interactions with your application.
 
+> Compatible with **AdonisJS 6** and **AdonisJS 7**.
+
 ## Features
 
 - **Tools** — Type-safe handlers that AI models can call to perform actions (query a database, send emails, call external APIs…)
