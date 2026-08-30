@@ -1,4 +1,4 @@
-# Protocol lifecycle and sessions
+# MCP middleware and sessions
 
 `@jrmc/adonis-mcp` supports both MCP protocol generations:
 

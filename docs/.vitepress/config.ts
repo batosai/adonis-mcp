@@ -55,7 +55,7 @@ export default defineConfig({
         link: '/dependency-injection'
       },
       {
-        text: 'Sessions',
+        text: 'Middleware & sessions',
         link: '/sessions'
       },
       {

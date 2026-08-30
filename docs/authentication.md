@@ -62,7 +62,7 @@ router.mcp().use(middleware.mcp())
 ```
 
 ::: tip
-The MCP middleware is automatically registered as a named middleware during installation. If it's missing, see the [Sessions documentation](./sessions.md) for manual registration instructions.
+The MCP middleware is automatically registered as a named middleware during installation. If it's missing, see the [middleware documentation](./sessions.md) for manual registration instructions.
 :::
 
 ### 4. Apply Auth Middleware to the MCP Route
