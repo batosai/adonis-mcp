@@ -120,7 +120,6 @@ Built-in support for AdonisJS authentication and Bouncer authorization in your M
 - [x] Demo applications
 - [x] Events
 - [x] Logger
-- [ ] Alternative transports (SSE)
 - [ ] Output tool
 
 ## Inspiration
