@@ -213,15 +213,18 @@ In your `start/routes.ts` file, register the MCP route and apply middleware:
 import { middleware } from '#start/kernel'
 import router from '@adonisjs/core/services/router'
 
-// Register MCP route (defaults to /mcp, or specify a custom path)
-router.mcp().use(middleware.auth())
+// Register MCP route (defaults to /mcp) with protocol and auth middleware
+router.mcp().use([middleware.mcp(), middleware.auth()])
 ```
 
 You can also specify a custom path:
 
 ```typescript
-router.mcp('/custom-mcp-path').use(middleware.auth())
+router.mcp('/custom-mcp-path').use([middleware.mcp(), middleware.auth()])
 ```
+
+The generated `mcp` middleware handles the stateless v2 protocol and legacy MCP sessions. Keep it
+on the route even when authentication is not required.
 
 > **⚠️ Important: CSRF Protection**
 >
@@ -293,7 +296,12 @@ For tools, you can use:
 - `response.structured(object: Record<string, unknown>)`: Return structured JSON data
 - `response.resourceLink(uri: string)`: Return a link to a resource
 - `response.error(message: string)`: Return an error message
-- `response.send(content: Content | Content[])`: Send custom content objects
+
+Return an array directly when a tool needs to send multiple content objects:
+
+```typescript
+return [response.text('Report generated'), response.resourceLink('file:///reports/latest.pdf')]
+```
 
 ```typescript
 async handle({ args, response }: ToolContext<Schema>) {
@@ -324,12 +332,12 @@ async handle({ args, response }: ToolContext<Schema>) {
 For resources, you can use:
 
 - `response.text(text: string)`: Return text content
-- `response.blob(text: string)`: Return binary content (base64 encoded)
+- `response.blob(data: string | Buffer)`: Return binary content (encoded to base64)
 
 ```typescript
 async handle({ response }: ResourceContext) {
-  const content = await fs.readFile('path/to/file.txt', 'utf-8')
-  return response.text(content)
+  const content = await fs.readFile('path/to/file.pdf')
+  return response.blob(content)
 }
 ```
 
@@ -442,7 +450,9 @@ The resource link will include metadata about the resource (name, mimeType, titl
 
 ### Metadata with `withMeta()`
 
-The `withMeta()` method is available on all content types and allows you to attach custom metadata to your responses. This metadata can be used by MCP clients for various purposes such as logging, analytics, or custom processing:
+The `withMeta()` method is available on text, image, audio, blob, resource link, and embedded
+resource content. It allows you to attach custom metadata used by MCP clients for logging,
+analytics, or custom processing. Structured responses do not support `withMeta()`:
 
 ```typescript
 async handle({ args, response }: ToolContext<Schema>) {
@@ -1049,9 +1059,34 @@ The package supports multiple transport mechanisms:
 - **Stdio Transport**: For command-line MCP servers that communicate via standard input/output
 - **Fake Transport**: For testing purposes, allows you to capture and inspect MCP messages
 
+### Version 2 protocol
+
+HTTP requests using MCP `2026-07-28` are stateless and carry their protocol metadata with every
+request. Legacy `2025-11-25` and `2025-06-18` clients retain the `initialize` lifecycle and
+`MCP-Session-Id` handling.
+
+Modern HTTP requests use `MCP-Protocol-Version` and `Mcp-Method` routing headers. `Mcp-Name` is
+also required for `tools/call`, `prompts/get`, and `resources/read`. Tool schema properties marked
+with `x-mcp-header` must match their corresponding `Mcp-Param-*` header.
+
+Clients may call `server/discover` to retrieve the supported protocol versions, capabilities,
+instructions, and server identity. Handlers can adapt their behavior using the request context:
+
+```typescript
+ctx.protocolEra
+ctx.protocolVersion
+ctx.clientCapabilities
+ctx.clientInfo
+ctx.logLevel
+```
+
+See the [protocol guide](docs/protocol.md) for request envelopes, response metadata, routing
+headers, and cache hints. See [MCP middleware and sessions](docs/sessions.md) for the dual-generation
+lifecycle.
+
 ### Pagination
 
-The `tools/list` and `resources/list` methods support cursor-based pagination to handle large numbers of tools and resources efficiently. This is particularly useful when you have many tools or resources registered in your application. [More information](https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/pagination)
+The `tools/list` and `resources/list` methods support cursor-based pagination to handle large numbers of tools and resources efficiently. This is particularly useful when you have many tools or resources registered in your application. [More information](https://modelcontextprotocol.io/specification/2026-07-28/server/utilities/pagination)
 
 ## Testing & Debugging
 
