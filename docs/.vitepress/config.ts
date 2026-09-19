@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitepress'
+import { buildAgentMarkdown } from './agent_markdown.js'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -14,6 +15,10 @@ export default defineConfig({
       },
     ],
   ],
+  sitemap: {
+    hostname: 'https://adonis-mcp.jrmc.dev',
+  },
+  buildEnd: buildAgentMarkdown,
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     // nav: [
