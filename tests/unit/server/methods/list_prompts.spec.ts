@@ -20,27 +20,19 @@ const prompt1Json: Record<string, unknown> = {
   name: 'test-prompt-1',
   title: 'Test Prompt 1',
   description: 'First test prompt',
-  inputSchema: {
-    type: 'object',
-    properties: { text: { type: 'string', description: 'Text input' } },
-    required: ['text'],
-  },
+  arguments: [{ name: 'text', description: 'Text input', required: true }],
 }
 const prompt2Json: Record<string, unknown> = {
   name: 'test-prompt-2',
   title: 'Test Prompt 2',
   description: 'Second test prompt',
-  inputSchema: {
-    type: 'object',
-    properties: { number: { type: 'number', description: 'Number input' } },
-    required: [],
-  },
+  arguments: [{ name: 'number', description: 'Number input', required: false }],
 }
 const promptNoSchemaJson: Record<string, unknown> = {
   name: 'test-prompt-no-schema',
   title: 'Test Prompt No Schema',
   description: 'Test prompt without schema',
-  inputSchema: { type: 'object', properties: {} },
+  arguments: [],
 }
 
 test.group('ListPrompts Method', () => {
@@ -74,18 +66,16 @@ test.group('ListPrompts Method', () => {
     assert.exists(prompt1)
     assert.equal(prompt1.title, 'Test Prompt 1')
     assert.equal(prompt1.description, 'First test prompt')
-    assert.exists(prompt1.inputSchema)
-    assert.equal(prompt1.inputSchema.type, 'object')
-    assert.exists(prompt1.inputSchema.properties.text)
-    assert.deepEqual(prompt1.inputSchema.required, ['text'])
+    assert.deepEqual(prompt1.arguments, [
+      { name: 'text', description: 'Text input', required: true },
+    ])
 
     assert.exists(prompt2)
     assert.equal(prompt2.title, 'Test Prompt 2')
     assert.equal(prompt2.description, 'Second test prompt')
-    assert.exists(prompt2.inputSchema)
-    assert.equal(prompt2.inputSchema.type, 'object')
-    assert.exists(prompt2.inputSchema.properties.number)
-    assert.deepEqual(prompt2.inputSchema.required, [])
+    assert.deepEqual(prompt2.arguments, [
+      { name: 'number', description: 'Number input', required: false },
+    ])
   })
 
   test('should handle prompt without schema', async ({ assert }) => {
@@ -108,10 +98,7 @@ test.group('ListPrompts Method', () => {
 
     const prompt = prompts[0]
     assert.equal(prompt.name, 'test-prompt-no-schema')
-    assert.exists(prompt.inputSchema)
-    assert.equal(prompt.inputSchema.type, 'object')
-    assert.deepEqual(prompt.inputSchema.properties, {})
-    assert.deepEqual(prompt.inputSchema.required, undefined)
+    assert.deepEqual(prompt.arguments, [])
   })
 
   test('should return empty array when no prompts are registered', async ({ assert }) => {
