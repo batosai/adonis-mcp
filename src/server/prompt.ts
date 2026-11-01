@@ -26,12 +26,25 @@ export abstract class Prompt<T extends JSONSchema = JSONSchema> {
 
   toJson() {
     const schema = this.schema()
+    const properties = ('properties' in schema ? schema.properties : {}) as Record<
+      string,
+      { title?: string; description?: string }
+    >
+    const required: readonly string[] = ('required' in schema && schema.required) || []
+
+    // MCP prompts/list carries an `arguments` array, not a JSON Schema.
+    const args = Object.entries(properties).map(([name, property]) => ({
+      name,
+      ...(property.title ? { title: property.title } : {}),
+      ...(property.description ? { description: property.description } : {}),
+      required: required.includes(name),
+    }))
 
     return {
       name: this.name,
       title: this.title,
       description: this.description,
-      inputSchema: schema,
+      arguments: args,
       _meta: this.meta,
     }
   }
