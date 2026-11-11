@@ -134,3 +134,7 @@ dist
 # vitepress
 docs/.vitepress/dist
 docs/.vitepress/cache
+
+# deploy docs
+Caddyfile
+deploy.config.json
