@@ -5,9 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.0.1
+
+> Released at *2026-11-11*
+
+### Added
+
+- Add date-based agent skill versioning through `metadata.version` (`YYYY.MM.DD.1`)
+
+### Fixed
+
+- Return `InvalidRequest` for malformed JSON-RPC envelopes instead of throwing before request handling
+- Ignore notifications without responding and preserve support for request ID `0`
+- Preserve original tool exceptions while continuing to serialize VineJS validation errors as tool error content
+- Accept empty strings for argument completion while rejecting missing or non-string values
+- Resolve tools, resources, and prompts through the application container during auto-discovery so constructor dependencies are injected
+- Keep `mcp:start` alive until stdin closes and wait for pending requests before terminating the application
+- Continue processing buffered stdio messages after JSON `null` and return `ParseError` for invalid JSON
+- Update documentation and skill testing examples to use registry entries with `{ path, json }`, container-based instantiation, and `addResourceTemplate()` for URI templates
+
 ## 2.0.0
 
-> Unreleased
+> Released at *2026-08-30*
 
 ### Added
 
