@@ -11,3 +11,8 @@ npx skills add batosai/adonis-mcp
 ## Available skills
 
 - **[adonis-mcp](adonis-mcp/SKILL.md)** — Build MCP servers in AdonisJS applications: create tools, resources, and prompts, with references for setup (installation, routes, CSRF, sessions, transports), authentication & authorization (Auth, Bouncer), and testing (FakeTransport, MCP Inspector).
+
+## Versioning
+
+The skill version is stored in `metadata.version` in its `SKILL.md` frontmatter.
+Use the format `YYYY.MM.DD.1`: the date of the skill revision followed by `.1`.

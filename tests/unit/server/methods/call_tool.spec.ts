@@ -157,3 +157,34 @@ test.group('CallTool Method', () => {
     }
   })
 })
+
+test('preserves thrown exceptions and supports thrown validation contents', async ({ assert }) => {
+  const { default: ErrorContent } = await import('../../../../src/server/contents/error.js')
+  const context = createTestContext(createToolsCallRequest('test'), {
+    tools: { test: { path: new URL(toolWithTextModule, import.meta.url).href, json: {} } },
+  }) as ToolContext
+  const original = new Error('Original failure')
+  for (const thrown of [original, [new ErrorContent('Invalid input')]]) {
+    const app = {
+      container: {
+        ...fakeApp.container,
+        make: () => ({}),
+        call: () => {
+          throw thrown
+        },
+      },
+    } as any
+    if (thrown === original) {
+      try {
+        await new CallTool().handle(context, app)
+        assert.fail('Expected original failure')
+      } catch (error) {
+        assert.strictEqual(error, original)
+      }
+    } else {
+      const response = await new CallTool().handle(context, app)
+      assert.isTrue(response.result?.isError)
+      assert.deepEqual(response.result?.content, [{ type: 'text', text: 'Invalid input' }])
+    }
+  }
+})

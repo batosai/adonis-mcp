@@ -19,22 +19,32 @@ export default class MakeTool extends BaseCommand {
 
   static options: CommandOptions = {
     startApp: true,
-    // stayAlive: true,
+    staysAlive: true,
   }
 
   #server: McpServer | null = null
 
   async run() {
-    try {
-      this.#server = await this.app.container.make('jrmc.mcp')
+    this.#server = await this.app.container.make('jrmc.mcp')
+    const transport = new StdioTransport()
+    const pending = new Set<Promise<unknown>>()
 
-      const transport = new StdioTransport()
-      await this.#server.connect(transport)
-      transport.on('mcp:stdio:transport:message', async (message: JsonRpcRequest) => {
-        await this.#server?.handle(message)
+    transport.on('mcp:stdio:transport:message', (message: JsonRpcRequest) => {
+      const task = this.#server!.handle(message).catch((error) => {
+        this.exitCode = 1
+        this.logger.error(error.message)
       })
-    } catch (error: any) {
-      throw error
-    }
+      pending.add(task)
+      void task.finally(() => pending.delete(task))
+    })
+
+    const ended = new Promise<void>((resolve) => {
+      transport.once('mcp:stdio:transport:end', resolve)
+    })
+    await this.#server.connect(transport)
+    await ended
+    await Promise.all(pending)
+    transport.close()
+    await this.terminate()
   }
 }

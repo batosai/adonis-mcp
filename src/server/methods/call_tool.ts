@@ -62,7 +62,10 @@ export default class CallTool implements Method {
     try {
       contents = await app.container.call(tool, 'handle', [ctx])
     } catch (error) {
-      if (error instanceof JsonRpcException) {
+      if (
+        !(error instanceof ErrorContent) &&
+        !(Array.isArray(error) && error.every((item) => item instanceof ErrorContent))
+      ) {
         throw error
       }
       contents = error

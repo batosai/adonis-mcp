@@ -17,14 +17,14 @@ export class ReadBuffer {
     this.#buffer = this.#buffer ? Buffer.concat([this.#buffer, chunk]) : chunk
   }
 
-  readMessage(): JsonRpcRequest | null {
+  readMessage(): JsonRpcRequest | null | undefined {
     if (!this.#buffer) {
-      return null
+      return undefined
     }
 
     const index = this.#buffer.indexOf('\n')
     if (index === -1) {
-      return null
+      return undefined
     }
 
     const line = this.#buffer.toString('utf8', 0, index).replace(/\r$/, '')

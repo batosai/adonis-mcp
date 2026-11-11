@@ -10,6 +10,7 @@ import type { JsonRpcResponse } from '../../types/jsonrpc.js'
 import type { Readable, Writable } from 'node:stream'
 
 import { ReadBuffer, serializeMessage } from '../../utils/stdio.js'
+import { ErrorCode } from '../../enums/error.js'
 import { EventEmitter } from 'node:events'
 
 export default class StdioTransport extends EventEmitter implements Transport {
@@ -22,21 +23,42 @@ export default class StdioTransport extends EventEmitter implements Transport {
     this.processReadBuffer()
   }
 
-  constructor() {
+  constructor(stdin: Readable = process.stdin, stdout: Writable = process.stdout) {
     super()
+    this.#stdin = stdin
+    this.#stdout = stdout
     this.#stdin.on('data', this.ondata)
+    this.#stdin.once('end', this.onend)
+  }
+
+  onend = () => {
+    this.close()
+    this.emit('mcp:stdio:transport:end')
+  }
+
+  close() {
+    this.#stdin.removeListener('data', this.ondata)
+    this.#stdin.removeListener('end', this.onend)
+    this.#readBuffer.clear()
   }
 
   async processReadBuffer() {
     while (true) {
+      let message
       try {
-        const message = this.#readBuffer.readMessage()
-        if (message === null) {
+        message = this.#readBuffer.readMessage()
+        if (message === undefined) {
           break
         }
-
-        this.emit('mcp:stdio:transport:message', message)
-      } catch (error) {}
+      } catch {
+        this.send({
+          jsonrpc: '2.0',
+          id: null,
+          error: { code: ErrorCode.ParseError, message: 'Parse error' },
+        })
+        continue
+      }
+      this.emit('mcp:stdio:transport:message', message)
     }
   }
 

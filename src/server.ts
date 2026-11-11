@@ -174,23 +174,45 @@ export default class Server {
   async handle(jsonRequest: JsonRpcRequest, transport?: Transport) {
     const activeTransport = transport ?? this.#transport
 
+    if (!activeTransport) {
+      throw createError('No transport connected.', 'E_NO_TRANSPORT_CONNECTED', 500)
+    }
+
+    if (
+      !jsonRequest ||
+      typeof jsonRequest !== 'object' ||
+      Array.isArray(jsonRequest) ||
+      jsonRequest.jsonrpc !== '2.0' ||
+      typeof jsonRequest.method !== 'string' ||
+      (jsonRequest.id !== undefined &&
+        typeof jsonRequest.id !== 'string' &&
+        !(typeof jsonRequest.id === 'number' && Number.isFinite(jsonRequest.id))) ||
+      (jsonRequest.params !== undefined &&
+        (!jsonRequest.params ||
+          typeof jsonRequest.params !== 'object' ||
+          Array.isArray(jsonRequest.params)))
+    ) {
+      return activeTransport.send(
+        {
+          jsonrpc: '2.0',
+          id: null,
+          error: { code: ErrorCode.InvalidRequest, message: 'Invalid request' },
+        },
+        { status: 400 }
+      )
+    }
+
     this.#emitter?.emit('mcp:request', jsonRequest)
 
-    // INGORE NOTIFICATIONS FOR NOW
-    if (jsonRequest.method.startsWith('notifications/')) {
+    // Notifications do not receive responses.
+    if (jsonRequest.id === undefined) {
       return null
     }
 
-    const mcpContext = this.createContext(jsonRequest)
-
-    if (!activeTransport) {
-      throw createError('No transport connected.', 'E_NO_TRANSPORT_CONNECTED', 500)
-    } else {
+    try {
+      const mcpContext = this.createContext(jsonRequest)
       await activeTransport.bindBouncer?.(mcpContext)
       activeTransport.bindAuth?.(mcpContext)
-    }
-
-    try {
       activeTransport.validateRequest?.(jsonRequest, mcpContext)
 
       if (mcpContext.protocolEra === 'modern') {

@@ -291,3 +291,29 @@ test.group('Server', () => {
     )
   })
 })
+
+test('rejects malformed envelopes without throwing', async ({ assert }) => {
+  for (const input of [
+    null,
+    {},
+    [],
+    { jsonrpc: '2.0', method: 1 },
+    { jsonrpc: '1.0', method: 'ping', id: 1 },
+    { jsonrpc: '2.0', method: 'ping', id: {}, params: {} },
+    { jsonrpc: '2.0', method: 'ping', id: 1, params: null },
+  ]) {
+    const transport = new FakeTransport()
+    await new Server({}).handle(input as any, transport)
+    assert.equal(transport.getLastMessage()?.error?.code, ErrorCode.InvalidRequest)
+    assert.isNull(transport.getLastMessage()?.id)
+  }
+})
+
+test('ignores notifications and still responds to id zero', async ({ assert }) => {
+  const server = new Server({})
+  const transport = new FakeTransport()
+  await server.handle({ jsonrpc: '2.0', method: 'notifications/initialized' } as any, transport)
+  assert.notExists(transport.getLastMessage())
+  await server.handle({ jsonrpc: '2.0', method: 'ping', id: 0 }, transport)
+  assert.equal(transport.getLastMessage()?.id, 0)
+})

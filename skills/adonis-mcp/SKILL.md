@@ -1,6 +1,8 @@
 ---
 name: adonis-mcp
 description: Build MCP servers in AdonisJS applications with the @jrmc/adonis-mcp package. Use when creating, editing, or debugging MCP tools, resources, or prompts in an AdonisJS app, when exposing AdonisJS functionality to AI assistants via the Model Context Protocol, or when setting up, securing, or testing an @jrmc/adonis-mcp server.
+metadata:
+  version: "2026.11.11.1"
 ---
 
 # AdonisJS MCP (@jrmc/adonis-mcp)

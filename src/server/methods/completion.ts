@@ -19,7 +19,11 @@ export default class Completion implements Method {
   async handle(ctx: CompleteContext, app = applicationService) {
     const params = ctx.request.params
 
-    if (!params?.argument?.name || !params?.argument?.value) {
+    if (
+      typeof params?.argument?.name !== 'string' ||
+      !params.argument.name ||
+      typeof params.argument.value !== 'string'
+    ) {
       throw new JsonRpcException(
         'The argument name and value are required.',
         ErrorCode.InvalidParams,

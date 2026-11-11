@@ -80,7 +80,7 @@ export default class McpProvider {
       files.map(async (file) => {
         const path = pathToFileURL(join(mcpPath, file)).href
         const { default: Method } = await import(path)
-        const instance = new Method()
+        const instance = await this.app.container.make(Method)
         const entry = { path, json: instance.toJson() }
 
         switch (type) {

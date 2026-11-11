@@ -19,6 +19,8 @@ import FakeTransport from '@jrmc/adonis-mcp/transports/fake_transport'
 import app from '@adonisjs/core/services/app'
 ```
 
+Each registry entry contains `path` (the module path) and `json` (the instance's `toJson()` metadata). Resource templates use `addResourceTemplate()`.
+
 ## Testing Tools
 
 ### Basic Tool Test
@@ -36,7 +38,10 @@ test.group('MCP Tool Integration', () => {
 
     // Register your tool
     server.addTool({
-      'my_tool': app.makePath('app/mcp/tools/my_tool_tool.ts')
+      'my_tool': {
+        path: app.makePath('app/mcp/tools/my_tool_tool.ts'),
+        json: (await app.container.make((await import(app.makePath('app/mcp/tools/my_tool_tool.ts'))).default)).toJson(),
+      }
     })
 
     // Connect with fake transport
@@ -93,7 +98,10 @@ test.group('MCP Resource Integration', () => {
 
     // Register your resource
     server.addResource({
-      'file:///document.txt': app.makePath('app/mcp/resources/document_resource.ts')
+      'file:///document.txt': {
+        path: app.makePath('app/mcp/resources/document_resource.ts'),
+        json: (await app.container.make((await import(app.makePath('app/mcp/resources/document_resource.ts'))).default)).toJson(),
+      }
     })
 
     const transport = new FakeTransport()
@@ -142,8 +150,11 @@ test('should handle resource with URI template', async ({ assert }) => {
   })
 
   // Register resource with template
-  server.addResource({
-    'file://{directory}/{name}.txt': app.makePath('app/mcp/resources/my_resource_resource.ts')
+  server.addResourceTemplate({
+    'file://{directory}/{name}.txt': {
+        path: app.makePath('app/mcp/resources/my_resource_resource.ts'),
+        json: (await app.container.make((await import(app.makePath('app/mcp/resources/my_resource_resource.ts'))).default)).toJson(),
+      }
   })
 
   const transport = new FakeTransport()
@@ -189,8 +200,11 @@ test('should provide resource completions', async ({ assert }) => {
     version: '1.0.0'
   })
 
-  server.addResource({
-    'file://{directory}/{name}.txt': app.makePath('app/mcp/resources/my_resource_resource.ts')
+  server.addResourceTemplate({
+    'file://{directory}/{name}.txt': {
+        path: app.makePath('app/mcp/resources/my_resource_resource.ts'),
+        json: (await app.container.make((await import(app.makePath('app/mcp/resources/my_resource_resource.ts'))).default)).toJson(),
+      }
   })
 
   const transport = new FakeTransport()
@@ -247,7 +261,10 @@ test.group('MCP Prompt Integration', () => {
 
     // Register your prompt
     server.addPrompt({
-      'my_prompt': app.makePath('app/mcp/prompts/my_prompt_prompt.ts')
+      'my_prompt': {
+        path: app.makePath('app/mcp/prompts/my_prompt_prompt.ts'),
+        json: (await app.container.make((await import(app.makePath('app/mcp/prompts/my_prompt_prompt.ts'))).default)).toJson(),
+      }
     })
 
     const transport = new FakeTransport()
@@ -300,13 +317,22 @@ test.group('MCP Server', () => {
     })
 
     server.addTool({
-      'my_tool': app.makePath('app/mcp/tools/my_tool_tool.ts')
+      'my_tool': {
+        path: app.makePath('app/mcp/tools/my_tool_tool.ts'),
+        json: (await app.container.make((await import(app.makePath('app/mcp/tools/my_tool_tool.ts'))).default)).toJson(),
+      }
     })
     server.addResource({
-      'file:///doc.txt': app.makePath('app/mcp/resources/document_resource.ts')
+      'file:///doc.txt': {
+        path: app.makePath('app/mcp/resources/document_resource.ts'),
+        json: (await app.container.make((await import(app.makePath('app/mcp/resources/document_resource.ts'))).default)).toJson(),
+      }
     })
     server.addPrompt({
-      'my_prompt': app.makePath('app/mcp/prompts/my_prompt_prompt.ts')
+      'my_prompt': {
+        path: app.makePath('app/mcp/prompts/my_prompt_prompt.ts'),
+        json: (await app.container.make((await import(app.makePath('app/mcp/prompts/my_prompt_prompt.ts'))).default)).toJson(),
+      }
     })
 
     const transport = new FakeTransport()

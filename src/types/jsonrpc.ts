@@ -30,7 +30,7 @@ export type JsonRpcRequest = {
 
 export type JsonRpcResponse = {
   jsonrpc: '2.0'
-  id: string | number
+  id: string | number | null
   result?: JsonRpcResult
   error?: JsonRpcError
 }
@@ -146,11 +146,7 @@ export type EmbeddedResource = {
 }
 
 export type ContentBlock =
-  | TextContent
-  | ImageContent
-  | AudioContent
-  | EmbeddedResource
-  | ResourceLink
+  TextContent | ImageContent | AudioContent | EmbeddedResource | ResourceLink
 
 // REQUEST TYPES
 

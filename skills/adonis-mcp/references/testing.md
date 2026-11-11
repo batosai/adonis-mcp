@@ -18,7 +18,10 @@ test.group('MCP Tool Integration', () => {
     const server = new Server({ name: 'Test Server', version: '1.0.0' })
 
     server.addTool({
-      'my_tool': app.makePath('app/mcp/tools/my_tool_tool.ts'),
+      'my_tool': {
+        path: app.makePath('app/mcp/tools/my_tool_tool.ts'),
+        json: (await app.container.make((await import(app.makePath('app/mcp/tools/my_tool_tool.ts'))).default)).toJson(),
+      },
     })
 
     const transport = new FakeTransport()
@@ -54,11 +57,11 @@ test.group('MCP Tool Integration', () => {
 
 | Primitive | Registration | Method | Params | Result type |
 |---|---|---|---|---|
-| Tool | `server.addTool({ name: path })` | `tools/call` | `{ name, arguments }` | `CallToolResult` (`result.content[]`) |
-| Resource | `server.addResource({ uri: path })` | `resources/read` | `{ uri }` | `ReadResourceResult` (`result.contents[]`, items have `uri`, `mimeType`, `text`) |
-| Prompt | `server.addPrompt({ name: path })` | `prompts/get` | `{ name, arguments }` | `GetPromptResult` (`result.messages[]` with `role` + `content`) |
+| Tool | `server.addTool({ name: { path, json } })` | `tools/call` | `{ name, arguments }` | `CallToolResult` (`result.content[]`) |
+| Resource | `server.addResource({ uri: { path, json } })` | `resources/read` | `{ uri }` | `ReadResourceResult` (`result.contents[]`, items have `uri`, `mimeType`, `text`) |
+| Prompt | `server.addPrompt({ name: { path, json } })` | `prompts/get` | `{ name, arguments }` | `GetPromptResult` (`result.messages[]` with `role` + `content`) |
 
-Resource templates: register with the template URI as key (`'file://{directory}/{name}.txt'`), then read with a concrete URI (`'file://production/config.txt'`) — variables are extracted automatically.
+Resource templates: use `server.addResourceTemplate()` with the template URI as key (`'file://{directory}/{name}.txt'`), then read with a concrete URI (`'file://production/config.txt'`) — variables are extracted automatically.
 
 ### Testing completions
 
